@@ -38,6 +38,10 @@ class BarChart extends Component {
   }
 
   render() {
+    if (this.state.chartData.length === 0) {
+      return <div></div>;
+    }
+    console.log(this.state.chartData, this.state.chartOptions);
     return (
       <Chart
         options={this.state.chartOptions}
