@@ -28,15 +28,50 @@ import { BsCheckCircleFill } from "react-icons/bs";
 // Vision UI Dashboard React components
 import VuiBox from "components/VuiBox";
 import VuiTypography from "components/VuiTypography";
+import VuiProgress from "components/VuiProgress";
 
 // Vision UI Dashboard Materail-UI example components
 import Table from "examples/Tables/Table";
 
-// Data
-import data from "layouts/dashboard/components/Projects/data";
-import { BestPerformanceVolumeItem } from "./data";
+const BestPerformanceVolumeItem = ({ row }) => {
+  console.log("row", row);
 
-function Projects(props) {
+  return {
+    symbol: (
+      <VuiBox display="flex" alignItems="center">
+        {/* <AdobeXD size="20px" /> */}
+        <VuiTypography
+          // pl="16px"
+          color="white"
+          variant="button"
+          fontWeight="medium"
+        >
+          {row.symbol}
+        </VuiTypography>
+      </VuiBox>
+    ),
+    totalNetInflow: (
+      <VuiTypography variant="button" color="white" fontWeight="bold">
+        {Math.round(row.totalNetInflow)}
+      </VuiTypography>
+    ),
+    diff: (
+      <VuiBox width="8rem" textAlign="left">
+        <VuiTypography color="white" variant="button" fontWeight="bold">
+          {[Math.round(row.diff), "%"].join("")}
+        </VuiTypography>
+        <VuiProgress
+          value={Math.round(row.diff)}
+          color="info"
+          label={false}
+          sx={{ background: "#2D2E5F" }}
+        />
+      </VuiBox>
+    ),
+  };
+};
+
+function BestPerformanceVolumeList(props) {
   // const { columns, rows } = data();
   const [menu, setMenu] = useState(null);
   const { data = [] } = props;
@@ -69,8 +104,6 @@ function Projects(props) {
     </Menu>
   );
 
-  console.log("renderRow", renderRow());
-
   return (
     <Card
       sx={{
@@ -80,12 +113,12 @@ function Projects(props) {
       <VuiBox display="flex" justifyContent="space-between" alignItems="center" mb="32px">
         <VuiBox mb="auto">
           <VuiTypography color="white" variant="lg" mb="6px" gutterBottom>
-            Projects
+            Best Volume Performance
           </VuiTypography>
           <VuiBox display="flex" alignItems="center" lineHeight={0}>
-            <BsCheckCircleFill color="green" size="15px" />
-            <VuiTypography variant="button" fontWeight="regular" color="text" ml="5px">
-              &nbsp;<strong>30 done</strong> this month
+            {/* <BsCheckCircleFill color="green" size="15px" /> */}
+            <VuiTypography variant="button" fontWeight="regular" color="text">
+              &nbsp;<strong>Top token</strong> has best volume by 7 days
             </VuiTypography>
           </VuiBox>
         </VuiBox>
@@ -123,4 +156,4 @@ function Projects(props) {
   );
 }
 
-export default Projects;
+export default BestPerformanceVolumeList;

@@ -59,10 +59,24 @@ import { lineChartDataDashboard } from "layouts/dashboard/data/lineChartData";
 import { lineChartOptionsDashboard } from "layouts/dashboard/data/lineChartOptions";
 import { barChartDataDashboard } from "layouts/dashboard/data/barChartData";
 import { barChartOptionsDashboard } from "layouts/dashboard/data/barChartOptions";
+import { useEffect, useState } from "react";
+import { getBestPerformanceVolume, getCurrentPositions } from "../../services/api";
+import BestPerformanceVolumeList from "./components/BestPerformanceVolumeList";
+import FuturePositionList from "./components/FuturePositionList";
 
 function Dashboard() {
   const { gradients } = colors;
   const { cardContent } = gradients;
+
+  const [bestPerformanceVolume, setBestPerformanceVolume] = useState([]);
+  const [position, setPosition] = useState([]);
+
+  useEffect(() => {
+    getBestPerformanceVolume().then(setBestPerformanceVolume);
+    getCurrentPositions().then(setPosition);
+  }, []);
+
+  console.log("position", position);
 
   return (
     <DashboardLayout>
@@ -107,7 +121,8 @@ function Dashboard() {
         <VuiBox mb={3}>
           <Grid container spacing="18px">
             <Grid item xs={12} lg={12} xl={5}>
-              <WelcomeMark />
+              <BestPerformanceVolumeList data={bestPerformanceVolume} />
+              {/* <WelcomeMark /> */}
             </Grid>
             <Grid item xs={12} lg={6} xl={3}>
               <SatisfactionRate />
@@ -120,7 +135,7 @@ function Dashboard() {
         <VuiBox mb={3}>
           <Grid container spacing={3}>
             <Grid item xs={12} lg={6} xl={7}>
-              <Card>
+              {/* <Card>
                 <VuiBox sx={{ height: "100%" }}>
                   <VuiTypography variant="lg" color="white" fontWeight="bold" mb="5px">
                     Sales Overview
@@ -140,7 +155,8 @@ function Dashboard() {
                     />
                   </VuiBox>
                 </VuiBox>
-              </Card>
+              </Card> */}
+              <FuturePositionList data={position} />
             </Grid>
             <Grid item xs={12} lg={6} xl={5}>
               <Card>

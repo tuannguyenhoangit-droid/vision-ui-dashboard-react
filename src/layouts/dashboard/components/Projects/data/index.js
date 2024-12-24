@@ -19,7 +19,45 @@ import avatar2 from "assets/images/avatar2.png";
 import avatar3 from "assets/images/avatar3.png";
 import avatar4 from "assets/images/avatar4.png";
 
-export default function data() {
+export const BestPerformanceVolumeItem = ({ row }) => {
+  console.log("row", row);
+
+  return {
+    symbol: (
+      <VuiBox display="flex" alignItems="center">
+        {/* <AdobeXD size="20px" /> */}
+        <VuiTypography
+          // pl="16px"
+          color="white"
+          variant="button"
+          fontWeight="medium"
+        >
+          {row.symbol}
+        </VuiTypography>
+      </VuiBox>
+    ),
+    totalNetInflow: (
+      <VuiTypography variant="button" color="white" fontWeight="bold">
+        {Math.round(row.totalNetInflow)}
+      </VuiTypography>
+    ),
+    diff: (
+      <VuiBox width="8rem" textAlign="left">
+        <VuiTypography color="white" variant="button" fontWeight="bold">
+          {[Math.round(row.diff), "%"].join("")}
+        </VuiTypography>
+        <VuiProgress
+          value={Math.round(row.diff)}
+          color="info"
+          label={false}
+          sx={{ background: "#2D2E5F" }}
+        />
+      </VuiBox>
+    ),
+  };
+};
+
+export const data = () => {
   const avatars = (members) =>
     members.map(([image, name]) => (
       <Tooltip key={name} title={name} placeholder="bottom">
@@ -210,37 +248,37 @@ export default function data() {
           </VuiBox>
         ),
       },
-      {
-        companies: (
-          <VuiBox display="flex" alignItems="center">
-            <Invision size="20px" />
-            <VuiTypography pl="16px" color="white" variant="button" fontWeight="medium">
-              Redesign New Online Shop
-            </VuiTypography>
-          </VuiBox>
-        ),
-        members: (
-          <VuiBox display="flex" py={1}>
-            {avatars([
-              [avatar1, "Ryan Tompson"],
-              [avatar4, "Jessica Doe"],
-            ])}
-          </VuiBox>
-        ),
-        budget: (
-          <VuiTypography variant="button" color="white" fontWeight="bold">
-            $2,000
-          </VuiTypography>
-        ),
-        completion: (
-          <VuiBox width="8rem" textAlign="left">
-            <VuiTypography color="white" variant="button" fontWeight="bold">
-              40%
-            </VuiTypography>
-            <VuiProgress value={40} color="info" label={false} sx={{ background: "#2D2E5F" }} />
-          </VuiBox>
-        ),
-      },
+      // {
+      //   companies: (
+      //     <VuiBox display="flex" alignItems="center">
+      //       <Invision size="20px" />
+      //       <VuiTypography pl="16px" color="white" variant="button" fontWeight="medium">
+      //         Redesign New Online Shop
+      //       </VuiTypography>
+      //     </VuiBox>
+      //   ),
+      //   members: (
+      //     <VuiBox display="flex" py={1}>
+      //       {avatars([
+      //         [avatar1, "Ryan Tompson"],
+      //         [avatar4, "Jessica Doe"],
+      //       ])}
+      //     </VuiBox>
+      //   ),
+      //   budget: (
+      //     <VuiTypography variant="button" color="white" fontWeight="bold">
+      //       $2,000
+      //     </VuiTypography>
+      //   ),
+      //   completion: (
+      //     <VuiBox width="8rem" textAlign="left">
+      //       <VuiTypography color="white" variant="button" fontWeight="bold">
+      //         40%
+      //       </VuiTypography>
+      //       <VuiProgress value={40} color="info" label={false} sx={{ background: "#2D2E5F" }} />
+      //     </VuiBox>
+      //   ),
+      // },
     ],
   };
-}
+};
