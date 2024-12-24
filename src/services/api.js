@@ -5,8 +5,6 @@ export const getBestPerformanceVolume = async (period = "DAY_1", dayAgo = 7) => 
     await axios
       .get(`http://localhost:3000/top-volume-performance?period=${period}&dayAgo=${dayAgo}`)
       .then((response) => {
-        console.log("response", response);
-
         resolve(response.data);
       })
       .catch((error) => {
@@ -20,8 +18,32 @@ export const getCurrentPositions = async () => {
     await axios
       .get(`https://sa.premierct.asia/v1/future/positions`)
       .then((response) => {
-        console.log("response", response);
+        resolve(response.data);
+      })
+      .catch((error) => {
+        console.log("error", error);
+      });
+  });
+};
 
+export const getTradeList = async () => {
+  return new Promise(async (resolve, reject) => {
+    await axios
+      .get(`https://sa.premierct.asia/v1/future/tradeList`)
+      .then((response) => {
+        resolve(response.data);
+      })
+      .catch((error) => {
+        console.log("error", error);
+      });
+  });
+};
+
+export const getBalance = async () => {
+  return new Promise(async (resolve, reject) => {
+    await axios
+      .get(`https://sa.premierct.asia/v1/future/balance`)
+      .then((response) => {
         resolve(response.data);
       })
       .catch((error) => {

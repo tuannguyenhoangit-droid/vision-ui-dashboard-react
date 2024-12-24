@@ -59,10 +59,21 @@ import { lineChartDataDashboard } from "layouts/dashboard/data/lineChartData";
 import { lineChartOptionsDashboard } from "layouts/dashboard/data/lineChartOptions";
 import { barChartDataDashboard } from "layouts/dashboard/data/barChartData";
 import { barChartOptionsDashboard } from "layouts/dashboard/data/barChartOptions";
-import { useEffect, useState } from "react";
-import { getBestPerformanceVolume, getCurrentPositions } from "../../services/api";
+import { useEffect, useMemo, useState } from "react";
+import {
+  getBalance,
+  getBestPerformanceVolume,
+  getCurrentPositions,
+  getTradeList,
+} from "../../services/api";
 import BestPerformanceVolumeList from "./components/BestPerformanceVolumeList";
 import FuturePositionList from "./components/FuturePositionList";
+
+const startOrDay = new Date();
+startOrDay.setDate(startOrDay.getDate() - 1);
+startOrDay.setHours(7);
+startOrDay.setMinutes(0);
+startOrDay.setSeconds(0);
 
 function Dashboard() {
   const { gradients } = colors;
@@ -70,13 +81,36 @@ function Dashboard() {
 
   const [bestPerformanceVolume, setBestPerformanceVolume] = useState([]);
   const [position, setPosition] = useState([]);
+  const [tradeList, setTradeList] = useState([]);
+  const [balance, setBalance] = useState([]);
 
   useEffect(() => {
     getBestPerformanceVolume().then(setBestPerformanceVolume);
     getCurrentPositions().then(setPosition);
+    getTradeList().then(setTradeList);
+    getBalance().then(setBalance);
   }, []);
 
-  console.log("position", position);
+  console.log("tradeList", tradeList);
+
+  const todayTrade = useMemo(() => {
+    const trade = tradeList.filter(({ time }) => time > startOrDay.getTime());
+    const todayProfit =
+      Math.round(
+        trade.map(({ realizedPnl }) => parseFloat(realizedPnl)).reduce((pre, cur) => pre + cur, 0) *
+          100
+      ) / 100;
+    return {
+      count: trade.length,
+      profit: todayProfit,
+    };
+  }, [tradeList]);
+
+  const accountBalance = useMemo(() => {
+    return Math.round((balance?.[0]?.balance || 0) * 100) / 100;
+  }, [balance]);
+
+  const todayProfitPercent = Math.round((todayTrade.profit / accountBalance) * 100 * 100) / 100;
 
   return (
     <DashboardLayout>
@@ -86,33 +120,39 @@ function Dashboard() {
           <Grid container spacing={3}>
             <Grid item xs={12} md={6} xl={3}>
               <MiniStatisticsCard
-                title={{ text: "today's money", fontWeight: "regular" }}
-                count="$53,000"
-                percentage={{ color: "success", text: "+55%" }}
+                title={{ text: "Account Balance", fontWeight: "regular" }}
+                count={["$", accountBalance].join("")}
+                percentage={{ color: "success", text: "" }}
                 icon={{ color: "info", component: <IoWallet size="22px" color="white" /> }}
               />
             </Grid>
             <Grid item xs={12} md={6} xl={3}>
               <MiniStatisticsCard
-                title={{ text: "today's users" }}
-                count="2,300"
-                percentage={{ color: "success", text: "+3%" }}
+                title={{ text: "Today Profit" }}
+                count={["$", todayTrade.profit].join("")}
+                percentage={{
+                  color: todayProfitPercent > 0 ? "success" : "error",
+                  text: [todayProfitPercent > 0 ? "+" : "-", todayProfitPercent, "%"].join(""),
+                }}
                 icon={{ color: "info", component: <IoGlobe size="22px" color="white" /> }}
               />
             </Grid>
             <Grid item xs={12} md={6} xl={3}>
               <MiniStatisticsCard
-                title={{ text: "new clients" }}
-                count="+3,462"
-                percentage={{ color: "error", text: "-2%" }}
+                title={{ text: "Unrelease PnL" }}
+                count={["$", Math.round((balance?.[0]?.crossUnPnl || 0) * 100) / 100].join("")}
+                // percentage={{ color: "error", text: "-2%" }}
                 icon={{ color: "info", component: <IoDocumentText size="22px" color="white" /> }}
               />
             </Grid>
             <Grid item xs={12} md={6} xl={3}>
               <MiniStatisticsCard
-                title={{ text: "total sales" }}
-                count="$103,430"
-                percentage={{ color: "success", text: "+5%" }}
+                title={{ text: "Total Trade (7d)" }}
+                count={tradeList.length}
+                percentage={{
+                  color: "success",
+                  text: ["+", todayTrade.count, " trades today"].join(""),
+                }}
                 icon={{ color: "info", component: <FaShoppingCart size="20px" color="white" /> }}
               />
             </Grid>

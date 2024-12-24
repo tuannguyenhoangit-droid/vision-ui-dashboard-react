@@ -57,7 +57,7 @@ const FuturePositionItem = ({ row }) => {
     ),
     entry: (
       <VuiTypography variant="button" color="white" fontWeight="bold">
-        {row.entryPrice}
+        {[Math.round(row.entryPrice * 1000) / 1000, "USDT"].join(" ")}
       </VuiTypography>
     ),
     price: (
