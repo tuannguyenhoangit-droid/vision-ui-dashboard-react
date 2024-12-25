@@ -1,11 +1,11 @@
 import axios from "axios";
 
-export const getBestPerformanceVolume = async (period = "DAY_1", dayAgo = 7) => {
+export const getBestPerformanceVolume = async (period = "DAY_1", dayAgo = 5) => {
   return new Promise(async (resolve, reject) => {
     await axios
       .get(`http://localhost:3000/top-volume-performance?period=${period}&dayAgo=${dayAgo}`)
       .then((response) => {
-        resolve(response.data);
+        resolve(response.data.slice(0, 6));
       })
       .catch((error) => {
         console.log("error", error);

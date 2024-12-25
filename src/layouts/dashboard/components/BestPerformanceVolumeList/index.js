@@ -16,15 +16,14 @@
 
 */
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 // @mui material components
-import Card from "@mui/material/Card";
+import { IoCalendar, IoTime, IoWallet } from "react-icons/io5";
 import Icon from "@mui/material/Icon";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import { BsCheckCircleFill } from "react-icons/bs";
-
+import { Card, Stack } from "@mui/material";
 // Vision UI Dashboard React components
 import VuiBox from "components/VuiBox";
 import VuiTypography from "components/VuiTypography";
@@ -34,8 +33,6 @@ import VuiProgress from "components/VuiProgress";
 import Table from "examples/Tables/Table";
 
 const BestPerformanceVolumeItem = ({ row }) => {
-  console.log("row", row);
-
   return {
     symbol: (
       <VuiBox display="flex" alignItems="center">
@@ -73,20 +70,40 @@ const BestPerformanceVolumeItem = ({ row }) => {
 
 function BestPerformanceVolumeList(props) {
   // const { columns, rows } = data();
-  const [menu, setMenu] = useState(null);
-  const { data = [] } = props;
+  const [frameMenuOpen, setFrameMenuOpen] = useState(null);
+  const [dayAgoMenuOpen, setDayAgoMenuOpen] = useState(null);
+  const { data = [], onFilterChange = () => null } = props;
+  const [frame, setFrame] = useState("DAY_1");
+  const [dayAgo, setDayAgo] = useState("7");
 
-  const openMenu = ({ currentTarget }) => setMenu(currentTarget);
-  const closeMenu = () => setMenu(null);
+  const openFrameMenu = ({ currentTarget }) => setFrameMenuOpen(currentTarget);
+  const closeFrameMenu = (ref) => {
+    setFrameMenuOpen(null);
+    setFrame(ref.nativeEvent.target.id);
+  };
+
+  const openDayAgoMenu = ({ currentTarget }) => setDayAgoMenuOpen(currentTarget);
+  const closeDayAgoMenu = (ref) => {
+    setDayAgoMenuOpen(null);
+    setDayAgo(ref.nativeEvent.target.id);
+  };
+
+  useEffect(() => {
+    onFilterChange(frame, dayAgo);
+  }, []);
+
+  useEffect(() => {
+    onFilterChange(frame, dayAgo);
+  }, [frame, dayAgo]);
 
   const renderRow = () => {
     return data.map((row) => BestPerformanceVolumeItem({ row }));
   };
 
-  const renderMenu = (
+  const renderMenuFrame = (
     <Menu
       id="simple-menu"
-      anchorEl={menu}
+      anchorEl={frameMenuOpen}
       anchorOrigin={{
         vertical: "top",
         horizontal: "left",
@@ -95,12 +112,42 @@ function BestPerformanceVolumeList(props) {
         vertical: "top",
         horizontal: "right",
       }}
-      open={Boolean(menu)}
-      onClose={closeMenu}
+      open={Boolean(frameMenuOpen)}
+      onClose={closeFrameMenu}
     >
-      <MenuItem onClick={closeMenu}>Action</MenuItem>
-      <MenuItem onClick={closeMenu}>Another action</MenuItem>
-      <MenuItem onClick={closeMenu}>Something else</MenuItem>
+      <MenuItem id="HOUR_4" onClick={closeFrameMenu}>
+        HOUR_4
+      </MenuItem>
+      <MenuItem id="DAY_1" onClick={closeFrameMenu}>
+        DAY_1
+      </MenuItem>
+    </Menu>
+  );
+
+  const renderMenuDayRange = (
+    <Menu
+      id="simple-menu"
+      anchorEl={dayAgoMenuOpen}
+      anchorOrigin={{
+        vertical: "top",
+        horizontal: "left",
+      }}
+      transformOrigin={{
+        vertical: "top",
+        horizontal: "right",
+      }}
+      open={Boolean(dayAgoMenuOpen)}
+      onClose={closeDayAgoMenu}
+    >
+      <MenuItem id="3" onClick={closeDayAgoMenu}>
+        3 Days Ago
+      </MenuItem>
+      <MenuItem id="5" onClick={closeDayAgoMenu}>
+        5 Days Ago
+      </MenuItem>
+      <MenuItem id="7" onClick={closeDayAgoMenu}>
+        7 Days Ago
+      </MenuItem>
     </Menu>
   );
 
@@ -122,12 +169,41 @@ function BestPerformanceVolumeList(props) {
             </VuiTypography>
           </VuiBox>
         </VuiBox>
-        <VuiBox color="text" px={2}>
-          <Icon sx={{ cursor: "pointer", fontWeight: "bold" }} fontSize="small" onClick={openMenu}>
-            more_vert
-          </Icon>
+        <VuiBox display="flex" justifyContent="space-between" mb="auto">
+          <Stack direction="row" spacing={{ sm: "10px", xl: "4px", xxl: "10px" }}>
+            <VuiBox
+              onClick={openFrameMenu}
+              bgColor="info"
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+              sx={{ borderRadius: "6px", width: "25px", height: "25px" }}
+            >
+              <IoTime color="#fff" size="12px" />
+            </VuiBox>
+            <VuiTypography color="text" variant="button" fontWeight="medium">
+              {frame}
+            </VuiTypography>
+          </Stack>
+          {renderMenuFrame}
+          <Stack direction="row" spacing={{ sm: "10px", xl: "4px", xxl: "10px" }} ml="16px">
+            <VuiBox
+              onClick={openDayAgoMenu}
+              bgColor="info"
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+              sx={{ borderRadius: "6px", width: "25px", height: "25px" }}
+            >
+              <IoCalendar color="#fff" size="12px" />
+            </VuiBox>
+            <VuiTypography color="text" variant="button" fontWeight="medium">
+              {[dayAgo, "Days"].join(" ")}
+            </VuiTypography>
+          </Stack>
+
+          {renderMenuDayRange}
         </VuiBox>
-        {renderMenu}
       </VuiBox>
       <VuiBox
         sx={{

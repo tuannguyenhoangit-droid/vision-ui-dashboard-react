@@ -85,13 +85,14 @@ function Dashboard() {
   const [balance, setBalance] = useState([]);
 
   useEffect(() => {
-    getBestPerformanceVolume().then(setBestPerformanceVolume);
     getCurrentPositions().then(setPosition);
     getTradeList().then(setTradeList);
     getBalance().then(setBalance);
   }, []);
 
-  console.log("tradeList", tradeList);
+  const onFilterChangeBestPerformanceVolume = (frame, dayAgo) => {
+    getBestPerformanceVolume(frame, dayAgo).then(setBestPerformanceVolume);
+  };
 
   const todayTrade = useMemo(() => {
     const trade = tradeList.filter(({ time }) => time > startOrDay.getTime());
@@ -103,6 +104,7 @@ function Dashboard() {
     return {
       count: trade.length,
       profit: todayProfit,
+      trade: trade.filter((item) => item.realizedPnl !== "0").slice(0, 10),
     };
   }, [tradeList]);
 
@@ -161,14 +163,17 @@ function Dashboard() {
         <VuiBox mb={3}>
           <Grid container spacing="18px">
             <Grid item xs={12} lg={12} xl={5}>
-              <BestPerformanceVolumeList data={bestPerformanceVolume} />
+              <BestPerformanceVolumeList
+                onFilterChange={onFilterChangeBestPerformanceVolume}
+                data={bestPerformanceVolume}
+              />
               {/* <WelcomeMark /> */}
             </Grid>
             <Grid item xs={12} lg={6} xl={3}>
               <SatisfactionRate />
             </Grid>
             <Grid item xs={12} lg={6} xl={4}>
-              <ReferralTracking />
+              <ReferralTracking position={position} balance={balance?.[0]?.balance} />
             </Grid>
           </Grid>
         </VuiBox>
@@ -337,7 +342,7 @@ function Dashboard() {
             <Projects />
           </Grid>
           <Grid item xs={12} md={6} lg={4}>
-            <OrderOverview />
+            <OrderOverview data={todayTrade.trade} />
           </Grid>
         </Grid>
       </VuiBox>
