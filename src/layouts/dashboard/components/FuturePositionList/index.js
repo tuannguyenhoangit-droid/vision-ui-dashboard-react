@@ -34,8 +34,6 @@ import VuiProgress from "components/VuiProgress";
 import Table from "examples/Tables/Table";
 
 const FuturePositionItem = ({ row }) => {
-  console.log("row", row);
-
   return {
     symbol: (
       <VuiBox display="flex" alignItems="center">

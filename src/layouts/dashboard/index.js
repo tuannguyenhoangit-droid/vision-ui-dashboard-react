@@ -78,7 +78,7 @@ startOrDay.setSeconds(0);
 function Dashboard() {
   const { gradients } = colors;
   const { cardContent } = gradients;
-
+  console.log(startOrDay.toLocaleString());
   const [bestPerformanceVolume, setBestPerformanceVolume] = useState([]);
   const [position, setPosition] = useState([]);
   const [tradeList, setTradeList] = useState([]);

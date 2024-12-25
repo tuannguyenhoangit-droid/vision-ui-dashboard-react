@@ -192,23 +192,23 @@ function ReferralTracking(props) {
                 alignItems="center"
               >
                 <VuiTypography color="text" variant="button" mb="4px">
-                  Percent
+                  Account Health
                 </VuiTypography>
                 <VuiTypography
                   color="white"
-                  variant="d5"
+                  variant="d6"
                   fontWeight="bold"
                   mb="4px"
                   sx={({ breakpoints }) => ({
                     [breakpoints.only("xl")]: {
-                      fontSize: "32px",
+                      fontSize: "24px",
                     },
                   })}
                 >
-                  {[100 - Math.round(health * 100) / 100, "%"]}
+                  {[100 - Math.round(health * 10) / 10, "%"]}
                 </VuiTypography>
                 <VuiTypography color="text" variant="button">
-                  Account Health
+                  Good
                 </VuiTypography>
               </VuiBox>
             </VuiBox>

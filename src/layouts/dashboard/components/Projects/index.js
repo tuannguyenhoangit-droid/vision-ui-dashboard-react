@@ -69,8 +69,6 @@ function Projects(props) {
     </Menu>
   );
 
-  console.log("renderRow", renderRow());
-
   return (
     <Card
       sx={{

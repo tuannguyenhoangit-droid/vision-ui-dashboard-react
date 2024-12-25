@@ -39,8 +39,6 @@ import AdobeXD from "examples/Icons/AdobeXD";
 import palette from "assets/theme/base/colors";
 
 function OrdersOverview({ data = [] }) {
-  console.log("trade", data);
-
   return (
     <Card className="h-100">
       <VuiBox mb="16px">
@@ -64,6 +62,7 @@ function OrdersOverview({ data = [] }) {
         {data.map((item) => {
           return (
             <TimelineItem
+              key={item.id}
               icon={<FaDollarSign size="16px" color={palette.info.main} />}
               title={[
                 item.realizedPnl > 0 ? "+" : "-",

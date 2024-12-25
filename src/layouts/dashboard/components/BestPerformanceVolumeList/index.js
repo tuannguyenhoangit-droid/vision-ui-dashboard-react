@@ -73,8 +73,8 @@ function BestPerformanceVolumeList(props) {
   const [frameMenuOpen, setFrameMenuOpen] = useState(null);
   const [dayAgoMenuOpen, setDayAgoMenuOpen] = useState(null);
   const { data = [], onFilterChange = () => null } = props;
-  const [frame, setFrame] = useState("DAY_1");
-  const [dayAgo, setDayAgo] = useState("7");
+  const [frame, setFrame] = useState("HOUR_4");
+  const [dayAgo, setDayAgo] = useState("5");
 
   const openFrameMenu = ({ currentTarget }) => setFrameMenuOpen(currentTarget);
   const closeFrameMenu = (ref) => {

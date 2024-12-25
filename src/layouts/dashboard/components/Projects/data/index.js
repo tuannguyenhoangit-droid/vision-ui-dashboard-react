@@ -20,8 +20,6 @@ import avatar3 from "assets/images/avatar3.png";
 import avatar4 from "assets/images/avatar4.png";
 
 export const BestPerformanceVolumeItem = ({ row }) => {
-  console.log("row", row);
-
   return {
     symbol: (
       <VuiBox display="flex" alignItems="center">
