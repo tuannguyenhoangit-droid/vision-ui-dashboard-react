@@ -13,6 +13,32 @@ export const getBestPerformanceVolume = async (period = "DAY_1", dayAgo = 5) => 
   });
 };
 
+export const getOpenOrders = async () => {
+  return new Promise(async (resolve, reject) => {
+    await axios
+      .get(`https://sa.premierct.asia/v1/future/openOrders`)
+      .then((response) => {
+        resolve(response.data);
+      })
+      .catch((error) => {
+        console.log("error", error);
+      });
+  });
+};
+
+export const getIncomePnL = async () => {
+  return new Promise(async (resolve, reject) => {
+    await axios
+      .get(`https://sa.premierct.asia/v1/future/incomePnL`)
+      .then((response) => {
+        resolve(response.data);
+      })
+      .catch((error) => {
+        console.log("error", error);
+      });
+  });
+};
+
 export const getCurrentPositions = async () => {
   return new Promise(async (resolve, reject) => {
     await axios

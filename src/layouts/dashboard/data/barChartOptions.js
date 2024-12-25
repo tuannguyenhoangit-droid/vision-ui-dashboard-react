@@ -22,6 +22,7 @@ export const barChartOptionsDashboard = {
       show: false,
     },
   },
+
   tooltip: {
     style: {
       fontSize: "10px",
@@ -37,9 +38,9 @@ export const barChartOptionsDashboard = {
   },
   xaxis: {
     categories: ["Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-    show: false,
+    show: true,
     labels: {
-      show: false,
+      show: true,
       style: {
         colors: "#fff",
         fontSize: "10px",
@@ -68,7 +69,7 @@ export const barChartOptionsDashboard = {
     show: false,
   },
   fill: {
-    colors: "#fff",
+    colors: "#444",
   },
   dataLabels: {
     enabled: false,
@@ -77,6 +78,20 @@ export const barChartOptionsDashboard = {
     bar: {
       borderRadius: 8,
       columnWidth: "12px",
+      colors: {
+        ranges: [
+          {
+            from: 0,
+            to: 100000,
+            color: "#01b574",
+          },
+          {
+            from: -10000,
+            to: -1,
+            color: "#e31a1a",
+          },
+        ],
+      },
     },
   },
   responsive: [

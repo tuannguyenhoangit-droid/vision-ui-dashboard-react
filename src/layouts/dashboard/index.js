@@ -53,21 +53,20 @@ import { IoDocumentText } from "react-icons/io5";
 import { FaShoppingCart } from "react-icons/fa";
 
 // Data
-import LineChart from "examples/Charts/LineCharts/LineChart";
 import BarChart from "examples/Charts/BarCharts/BarChart";
-import { lineChartDataDashboard } from "layouts/dashboard/data/lineChartData";
-import { lineChartOptionsDashboard } from "layouts/dashboard/data/lineChartOptions";
-import { barChartDataDashboard } from "layouts/dashboard/data/barChartData";
 import { barChartOptionsDashboard } from "layouts/dashboard/data/barChartOptions";
 import { useEffect, useMemo, useState } from "react";
 import {
   getBalance,
   getBestPerformanceVolume,
   getCurrentPositions,
+  getIncomePnL,
+  getOpenOrders,
   getTradeList,
 } from "../../services/api";
 import BestPerformanceVolumeList from "./components/BestPerformanceVolumeList";
 import FuturePositionList from "./components/FuturePositionList";
+import { barChartDataDashboard } from "./data/barChartData";
 
 const startOrDay = new Date();
 startOrDay.setDate(startOrDay.getDate() - 1);
@@ -78,17 +77,34 @@ startOrDay.setSeconds(0);
 function Dashboard() {
   const { gradients } = colors;
   const { cardContent } = gradients;
-  console.log(startOrDay.toLocaleString());
+
+  const [openOrders, setOpenOrders] = useState([]);
   const [bestPerformanceVolume, setBestPerformanceVolume] = useState([]);
   const [position, setPosition] = useState([]);
   const [tradeList, setTradeList] = useState([]);
   const [balance, setBalance] = useState([]);
+  const [incomePnL, setIncomePnL] = useState({});
 
   useEffect(() => {
     getCurrentPositions().then(setPosition);
+    getOpenOrders().then(setOpenOrders);
     getTradeList().then(setTradeList);
     getBalance().then(setBalance);
+    getIncomePnL().then(setIncomePnL);
   }, []);
+
+  const incomeBarChart = useMemo(() => {
+    barChartOptionsDashboard.xaxis.categories = (incomePnL?.data || []).map((ic) => ic.d);
+    const chart = {
+      option: barChartOptionsDashboard,
+      data: {
+        name: "PnL",
+        data: (incomePnL.data || []).map(({ income }) => income),
+      },
+    };
+
+    return chart;
+  }, [incomePnL]);
 
   const onFilterChangeBestPerformanceVolume = (frame, dayAgo) => {
     getBestPerformanceVolume(frame, dayAgo).then(setBestPerformanceVolume);
@@ -112,7 +128,9 @@ function Dashboard() {
     return Math.round((balance?.[0]?.balance || 0) * 100) / 100;
   }, [balance]);
 
-  const todayProfitPercent = Math.round((todayTrade.profit / accountBalance) * 100 * 100) / 100;
+  const todayProfitPercent =
+    Math.round(((incomePnL?.data?.[0]?.income || 0) / accountBalance) * 100 * 100) / 100;
+  console.log("incomePnL", incomePnL);
 
   return (
     <DashboardLayout>
@@ -131,10 +149,10 @@ function Dashboard() {
             <Grid item xs={12} md={6} xl={3}>
               <MiniStatisticsCard
                 title={{ text: "Today Profit" }}
-                count={["$", todayTrade.profit].join("")}
+                count={["$", incomePnL?.data?.[0]?.income || 0].join("")}
                 percentage={{
                   color: todayProfitPercent > 0 ? "success" : "error",
-                  text: [todayProfitPercent > 0 ? "+" : "-", todayProfitPercent, "%"].join(""),
+                  text: [todayProfitPercent > 0 ? "+" : "-", todayProfitPercent || 0, "%"].join(""),
                 }}
                 icon={{ color: "info", component: <IoGlobe size="22px" color="white" /> }}
               />
@@ -149,12 +167,8 @@ function Dashboard() {
             </Grid>
             <Grid item xs={12} md={6} xl={3}>
               <MiniStatisticsCard
-                title={{ text: "Total Trade (7d)" }}
-                count={tradeList.length}
-                percentage={{
-                  color: "success",
-                  text: ["+", todayTrade.count, " trades today"].join(""),
-                }}
+                title={{ text: "Today trades" }}
+                count={todayTrade.count}
                 icon={{ color: "info", component: <FaShoppingCart size="20px" color="white" /> }}
               />
             </Grid>
@@ -162,15 +176,15 @@ function Dashboard() {
         </VuiBox>
         <VuiBox mb={3}>
           <Grid container spacing="18px">
-            <Grid item xs={12} lg={12} xl={5}>
+            <Grid item xs={12} lg={12} xl={4}>
               <BestPerformanceVolumeList
                 onFilterChange={onFilterChangeBestPerformanceVolume}
                 data={bestPerformanceVolume}
               />
               {/* <WelcomeMark /> */}
             </Grid>
-            <Grid item xs={12} lg={6} xl={3}>
-              <SatisfactionRate />
+            <Grid item xs={12} lg={6} xl={4}>
+              <SatisfactionRate data={openOrders} />
             </Grid>
             <Grid item xs={12} lg={6} xl={4}>
               <ReferralTracking position={position} balance={balance?.[0]?.balance} />
@@ -206,9 +220,28 @@ function Dashboard() {
             <Grid item xs={12} lg={6} xl={5}>
               <Card>
                 <VuiBox>
+                  <VuiTypography variant="lg" color="white" fontWeight="bold" mb="5px">
+                    Profit and Loss
+                  </VuiTypography>
+                  <VuiBox display="flex" alignItems="center" mb="40px">
+                    <VuiTypography
+                      variant="button"
+                      color={incomePnL.totalIncomeLast7Days > 0 ? "success" : "error"}
+                      fontWeight="bold"
+                    >
+                      {[
+                        incomePnL.totalIncomeLast7Days > 0 ? "+" : "-",
+                        "$",
+                        Math.round(incomePnL.totalIncomeLast7Days * 100) / 100,
+                      ]}
+                      <VuiTypography variant="button" color="text" fontWeight="regular">
+                        {" this week"}
+                      </VuiTypography>
+                    </VuiTypography>
+                  </VuiBox>
                   <VuiBox
                     mb="24px"
-                    height="220px"
+                    height="340px"
                     sx={{
                       background: linearGradient(
                         cardContent.main,
@@ -219,119 +252,10 @@ function Dashboard() {
                     }}
                   >
                     <BarChart
-                      barChartData={barChartDataDashboard}
-                      barChartOptions={barChartOptionsDashboard}
+                      chartData={[incomeBarChart.data]}
+                      chartOptions={incomeBarChart.option}
                     />
                   </VuiBox>
-                  <VuiTypography variant="lg" color="white" fontWeight="bold" mb="5px">
-                    Active Users
-                  </VuiTypography>
-                  <VuiBox display="flex" alignItems="center" mb="40px">
-                    <VuiTypography variant="button" color="success" fontWeight="bold">
-                      (+23){" "}
-                      <VuiTypography variant="button" color="text" fontWeight="regular">
-                        than last week
-                      </VuiTypography>
-                    </VuiTypography>
-                  </VuiBox>
-                  <Grid container spacing="50px">
-                    <Grid item xs={6} md={3} lg={3}>
-                      <Stack
-                        direction="row"
-                        spacing={{ sm: "10px", xl: "4px", xxl: "10px" }}
-                        mb="6px"
-                      >
-                        <VuiBox
-                          bgColor="info"
-                          display="flex"
-                          justifyContent="center"
-                          alignItems="center"
-                          sx={{ borderRadius: "6px", width: "25px", height: "25px" }}
-                        >
-                          <IoWallet color="#fff" size="12px" />
-                        </VuiBox>
-                        <VuiTypography color="text" variant="button" fontWeight="medium">
-                          Users
-                        </VuiTypography>
-                      </Stack>
-                      <VuiTypography color="white" variant="lg" fontWeight="bold" mb="8px">
-                        32,984
-                      </VuiTypography>
-                      <VuiProgress value={60} color="info" sx={{ background: "#2D2E5F" }} />
-                    </Grid>
-                    <Grid item xs={6} md={3} lg={3}>
-                      <Stack
-                        direction="row"
-                        spacing={{ sm: "10px", xl: "4px", xxl: "10px" }}
-                        mb="6px"
-                      >
-                        <VuiBox
-                          bgColor="info"
-                          display="flex"
-                          justifyContent="center"
-                          alignItems="center"
-                          sx={{ borderRadius: "6px", width: "25px", height: "25px" }}
-                        >
-                          <IoIosRocket color="#fff" size="12px" />
-                        </VuiBox>
-                        <VuiTypography color="text" variant="button" fontWeight="medium">
-                          Clicks
-                        </VuiTypography>
-                      </Stack>
-                      <VuiTypography color="white" variant="lg" fontWeight="bold" mb="8px">
-                        2,42M
-                      </VuiTypography>
-                      <VuiProgress value={60} color="info" sx={{ background: "#2D2E5F" }} />
-                    </Grid>
-                    <Grid item xs={6} md={3} lg={3}>
-                      <Stack
-                        direction="row"
-                        spacing={{ sm: "10px", xl: "4px", xxl: "10px" }}
-                        mb="6px"
-                      >
-                        <VuiBox
-                          bgColor="info"
-                          display="flex"
-                          justifyContent="center"
-                          alignItems="center"
-                          sx={{ borderRadius: "6px", width: "25px", height: "25px" }}
-                        >
-                          <FaShoppingCart color="#fff" size="12px" />
-                        </VuiBox>
-                        <VuiTypography color="text" variant="button" fontWeight="medium">
-                          Sales
-                        </VuiTypography>
-                      </Stack>
-                      <VuiTypography color="white" variant="lg" fontWeight="bold" mb="8px">
-                        2,400$
-                      </VuiTypography>
-                      <VuiProgress value={60} color="info" sx={{ background: "#2D2E5F" }} />
-                    </Grid>
-                    <Grid item xs={6} md={3} lg={3}>
-                      <Stack
-                        direction="row"
-                        spacing={{ sm: "10px", xl: "4px", xxl: "10px" }}
-                        mb="6px"
-                      >
-                        <VuiBox
-                          bgColor="info"
-                          display="flex"
-                          justifyContent="center"
-                          alignItems="center"
-                          sx={{ borderRadius: "6px", width: "25px", height: "25px" }}
-                        >
-                          <IoBuild color="#fff" size="12px" />
-                        </VuiBox>
-                        <VuiTypography color="text" variant="button" fontWeight="medium">
-                          Items
-                        </VuiTypography>
-                      </Stack>
-                      <VuiTypography color="white" variant="lg" fontWeight="bold" mb="8px">
-                        320
-                      </VuiTypography>
-                      <VuiProgress value={60} color="info" sx={{ background: "#2D2E5F" }} />
-                    </Grid>
-                  </Grid>
                 </VuiBox>
               </Card>
             </Grid>

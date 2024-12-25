@@ -55,7 +55,7 @@ const FuturePositionItem = ({ row }) => {
     ),
     entry: (
       <VuiTypography variant="button" color="white" fontWeight="bold">
-        {[Math.round(row.entryPrice * 1000) / 1000, "USDT"].join(" ")}
+        {[Math.round(row.entryPrice * 1000) / 1000].join(" ")}
       </VuiTypography>
     ),
     price: (
@@ -65,14 +65,18 @@ const FuturePositionItem = ({ row }) => {
     ),
     margin: (
       <VuiTypography variant="button" color="white" fontWeight="bold">
-        {[Math.round(row.initialMargin * 1000) / 1000, "USDT"].join(" ")}
+        {["$", Math.round(row.initialMargin * 1000) / 1000].join(" ")}
       </VuiTypography>
     ),
 
     PnL: (
       <VuiBox width="8rem" textAlign="left">
-        <VuiTypography color="white" variant="button" fontWeight="bold">
-          {[Math.round(row.unRealizedProfit * 100) / 100, "USDT"].join(" ")}
+        <VuiTypography
+          color={row.unRealizedProfit > 0 ? "success" : "error"}
+          variant="button"
+          fontWeight="bold"
+        >
+          {["$", Math.round(row.unRealizedProfit * 100) / 100].join(" ")}
         </VuiTypography>
         <VuiProgress
           value={Math.round(row.diff)}

@@ -36,7 +36,7 @@ function ReferralTracking(props) {
           mb="40px"
         >
           <VuiTypography variant="lg" color="white" mr="auto" fontWeight="bold">
-            Referral Tracking
+            Account Status
           </VuiTypography>
           <VuiBox
             display="flex"
