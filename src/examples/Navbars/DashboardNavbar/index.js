@@ -60,6 +60,7 @@ import {
 // Images
 import team2 from "assets/images/team-2.jpg";
 import logoSpotify from "assets/images/small-logos/logo-spotify.svg";
+import { useSelector } from "react-redux";
 
 function DashboardNavbar({ absolute, light, isMini }) {
   const [navbarType, setNavbarType] = useState();
@@ -67,6 +68,7 @@ function DashboardNavbar({ absolute, light, isMini }) {
   const { miniSidenav, transparentNavbar, fixedNavbar, openConfigurator } = controller;
   const [openMenu, setOpenMenu] = useState(false);
   const route = useLocation().pathname.split("/").slice(1);
+  const user = useSelector((state) => state.user);
 
   useEffect(() => {
     // Setting the navbar type
@@ -180,7 +182,7 @@ function DashboardNavbar({ absolute, light, isMini }) {
                     fontWeight="medium"
                     color={light ? "white" : "dark"}
                   >
-                    Sign in
+                    {user.user?.displayName}
                   </VuiTypography>
                 </IconButton>
               </Link>

@@ -19,7 +19,7 @@
 import { useState, useEffect, useMemo } from "react";
 
 // react-router components
-import { Route, Switch, Redirect, useLocation } from "react-router-dom";
+import { Route, Switch, Redirect, useLocation, useHistory } from "react-router-dom";
 
 // @mui material components
 import { ThemeProvider } from "@mui/material/styles";
@@ -47,6 +47,10 @@ import routes from "routes";
 
 // Vision UI Dashboard React contexts
 import { useVisionUIController, setMiniSidenav, setOpenConfigurator } from "context";
+import { getAuth } from "firebase/auth";
+import { firebaseApp } from "./firebase";
+import { setUser } from "./redux/futures/userSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function App() {
   const [controller, dispatch] = useVisionUIController();
@@ -54,6 +58,34 @@ export default function App() {
   const [onMouseEnter, setOnMouseEnter] = useState(false);
   const [rtlCache, setRtlCache] = useState(null);
   const { pathname } = useLocation();
+  const history = useHistory();
+
+  const dispatchRedux = useDispatch();
+  const user = useSelector((state) => state.user);
+
+  useEffect(() => {
+    const auth = getAuth(firebaseApp);
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      console.log("onAuthStateChanged", user);
+
+      if (user) {
+        dispatchRedux(
+          setUser({
+            displayName: user.displayName,
+            email: user.email,
+            uid: user.uid,
+            photoURL: user.photoURL,
+          })
+        );
+        history.push("/dashboard");
+      } else {
+        dispatchRedux(setUser(null));
+      }
+    });
+
+    // Cleanup subscription on unmount
+    return () => unsubscribe();
+  }, []);
 
   // Cache for the rtl
   useMemo(() => {
@@ -165,7 +197,7 @@ export default function App() {
           <Sidenav
             color={sidenavColor}
             brand=""
-            brandName="VISION UI FREE"
+            brandName="SA BOT"
             routes={routes}
             onMouseEnter={handleOnMouseEnter}
             onMouseLeave={handleOnMouseLeave}

@@ -1,4 +1,7 @@
 import axios from "axios";
+import { firebaseApp } from "../firebase";
+import { getAuth } from "firebase/auth";
+const auth = getAuth(firebaseApp);
 
 export const getBestPerformanceVolume = async (period = "DAY_1", dayAgo = 5) => {
   return new Promise(async (resolve, reject) => {
@@ -69,6 +72,33 @@ export const getBalance = async () => {
   return new Promise(async (resolve, reject) => {
     await axios
       .get(`https://sa.premierct.asia/v1/future/balance`)
+      .then((response) => {
+        resolve(response.data);
+      })
+      .catch((error) => {
+        console.log("error", error);
+      });
+  });
+};
+
+/**
+ * SYMBOL CONFIGS
+ */
+
+export const createSymbolConfig = async () => {
+  const token = await auth.currentUser.getIdToken();
+  return new Promise(async (resolve, reject) => {
+    await axios
+      .post(
+        `https://sa.premierct.asia/v1/future/symbol-config`,
+        {},
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: ["Bearer", token].join(" "),
+          },
+        }
+      )
       .then((response) => {
         resolve(response.data);
       })

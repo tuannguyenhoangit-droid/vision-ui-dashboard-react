@@ -40,10 +40,34 @@ import CoverLayout from "layouts/authentication/components/CoverLayout";
 // Images
 import bgSignIn from "assets/images/signInImage.png";
 
+import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { firebaseApp } from "../../../firebase";
+
+const provider = new GoogleAuthProvider();
+
 function SignIn() {
   const [rememberMe, setRememberMe] = useState(true);
 
   const handleSetRememberMe = () => setRememberMe(!rememberMe);
+
+  const handleSignIn = () => {
+    const auth = getAuth(firebaseApp);
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        // success
+        // ...
+      })
+      .catch((error) => {
+        // Handle Errors here.
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        // The email of the user's account used.
+        const email = error.customData.email;
+        // The AuthCredential type that was used.
+        const credential = GoogleAuthProvider.credentialFromError(error);
+        // ...
+      });
+  };
 
   return (
     <CoverLayout
@@ -112,7 +136,7 @@ function SignIn() {
           </VuiTypography>
         </VuiBox>
         <VuiBox mt={4} mb={1}>
-          <VuiButton color="info" fullWidth>
+          <VuiButton onClick={handleSignIn} color="info" fullWidth>
             SIGN IN
           </VuiButton>
         </VuiBox>

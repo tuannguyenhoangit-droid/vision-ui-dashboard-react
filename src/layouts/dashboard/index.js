@@ -66,7 +66,7 @@ import {
 } from "../../services/api";
 import BestPerformanceVolumeList from "./components/BestPerformanceVolumeList";
 import FuturePositionList from "./components/FuturePositionList";
-import { barChartDataDashboard } from "./data/barChartData";
+import { useSelector } from "react-redux";
 
 const startOrDay = new Date();
 startOrDay.setDate(startOrDay.getDate() - 1);
@@ -85,6 +85,9 @@ function Dashboard() {
   const [balance, setBalance] = useState([]);
   const [incomePnL, setIncomePnL] = useState({});
 
+  const user = useSelector((state) => state.user);
+  console.log("user", user);
+
   useEffect(() => {
     getCurrentPositions().then(setPosition);
     getOpenOrders().then(setOpenOrders);
@@ -94,9 +97,14 @@ function Dashboard() {
   }, []);
 
   const incomeBarChart = useMemo(() => {
-    barChartOptionsDashboard.xaxis.categories = (incomePnL?.data || []).map((ic) => ic.d);
     const chart = {
-      option: barChartOptionsDashboard,
+      option: {
+        ...barChartOptionsDashboard,
+        xaxis: {
+          ...barChartOptionsDashboard.xaxis,
+          categories: (incomePnL?.data || []).map((ic) => ic.d),
+        },
+      },
       data: {
         name: "PnL",
         data: (incomePnL.data || []).map(({ income }) => income),
