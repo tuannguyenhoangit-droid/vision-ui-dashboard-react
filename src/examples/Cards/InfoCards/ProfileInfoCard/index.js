@@ -18,23 +18,30 @@
 
 // prop-types is library for typechecking of props
 import PropTypes from "prop-types";
-
+import JSEncrypt from "jsencrypt";
 // @mui material components
 import Card from "@mui/material/Card";
-import Divider from "@mui/material/Divider";
 
 // Vision UI Dashboard React components
 import VuiBox from "components/VuiBox";
 import VuiTypography from "components/VuiTypography";
 
 // Vision UI Dashboard React base styles
-import colors from "assets/theme/base/colors";
-import typography from "assets/theme/base/typography";
 
+import GradientBorder from "examples/GradientBorder";
+import borders from "assets/theme/base/borders";
+import radialGradient from "assets/theme/functions/radialGradient";
+import palette from "assets/theme/base/colors";
+import VuiInput from "components/VuiInput";
+import VuiButton from "components/VuiButton";
+import { useState } from "react";
+import { accountUpdateKeys } from "../../../../services/api";
 function ProfileInfoCard({ title, description, info, social }) {
   const labels = [];
   const values = [];
-  const { size } = typography;
+
+  const [apiKey, setAPIKey] = useState("");
+  const [secretKey, setSecretKey] = useState("");
 
   // Convert this form `objectKey` of the object key in to this `object key`
   Object.keys(info).forEach((el) => {
@@ -63,23 +70,29 @@ function ProfileInfoCard({ title, description, info, social }) {
     </VuiBox>
   ));
 
-  // Render the card social media icons
-  const renderSocial = social.map(({ link, icon, color }) => (
-    <VuiBox
-      key={color}
-      component="a"
-      href={link}
-      target="_blank"
-      rel="noreferrer"
-      fontSize={size.lg}
-      color="white"
-      pr={1}
-      pl={0.5}
-      lineHeight={1}
-    >
-      {icon}
-    </VuiBox>
-  ));
+  const handleEncrypt = async () => {
+    const publicKeyPEM = `-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA+pIUi+8P+isRC3dM94Yi
+pzGzFh4QfCNHSBfmpVTVu6Fx1Nz34sSds0jCcGag/Cngc7WQKV7Nom45uYxe9wGo
+N6aRKqwDVe/KpJ0V3BJnIiyGWqo3pUq6pY5Vrzk7iLAhGWUgcIdoCxDFtdWFZinf
+a6kvfbZO63jDfJbNn1B9AGq9BQyZhL+MnnqlavbJpTNsUweBssyvlvxwHAwaqtnw
+yvsxczqcdZscetZDp14++P6hmccjKap+fpHjsBQG8sXi7yg53vFtSi4XuVGxVv5X
+TuMVRuNVF+8KLtG4/Jstt57JE+u7tErK6IKKFAH1+P3YDF5Yck31n107KHjOq7XY
+JwIDAQAB
+-----END PUBLIC KEY-----
+`.trim();
+
+    const dataToEncrypt = `${apiKey}:${secretKey}`;
+
+    // Khởi tạo JSEncrypt với Public Key
+    const encryptor = new JSEncrypt();
+    encryptor.setPublicKey(publicKeyPEM);
+
+    // Mã hóa dữ liệu
+    const encryptedData = encryptor.encrypt(dataToEncrypt);
+    await accountUpdateKeys(encryptedData);
+    console.log("Dữ liệu đã mã hóa:", encryptedData);
+  };
 
   return (
     <Card
@@ -98,22 +111,68 @@ function ProfileInfoCard({ title, description, info, social }) {
             {description}
           </VuiTypography>
         </VuiBox>
-        <VuiBox opacity={0.3}>
-          <Divider />
-        </VuiBox>
+
         <VuiBox>
-          {renderItems}
-          <VuiBox display="flex" py={1} pr={2} color="white">
-            <VuiTypography
-              variant="button"
-              fontWeight="regular"
-              color="text"
-              textTransform="capitalize"
-            >
-              social: &nbsp;
-            </VuiTypography>
-            {renderSocial}
+          <VuiBox color="white">
+            <VuiBox mb={2}>
+              <VuiBox mb={1} ml={0.5}>
+                <VuiTypography component="label" variant="button" color="white" fontWeight="medium">
+                  API Key
+                </VuiTypography>
+              </VuiBox>
+              <GradientBorder
+                minWidth="100%"
+                borderRadius={borders.borderRadius.lg}
+                padding="1px"
+                backgroundImage={radialGradient(
+                  palette.gradients.borderLight.main,
+                  palette.gradients.borderLight.state,
+                  palette.gradients.borderLight.angle
+                )}
+              >
+                <VuiInput
+                  placeholder="Enter API Key"
+                  value={apiKey}
+                  onChange={({ nativeEvent }) => setAPIKey(nativeEvent.target.value)}
+                  sx={({ typography: { size } }) => ({
+                    fontSize: size.sm,
+                  })}
+                />
+              </GradientBorder>
+            </VuiBox>
+            <VuiBox mb={0.5}>
+              <VuiBox mb={1} ml={0.5}>
+                <VuiTypography component="label" variant="button" color="white" fontWeight="medium">
+                  Secret Key
+                </VuiTypography>
+              </VuiBox>
+              <GradientBorder
+                minWidth="100%"
+                borderRadius={borders.borderRadius.lg}
+                padding="1px"
+                backgroundImage={radialGradient(
+                  palette.gradients.borderLight.main,
+                  palette.gradients.borderLight.state,
+                  palette.gradients.borderLight.angle
+                )}
+              >
+                <VuiInput
+                  placeholder="Enter Secret Key"
+                  value={secretKey}
+                  onChange={({ nativeEvent }) => setSecretKey(nativeEvent.target.value)}
+                  sx={({ typography: { size } }) => ({
+                    fontSize: size.sm,
+                  })}
+                />
+              </GradientBorder>
+            </VuiBox>
           </VuiBox>
+          {renderItems}
+        </VuiBox>
+        <VuiBox display="flex" mt={1} justifyContent="flex-end">
+          <VuiButton onClick={handleEncrypt} color="info">
+            SAVE KEY
+          </VuiButton>
         </VuiBox>
       </VuiBox>
     </Card>

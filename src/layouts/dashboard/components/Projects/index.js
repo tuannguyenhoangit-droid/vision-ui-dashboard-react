@@ -16,7 +16,7 @@
 
 */
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 // @mui material components
 import Card from "@mui/material/Card";
@@ -31,15 +31,74 @@ import VuiTypography from "components/VuiTypography";
 
 // Vision UI Dashboard Materail-UI example components
 import Table from "examples/Tables/Table";
+import { useSelector } from "react-redux";
+import VuiSwitch from "components/VuiSwitch";
+import { timeDifference } from "utils";
 
-// Data
-import data from "layouts/dashboard/components/Projects/data";
-import { BestPerformanceVolumeItem } from "./data";
+const SymbolConfigItem = ({ row }) => {
+  return {
+    symbol: (
+      <VuiBox display="flex" alignItems="center">
+        {/* <AdobeXD size="20px" /> */}
+        <VuiTypography
+          // pl="16px"
+          color="white"
+          variant="button"
+          fontWeight="medium"
+        >
+          {row.symbol}
+        </VuiTypography>
+      </VuiBox>
+    ),
+    side: (
+      <VuiTypography
+        variant="button"
+        color={row.side === "BUY" ? "success" : "error"}
+        fontWeight="bold"
+      >
+        {row.side}
+      </VuiTypography>
+    ),
+    frame: (
+      <VuiTypography variant="button" color="white" fontWeight="bold">
+        {row.frame}
+      </VuiTypography>
+    ),
+    amount: (
+      <VuiTypography variant="button" color="white" fontWeight="bold">
+        {row.buyAmount}
+      </VuiTypography>
+    ),
+    "max budget": (
+      <VuiTypography variant="button" color="white" fontWeight="bold">
+        {["$", row.maxBudget].join("")}
+      </VuiTypography>
+    ),
+    "require frames": (
+      <VuiBox width="8rem" textAlign="left">
+        {row.buyRequireHistogram.map((frame) => (
+          <VuiTypography variant="button" color="white" fontWeight="bold">
+            {frame}
+          </VuiTypography>
+        ))}
+      </VuiBox>
+    ),
+    "optimized entry": (
+      <VuiTypography variant="button" color="white" fontWeight="bold">
+        <VuiSwitch color="success" checked={row.optimizeEntry}></VuiSwitch>
+      </VuiTypography>
+    ),
+    uptime: (
+      <VuiTypography variant="button" color="white" fontWeight="bold">
+        {timeDifference(row.createdAt)}
+      </VuiTypography>
+    ),
+  };
+};
 
 function Projects(props) {
-  // const { columns, rows } = data();
+  const symbolConfig = useSelector((e) => e.symbolConfig.data);
   const [menu, setMenu] = useState(null);
-  const { data = [] } = props;
 
   const openMenu = ({ currentTarget }) => setMenu(currentTarget);
   const closeMenu = (action) => {
@@ -47,9 +106,9 @@ function Projects(props) {
     props?.onMenuClick?.(action);
   };
 
-  const renderRow = () => {
-    return data.map((row) => BestPerformanceVolumeItem({ row }));
-  };
+  const renderRow = useMemo(() => {
+    return symbolConfig.map((row) => SymbolConfigItem({ row }));
+  }, [symbolConfig]);
 
   const renderMenu = (
     <Menu
@@ -114,10 +173,15 @@ function Projects(props) {
         <Table
           columns={[
             { name: "symbol", align: "left" },
-            { name: "totalNetInflow", align: "left" },
-            { name: "diff", align: "left" },
+            { name: "side", align: "left" },
+            { name: "frame", align: "left" },
+            { name: "amount", align: "left" },
+            { name: "max budget", align: "left" },
+            { name: "require frames", align: "left" },
+            { name: "optimized entry", align: "left" },
+            { name: "uptime", align: "left" },
           ]}
-          rows={renderRow()}
+          rows={renderRow}
         />
       </VuiBox>
     </Card>

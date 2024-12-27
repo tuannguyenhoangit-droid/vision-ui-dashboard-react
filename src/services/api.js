@@ -86,7 +86,7 @@ export const getBalance = async () => {
  */
 
 export const userSignIn = async (displayName, email, uid, photoURL) => {
-  const token = await auth.currentUser.getIdToken();
+  const token = await auth.currentUser?.getIdToken?.();
   const payload = {
     displayName,
     email,
@@ -96,8 +96,30 @@ export const userSignIn = async (displayName, email, uid, photoURL) => {
 
   return new Promise(async (resolve, reject) => {
     await axios
-      // .post("https://sa.premierct.asia/v1/user/sign-in", payload, {
-      .post("http://localhost:3333/v1/user/sign-in", payload, {
+      .post("https://sa.premierct.asia/v1/account/sign-in", payload, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: ["Bearer", token].join(" "),
+        },
+      })
+      .then((response) => {
+        resolve(response.data);
+      })
+      .catch((error) => {
+        console.log("error", error);
+      });
+  });
+};
+
+export const accountUpdateKeys = async (signature) => {
+  const token = await auth.currentUser?.getIdToken?.();
+  const payload = {
+    signature,
+  };
+
+  return new Promise(async (resolve, reject) => {
+    await axios
+      .post("https://sa.premierct.asia/v1/account/keys", payload, {
         headers: {
           "Content-Type": "application/json",
           Authorization: ["Bearer", token].join(" "),
@@ -121,7 +143,7 @@ export const createSymbolConfig = async (
   side = "BUY",
   buyRequireHistogram = []
 ) => {
-  const token = await auth.currentUser.getIdToken();
+  const token = await auth.currentUser?.getIdToken?.();
   const payload = {
     symbol,
     frame,
@@ -149,7 +171,8 @@ export const createSymbolConfig = async (
 };
 
 export const getSymbolConfig = async () => {
-  const token = await auth.currentUser.getIdToken();
+  const token = await auth.currentUser?.getIdToken?.();
+  if (!token) return [];
   return new Promise(async (resolve, reject) => {
     await axios
       .get("https://sa.premierct.asia/v1/future/symbol-config", {

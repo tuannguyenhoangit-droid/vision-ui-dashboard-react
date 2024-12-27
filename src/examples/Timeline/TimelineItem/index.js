@@ -19,9 +19,6 @@
 // prop-types is a library for typechecking of props
 import PropTypes from "prop-types";
 
-// @mui material components
-import Icon from "@mui/material/Icon";
-
 // Vision UI Dashboard React components
 import VuiBox from "components/VuiBox";
 import VuiTypography from "components/VuiTypography";
@@ -33,22 +30,7 @@ import { useTimeline } from "examples/Timeline/context";
 // Custom styles for the TimelineItem
 import { timelineItem } from "examples/Timeline/TimelineItem/styles";
 
-function TimelineItem({ color, icon, title, dateTime, description, badges, lastItem }) {
-  const isDark = useTimeline();
-
-  const renderBadges =
-    badges.length > 0
-      ? badges.map((badge, key) => {
-          const badgeKey = `badge-${key}`;
-
-          return (
-            <VuiBox key={badgeKey} mr={key === badges.length - 1 ? 0 : 0.5}>
-              <VuiBadge color={color} size="xs" badgeContent={badge} container />
-            </VuiBox>
-          );
-        })
-      : null;
-
+function TimelineItem({ color, icon, title, dateTime, description, realizedPnl }) {
   return (
     <VuiBox position="relative" mb="24px" sx={(theme) => timelineItem(theme, { color })}>
       <VuiBox
@@ -62,10 +44,15 @@ function TimelineItem({ color, icon, title, dateTime, description, badges, lastI
       >
         {icon}
       </VuiBox>
-      <VuiBox ml="30px" pt={description ? 0.7 : 0.5} lineHeight={0} maxWidth="30rem">
-        <VuiTypography variant="button" fontWeight="medium" color="white">
-          {title}
-        </VuiTypography>
+      <VuiBox ml="20px" pt={description ? 0.7 : 0.5} lineHeight={0} maxWidth="30rem">
+        <VuiBox>
+          <VuiTypography variant="button" fontWeight="medium" color="success">
+            {[realizedPnl > 0 ? "+ $" : "- $", Math.round(realizedPnl * 100) / 100]}
+          </VuiTypography>
+          <VuiTypography ml={0.5} variant="button" fontWeight="medium" color="white">
+            {title}
+          </VuiTypography>
+        </VuiBox>
         <VuiBox mt={0.5}>
           <VuiTypography variant="caption" fontWeight="medium" color="text">
             {dateTime}
@@ -78,11 +65,6 @@ function TimelineItem({ color, icon, title, dateTime, description, badges, lastI
             </VuiTypography>
           ) : null}
         </VuiBox>
-        {badges.length > 0 ? (
-          <VuiBox display="flex" pb={lastItem ? 1 : 2}>
-            {renderBadges}
-          </VuiBox>
-        ) : null}
       </VuiBox>
     </VuiBox>
   );

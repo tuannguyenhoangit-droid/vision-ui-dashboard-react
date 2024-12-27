@@ -25,51 +25,40 @@ import VuiTypography from "components/VuiTypography";
 
 // React icons
 import { BsCheckCircleFill } from "react-icons/bs";
-import { FaBell, FaDollarSign } from "react-icons/fa";
-import { IoLogoCss3 } from "react-icons/io";
-import { FaShoppingCart } from "react-icons/fa";
-import { BsCreditCardFill } from "react-icons/bs";
-import { SiDropbox } from "react-icons/si";
+import { FaDollarSign } from "react-icons/fa";
 
 // Vision UI Dashboard React example components
 import TimelineItem from "examples/Timeline/TimelineItem";
-import AdobeXD from "examples/Icons/AdobeXD";
 
 // Vision UI Dashboard theme imports
 import palette from "assets/theme/base/colors";
+import { useMemo } from "react";
+import { RiMoneyDollarBoxFill, RiMoneyDollarCircleFill } from "react-icons/ri";
 
 function OrdersOverview({ data = [] }) {
+  const sumRealizedPnl = useMemo(() => {
+    return (
+      Math.round(
+        data.map(({ realizedPnl }) => parseFloat(realizedPnl)).reduce((pre, cur) => pre + cur, 0) *
+          100
+      ) / 100
+    );
+  }, [data]);
   return (
     <Card className="h-100">
       <VuiBox mb="16px">
         <VuiTypography variant="lg" fontWeight="bold" mb="5px" color="white">
           Last 10 Positions History
         </VuiTypography>
-        <VuiBox mb={2}>
-          <VuiBox display="flex" alignItems="center">
-            <BsCheckCircleFill color="green" size="15px" mr="5px" />
-            <VuiTypography variant="button" color="text" fontWeight="medium" ml="5px" mr="2px">
-              +30%
-            </VuiTypography>{" "}
-            <VuiTypography variant="button" color="text" fontWeight="regular">
-              {" "}
-              this month
-            </VuiTypography>
-          </VuiBox>
-        </VuiBox>
       </VuiBox>
       <VuiBox>
         {data.map((item) => {
           return (
             <TimelineItem
               key={item.id}
-              icon={<FaDollarSign size="16px" color={palette.info.main} />}
-              title={[
-                item.realizedPnl > 0 ? "+" : "-",
-                `$${Math.round(item.realizedPnl * 100) / 100}`,
-                "from take profit",
-                item.symbol,
-              ].join(" ")}
+              realizedPnl={item.realizedPnl}
+              icon={<RiMoneyDollarCircleFill size="16px" color={palette.info.main} />}
+              title={[item.side, item.symbol].join(" ")}
               dateTime={new Date(item.time).toLocaleString()}
             />
           );

@@ -131,8 +131,8 @@ export function SymbolConfigModal({ open, onClose = () => null }) {
         const result = await createSymbolConfig(
           config.symbol,
           config.frame,
-          config.buyAmount,
-          config.maxBudget,
+          parseFloat(config.buyAmount),
+          parseInt(config.maxBudget),
           config.optimizeEntry,
           config.side,
           config.buyRequireHistogram
@@ -143,6 +143,9 @@ export function SymbolConfigModal({ open, onClose = () => null }) {
 
         const userSymbolConfig = await getSymbolConfig();
         dispatch(setSymbolConfigData(userSymbolConfig));
+        setConfig({
+          ...initConfig,
+        });
       } catch (e) {
         setLoading(false);
         console.log("e", e);
@@ -152,11 +155,9 @@ export function SymbolConfigModal({ open, onClose = () => null }) {
     }
   };
 
-  console.log("config", config);
-
   return (
     <Dialog onClose={onClose} open={open}>
-      <GradientBorder borderRadius={6} maxWidth="100%">
+      <GradientBorder borderRadius={"6"} maxWidth="100%">
         <VuiBox
           component="form"
           role="form"
@@ -269,7 +270,7 @@ export function SymbolConfigModal({ open, onClose = () => null }) {
                   flexDirection: "column",
                 },
                 [breakpoints.up("md")]: {
-                  flexDirection: "row",
+                  flexDirection: "column",
                 },
                 [breakpoints.only("xl")]: {
                   flexDirection: "column",
@@ -314,7 +315,7 @@ export function SymbolConfigModal({ open, onClose = () => null }) {
             </VuiBox>
             <VuiBox display="flex" alignItems="center">
               <VuiSwitch
-                color="info"
+                color="success"
                 checked={config.optimizeEntry}
                 onChange={(e, switched) => {
                   onChange("optimizeEntry", switched);

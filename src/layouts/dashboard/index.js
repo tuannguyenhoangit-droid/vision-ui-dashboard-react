@@ -62,12 +62,14 @@ import {
   getCurrentPositions,
   getIncomePnL,
   getOpenOrders,
+  getSymbolConfig,
   getTradeList,
 } from "../../services/api";
 import BestPerformanceVolumeList from "./components/BestPerformanceVolumeList";
 import FuturePositionList from "./components/FuturePositionList";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { SymbolConfigModal } from "./components/SymbolConfigModal";
+import { setSymbolConfigData } from "../../redux/futures/symbolConfigSlice";
 
 const startOrDay = new Date();
 startOrDay.setDate(startOrDay.getDate() - 1);
@@ -91,13 +93,17 @@ function Dashboard() {
   const [incomePnL, setIncomePnL] = useState({});
 
   const user = useSelector((state) => state.user);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    getCurrentPositions().then(setPosition);
-    getOpenOrders().then(setOpenOrders);
-    getTradeList().then(setTradeList);
-    getBalance().then(setBalance);
-    getIncomePnL().then(setIncomePnL);
+    setTimeout(() => {
+      getCurrentPositions().then(setPosition);
+      getOpenOrders().then(setOpenOrders);
+      getTradeList().then(setTradeList);
+      getBalance().then(setBalance);
+      getIncomePnL().then(setIncomePnL);
+      getSymbolConfig().then((data) => dispatch(setSymbolConfigData(data)));
+    }, 1000);
   }, []);
 
   const incomeBarChart = useMemo(() => {

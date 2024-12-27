@@ -3,10 +3,7 @@ import React from "react";
 import { Card } from "@mui/material";
 import VuiBox from "components/VuiBox";
 import VuiTypography from "components/VuiTypography";
-// import { IoHappy } from "react-icons/io5";
-// import colors from "assets/theme/base/colors";
-// import linearGradient from "assets/theme/functions/linearGradient";
-// import CircularProgress from "@mui/material/CircularProgress";
+
 import Table from "examples/Tables/Table";
 
 const RecentOrderItem = ({ row }) => {
@@ -25,7 +22,11 @@ const RecentOrderItem = ({ row }) => {
       </VuiBox>
     ),
     type: (
-      <VuiTypography variant="button" color="white" fontWeight="bold">
+      <VuiTypography
+        variant="button"
+        color={row.side === "BUY" ? "success" : "error"}
+        fontWeight="bold"
+      >
         {[row.side, row.type].join(" ")}
       </VuiTypography>
     ),
