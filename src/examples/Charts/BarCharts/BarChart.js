@@ -24,8 +24,6 @@ const BarChart = ({ chartData = [], chartOptions = [] }) => {
     return <div></div>;
   }
 
-  console.log("chartOptions", chartOptions);
-
   return <Chart options={chartOptions} series={chartData} type="bar" width="100%" height="100%" />;
 };
 

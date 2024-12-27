@@ -76,7 +76,13 @@ const FuturePositionItem = ({ row }) => {
           variant="button"
           fontWeight="bold"
         >
-          {["$", Math.round(row.unRealizedProfit * 100) / 100].join(" ")}
+          {[
+            "$",
+            Math.round(row.unRealizedProfit * 100) / 100,
+            " (",
+            Math.round((row.unRealizedProfit / row.initialMargin) * 100 * 100) / 100,
+            "%) ",
+          ].join(" ")}
         </VuiTypography>
         <VuiProgress
           value={Math.round(row.diff)}

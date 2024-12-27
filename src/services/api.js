@@ -85,20 +85,79 @@ export const getBalance = async () => {
  * SYMBOL CONFIGS
  */
 
-export const createSymbolConfig = async () => {
+export const userSignIn = async (displayName, email, uid, photoURL) => {
+  const token = await auth.currentUser.getIdToken();
+  const payload = {
+    displayName,
+    email,
+    uid,
+    photoURL,
+  };
+
+  return new Promise(async (resolve, reject) => {
+    await axios
+      // .post("https://sa.premierct.asia/v1/user/sign-in", payload, {
+      .post("http://localhost:3333/v1/user/sign-in", payload, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: ["Bearer", token].join(" "),
+        },
+      })
+      .then((response) => {
+        resolve(response.data);
+      })
+      .catch((error) => {
+        console.log("error", error);
+      });
+  });
+};
+
+export const createSymbolConfig = async (
+  symbol,
+  frame,
+  buyAmount,
+  maxBudget,
+  optimizeEntry,
+  side = "BUY",
+  buyRequireHistogram = []
+) => {
+  const token = await auth.currentUser.getIdToken();
+  const payload = {
+    symbol,
+    frame,
+    buyAmount,
+    maxBudget,
+    optimizeEntry,
+    side,
+    buyRequireHistogram,
+  };
+  return new Promise(async (resolve, reject) => {
+    await axios
+      .post("https://sa.premierct.asia/v1/future/symbol-config", payload, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: ["Bearer", token].join(" "),
+        },
+      })
+      .then((response) => {
+        resolve(response.data);
+      })
+      .catch((error) => {
+        console.log("error", error);
+      });
+  });
+};
+
+export const getSymbolConfig = async () => {
   const token = await auth.currentUser.getIdToken();
   return new Promise(async (resolve, reject) => {
     await axios
-      .post(
-        `https://sa.premierct.asia/v1/future/symbol-config`,
-        {},
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: ["Bearer", token].join(" "),
-          },
-        }
-      )
+      .get("https://sa.premierct.asia/v1/future/symbol-config", {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: ["Bearer", token].join(" "),
+        },
+      })
       .then((response) => {
         resolve(response.data);
       })

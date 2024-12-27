@@ -51,6 +51,7 @@ import { getAuth } from "firebase/auth";
 import { firebaseApp } from "./firebase";
 import { setUser } from "./redux/futures/userSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { userSignIn } from "services/api";
 
 export default function App() {
   const [controller, dispatch] = useVisionUIController();
@@ -69,14 +70,14 @@ export default function App() {
       console.log("onAuthStateChanged", user);
 
       if (user) {
-        dispatchRedux(
-          setUser({
-            displayName: user.displayName,
-            email: user.email,
-            uid: user.uid,
-            photoURL: user.photoURL,
-          })
-        );
+        const data = {
+          displayName: user.displayName,
+          email: user.email,
+          uid: user.uid,
+          photoURL: user.photoURL,
+        };
+        dispatchRedux(setUser(data));
+        userSignIn(user.displayName, user.email, user.uid, user.photoURL);
         history.push("/dashboard");
       } else {
         dispatchRedux(setUser(null));

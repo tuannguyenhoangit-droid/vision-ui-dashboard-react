@@ -67,6 +67,7 @@ import {
 import BestPerformanceVolumeList from "./components/BestPerformanceVolumeList";
 import FuturePositionList from "./components/FuturePositionList";
 import { useSelector } from "react-redux";
+import { SymbolConfigModal } from "./components/SymbolConfigModal";
 
 const startOrDay = new Date();
 startOrDay.setDate(startOrDay.getDate() - 1);
@@ -78,6 +79,10 @@ function Dashboard() {
   const { gradients } = colors;
   const { cardContent } = gradients;
 
+  // modal handler
+
+  const [isOpenSymbolConfigModal, openSymbolConfigModal] = useState(false);
+
   const [openOrders, setOpenOrders] = useState([]);
   const [bestPerformanceVolume, setBestPerformanceVolume] = useState([]);
   const [position, setPosition] = useState([]);
@@ -86,7 +91,6 @@ function Dashboard() {
   const [incomePnL, setIncomePnL] = useState({});
 
   const user = useSelector((state) => state.user);
-  console.log("user", user);
 
   useEffect(() => {
     getCurrentPositions().then(setPosition);
@@ -120,14 +124,8 @@ function Dashboard() {
 
   const todayTrade = useMemo(() => {
     const trade = tradeList.filter(({ time }) => time > startOrDay.getTime());
-    const todayProfit =
-      Math.round(
-        trade.map(({ realizedPnl }) => parseFloat(realizedPnl)).reduce((pre, cur) => pre + cur, 0) *
-          100
-      ) / 100;
     return {
       count: trade.length,
-      profit: todayProfit,
       trade: trade.filter((item) => item.realizedPnl !== "0").slice(0, 10),
     };
   }, [tradeList]);
@@ -138,7 +136,9 @@ function Dashboard() {
 
   const todayProfitPercent =
     Math.round(((incomePnL?.data?.[0]?.income || 0) / accountBalance) * 100 * 100) / 100;
-  console.log("incomePnL", incomePnL);
+
+  const unRealizedProfitPercent =
+    Math.round(((balance?.[0]?.crossUnPnl || 0) / accountBalance) * 100 * 100) / 100;
 
   return (
     <DashboardLayout>
@@ -169,7 +169,14 @@ function Dashboard() {
               <MiniStatisticsCard
                 title={{ text: "Unrelease PnL" }}
                 count={["$", Math.round((balance?.[0]?.crossUnPnl || 0) * 100) / 100].join("")}
-                // percentage={{ color: "error", text: "-2%" }}
+                percentage={{
+                  color: balance?.[0]?.crossUnPnl > 0 ? "success" : "error",
+                  text: [
+                    unRealizedProfitPercent > 0 ? "+" : "-",
+                    unRealizedProfitPercent || 0,
+                    "%",
+                  ].join(""),
+                }}
                 icon={{ color: "info", component: <IoDocumentText size="22px" color="white" /> }}
               />
             </Grid>
@@ -271,7 +278,11 @@ function Dashboard() {
         </VuiBox>
         <Grid container spacing={3} direction="row" justifyContent="center" alignItems="stretch">
           <Grid item xs={12} md={6} lg={8}>
-            <Projects />
+            <Projects
+              onMenuClick={(action) => {
+                if (action === "add") openSymbolConfigModal(true);
+              }}
+            />
           </Grid>
           <Grid item xs={12} md={6} lg={4}>
             <OrderOverview data={todayTrade.trade} />
@@ -279,6 +290,10 @@ function Dashboard() {
         </Grid>
       </VuiBox>
       <Footer />
+      <SymbolConfigModal
+        onClose={() => openSymbolConfigModal(false)}
+        open={isOpenSymbolConfigModal}
+      />
     </DashboardLayout>
   );
 }

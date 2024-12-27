@@ -42,7 +42,10 @@ function Projects(props) {
   const { data = [] } = props;
 
   const openMenu = ({ currentTarget }) => setMenu(currentTarget);
-  const closeMenu = () => setMenu(null);
+  const closeMenu = (action) => {
+    setMenu(null);
+    props?.onMenuClick?.(action);
+  };
 
   const renderRow = () => {
     return data.map((row) => BestPerformanceVolumeItem({ row }));
@@ -63,7 +66,7 @@ function Projects(props) {
       open={Boolean(menu)}
       onClose={closeMenu}
     >
-      <MenuItem onClick={closeMenu}>Action</MenuItem>
+      <MenuItem onClick={() => closeMenu("add")}>Add Config</MenuItem>
       <MenuItem onClick={closeMenu}>Another action</MenuItem>
       <MenuItem onClick={closeMenu}>Something else</MenuItem>
     </Menu>
@@ -78,7 +81,7 @@ function Projects(props) {
       <VuiBox display="flex" justifyContent="space-between" alignItems="center" mb="32px">
         <VuiBox mb="auto">
           <VuiTypography color="white" variant="lg" mb="6px" gutterBottom>
-            Projects
+            Running Symbol Configs
           </VuiTypography>
           <VuiBox display="flex" alignItems="center" lineHeight={0}>
             <BsCheckCircleFill color="green" size="15px" />
