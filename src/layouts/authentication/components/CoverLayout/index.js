@@ -58,13 +58,13 @@ function CoverLayout({
         gradients.cover.angle
       )}
     >
-      <DefaultNavbar
+      {/* <DefaultNavbar
         action={{
           type: "external",
           route: "#",
           label: "UPGRADE PRO",
         }}
-      />
+      /> */}
       <VuiBox
         height="100%"
         width="50vw"
@@ -205,7 +205,7 @@ function CoverLayout({
           >
             {children}
           </VuiBox>
-          {/* <Footer /> */}
+          <Footer />
         </VuiBox>
       </VuiBox>
     </PageLayout>

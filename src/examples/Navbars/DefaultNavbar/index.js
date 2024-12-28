@@ -16,7 +16,7 @@
 
 */
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 
 // react-router components
 import { Link } from "react-router-dom";
@@ -47,7 +47,6 @@ function DefaultNavbar({ transparent, light, action }) {
   const { borderWidth } = borders;
   const [mobileNavbar, setMobileNavbar] = useState(false);
   const [mobileView, setMobileView] = useState(false);
-
   const openMobileNavbar = ({ currentTarget }) => setMobileNavbar(currentTarget.parentNode);
   const closeMobileNavbar = () => setMobileNavbar(false);
 

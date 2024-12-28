@@ -146,6 +146,30 @@ export const userSignIn = async (displayName, email, uid, photoURL) => {
   });
 };
 
+export const accountSignUp = async (displayName, email, passwordEncrypted) => {
+  const payload = {
+    displayName,
+    email,
+    passwordEncrypted,
+  };
+
+  return new Promise(async (resolve, reject) => {
+    await axios
+      .post("https://sa.premierct.asia/v1/account/sign-up", payload, {
+        // .post("http://localhost:3333/v1/account/sign-up", payload, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+      .then((response) => {
+        resolve(response.data);
+      })
+      .catch((error) => {
+        console.log("error", error);
+      });
+  });
+};
+
 export const accountUpdateKeys = async (signature) => {
   const token = await auth.currentUser?.getIdToken?.();
   const payload = {

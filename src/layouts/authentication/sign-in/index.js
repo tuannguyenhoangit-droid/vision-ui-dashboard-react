@@ -75,7 +75,7 @@ function SignIn() {
       color="white"
       description="Enter your email and password to sign in"
       premotto="INSPIRED BY THE FUTURE:"
-      motto="THE VISION UI DASHBOARD"
+      motto="THE SA BOT DASHBOARD"
       image={bgSignIn}
     >
       <VuiBox component="form" role="form">

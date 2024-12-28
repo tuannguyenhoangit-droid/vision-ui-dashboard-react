@@ -51,10 +51,8 @@ import SignUp from "layouts/authentication/sign-up";
 import { IoRocketSharp } from "react-icons/io5";
 import { IoIosDocument } from "react-icons/io";
 import { BsFillPersonFill } from "react-icons/bs";
-import { IoBuild } from "react-icons/io5";
-import { BsCreditCardFill } from "react-icons/bs";
-import { IoStatsChart } from "react-icons/io5";
 import { IoHome } from "react-icons/io5";
+import VerifyEmail from "layouts/authentication/verifyEmail";
 
 const routes = [
   {
@@ -112,15 +110,23 @@ const routes = [
     component: SignIn,
     noCollapse: true,
   },
-  // {
-  //   type: "collapse",
-  //   name: "Sign Up",
-  //   key: "sign-up",
-  //   route: "/authentication/sign-up",
-  //   icon: <IoRocketSharp size="15px" color="inherit" />,
-  //   component: SignUp,
-  //   noCollapse: true,
-  // },
+  {
+    type: "collapse",
+    name: "Sign Up",
+    key: "sign-up",
+    route: "/authentication/sign-up",
+    icon: <IoRocketSharp size="15px" color="inherit" />,
+    component: SignUp,
+    noCollapse: true,
+  },
+  {
+    name: "Verify Email",
+    key: "verify-email",
+    route: "/authentication/verify-email",
+    icon: <IoRocketSharp size="15px" color="inherit" />,
+    component: VerifyEmail,
+    noCollapse: true,
+  },
 ];
 
 export default routes;

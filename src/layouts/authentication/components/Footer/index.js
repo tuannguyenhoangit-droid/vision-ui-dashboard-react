@@ -44,12 +44,12 @@ function Footer() {
     >
       <Grid container justifyContent="center">
         <Grid item xs={12} sx={{ textAlign: "center" }}>
-          {/* <VuiTypography
+          <VuiTypography
             variant="button"
             sx={{ textAlign: "center", fontWeight: "400 !important" }}
             color="text"
           >
-            @ 2021, Made with ❤️&nbsp;&nbsp;&nbsp; by{" "}
+            @ 2024, Made with ❤️&nbsp;&nbsp;&nbsp; by{" "}
             <VuiTypography
               component="a"
               variant="button"
@@ -58,24 +58,12 @@ function Footer() {
               color="text"
               mr="2px"
             >
-              Simmmple
+              SA BOT
             </VuiTypography>
-            &
-            <VuiTypography
-              ml="2px"
-              mr="2px"
-              component="a"
-              variant="button"
-              href="#"
-              sx={{ textAlign: "center", fontWeight: "500 !important" }}
-              color="text"
-            >
-              Creative Tim
-            </VuiTypography>
-            for a better web
-          </VuiTypography> */}
+            for automatic trading
+          </VuiTypography>
         </Grid>
-        <Grid item xs={10}>
+        {/* <Grid item xs={10}>
           <VuiBox display="flex" justifyContent="center" flexWrap="wrap" mb={3}>
             <VuiBox mr={{ xs: "20px", lg: "46px" }}>
               <VuiTypography component="a" href="#" variant="body2" color="text">
@@ -93,7 +81,7 @@ function Footer() {
               </VuiTypography>
             </VuiBox>
           </VuiBox>
-        </Grid>
+        </Grid> */}
       </Grid>
     </VuiBox>
   );

@@ -17,17 +17,9 @@
 */
 
 import { useState } from "react";
-
+import JSEncrypt from "jsencrypt";
 // react-router-dom components
 import { Link } from "react-router-dom";
-
-// @mui material components
-import Icon from "@mui/material/Icon";
-import IconButton from "@mui/material/IconButton";
-import Stack from "@mui/material/Stack";
-
-// Icons
-import { FaApple, FaFacebook, FaGoogle } from "react-icons/fa";
 
 // Vision UI Dashboard React components
 import VuiBox from "components/VuiBox";
@@ -48,11 +40,61 @@ import CoverLayout from "layouts/authentication/components/CoverLayout";
 
 // Images
 import bgSignIn from "assets/images/signUpImage.png";
+import { PUBLIC_KEY } from "../../../utils/key";
+import { accountSignUp } from "../../../services/api";
+import { firebaseApp } from "../../../firebase";
+import { getAuth, sendEmailVerification, signInWithEmailAndPassword } from "firebase/auth";
 
 function SignIn() {
   const [rememberMe, setRememberMe] = useState(true);
 
   const handleSetRememberMe = () => setRememberMe(!rememberMe);
+
+  const [data, setData] = useState({
+    displayName: "",
+    email: "",
+    password: "",
+  });
+
+  const [loading, setLoading] = useState(false);
+
+  const onChange = (key, value) => {
+    setData({ ...data, [key]: value });
+  };
+
+  const onSubmit = async () => {
+    console.log("data", data);
+
+    try {
+      if (data.displayName && data.email && data.password) {
+        setLoading(true);
+        const publicKeyPEM = PUBLIC_KEY.trim();
+        // Khởi tạo JSEncrypt với Public Key
+        const encryptor = new JSEncrypt();
+        encryptor.setPublicKey(publicKeyPEM);
+
+        // Mã hóa dữ liệu
+        const passwordEncrypted = encryptor.encrypt(data.password);
+
+        const result = await accountSignUp(data.displayName, data.email, passwordEncrypted);
+        const auth = getAuth(firebaseApp);
+        const userCredential = await signInWithEmailAndPassword(auth, data.email, data.password);
+        const user = userCredential.user;
+
+        // Send verification email
+        await sendEmailVerification(user, {
+          url: "https://sa-bot.web.app",
+        });
+        console.log("result", result);
+        setLoading(false);
+      } else {
+        // TODO
+        console.log("Params missing");
+      }
+    } catch (e) {
+      console.log("sign up submit", e);
+    }
+  };
 
   return (
     <CoverLayout
@@ -61,7 +103,7 @@ function SignIn() {
       description="Use these awesome forms to login or create new account in your project for free."
       image={bgSignIn}
       premotto="INSPIRED BY THE FUTURE:"
-      motto="THE VISION UI DASHBOARD"
+      motto="THE SA BOT DASHBOARD"
       cardContent
     >
       <GradientBorder borderRadius={borders.borderRadius.form} minWidth="100%" maxWidth="100%">
@@ -74,112 +116,6 @@ function SignIn() {
             backgroundColor: secondary.focus,
           })}
         >
-          <VuiTypography
-            color="white"
-            fontWeight="bold"
-            textAlign="center"
-            mb="24px"
-            sx={({ typography: { size } }) => ({
-              fontSize: size.lg,
-            })}
-          >
-            Register with
-          </VuiTypography>
-          <Stack mb="25px" justifyContent="center" alignItems="center" direction="row" spacing={2}>
-            <GradientBorder borderRadius="xl">
-              <a href="#">
-                <IconButton
-                  transition="all .25s ease"
-                  justify="center"
-                  align="center"
-                  bg="rgb(19,21,54)"
-                  borderradius="15px"
-                  sx={({ palette: { secondary }, borders: { borderRadius } }) => ({
-                    borderRadius: borderRadius.xl,
-                    padding: "25px",
-                    backgroundColor: secondary.focus,
-                    "&:hover": {
-                      backgroundColor: rgba(secondary.focus, 0.9),
-                    },
-                  })}
-                >
-                  <Icon
-                    as={FaFacebook}
-                    w="30px"
-                    h="30px"
-                    sx={({ palette: { white } }) => ({
-                      color: white.focus,
-                    })}
-                  />
-                </IconButton>
-              </a>
-            </GradientBorder>
-            <GradientBorder borderRadius="xl">
-              <a href="#">
-                <IconButton
-                  transition="all .25s ease"
-                  justify="center"
-                  align="center"
-                  bg="rgb(19,21,54)"
-                  borderradius="15px"
-                  sx={({ palette: { secondary }, borders: { borderRadius } }) => ({
-                    borderRadius: borderRadius.xl,
-                    padding: "25px",
-                    backgroundColor: secondary.focus,
-                    "&:hover": {
-                      backgroundColor: rgba(secondary.focus, 0.9),
-                    },
-                  })}
-                >
-                  <Icon
-                    as={FaApple}
-                    w="30px"
-                    h="30px"
-                    sx={({ palette: { white } }) => ({
-                      color: white.focus,
-                    })}
-                  />
-                </IconButton>
-              </a>
-            </GradientBorder>
-            <GradientBorder borderRadius="xl">
-              <a href="#">
-                <IconButton
-                  transition="all .25s ease"
-                  justify="center"
-                  align="center"
-                  bg="rgb(19,21,54)"
-                  borderradius="15px"
-                  sx={({ palette: { secondary }, borders: { borderRadius } }) => ({
-                    borderRadius: borderRadius.xl,
-                    padding: "25px",
-                    backgroundColor: secondary.focus,
-                    "&:hover": {
-                      backgroundColor: rgba(secondary.focus, 0.9),
-                    },
-                  })}
-                >
-                  <Icon
-                    as={FaGoogle}
-                    w="30px"
-                    h="30px"
-                    sx={({ palette: { white } }) => ({
-                      color: white.focus,
-                    })}
-                  />
-                </IconButton>
-              </a>
-            </GradientBorder>
-          </Stack>
-          <VuiTypography
-            color="text"
-            fontWeight="bold"
-            textAlign="center"
-            mb="14px"
-            sx={({ typography: { size } }) => ({ fontSize: size.lg })}
-          >
-            or
-          </VuiTypography>
           <VuiBox mb={2}>
             <VuiBox mb={1} ml={0.5}>
               <VuiTypography component="label" variant="button" color="white" fontWeight="medium">
@@ -198,6 +134,8 @@ function SignIn() {
             >
               <VuiInput
                 placeholder="Your full name..."
+                value={data.displayName}
+                onChange={(e) => onChange("displayName", e.nativeEvent.target.value)}
                 sx={({ typography: { size } }) => ({
                   fontSize: size.sm,
                 })}
@@ -223,6 +161,8 @@ function SignIn() {
               <VuiInput
                 type="email"
                 placeholder="Your email..."
+                value={data.email}
+                onChange={(e) => onChange("email", e.nativeEvent.target.value)}
                 sx={({ typography: { size } }) => ({
                   fontSize: size.sm,
                 })}
@@ -248,6 +188,8 @@ function SignIn() {
               <VuiInput
                 type="password"
                 placeholder="Your password..."
+                value={data.password}
+                onChange={(e) => onChange("password", e.nativeEvent.target.value)}
                 sx={({ typography: { size } }) => ({
                   fontSize: size.sm,
                 })}
@@ -267,7 +209,7 @@ function SignIn() {
             </VuiTypography>
           </VuiBox>
           <VuiBox mt={4} mb={1}>
-            <VuiButton color="info" fullWidth>
+            <VuiButton onClick={onSubmit} color="info" fullWidth>
               SIGN UP
             </VuiButton>
           </VuiBox>

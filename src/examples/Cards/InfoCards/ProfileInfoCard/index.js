@@ -36,6 +36,7 @@ import VuiInput from "components/VuiInput";
 import VuiButton from "components/VuiButton";
 import { useState } from "react";
 import { accountUpdateKeys } from "../../../../services/api";
+import { PUBLIC_KEY } from "../../../../utils/key";
 function ProfileInfoCard({ title, description, info, social }) {
   const labels = [];
   const values = [];
@@ -71,16 +72,7 @@ function ProfileInfoCard({ title, description, info, social }) {
   ));
 
   const handleEncrypt = async () => {
-    const publicKeyPEM = `-----BEGIN PUBLIC KEY-----
-MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA+pIUi+8P+isRC3dM94Yi
-pzGzFh4QfCNHSBfmpVTVu6Fx1Nz34sSds0jCcGag/Cngc7WQKV7Nom45uYxe9wGo
-N6aRKqwDVe/KpJ0V3BJnIiyGWqo3pUq6pY5Vrzk7iLAhGWUgcIdoCxDFtdWFZinf
-a6kvfbZO63jDfJbNn1B9AGq9BQyZhL+MnnqlavbJpTNsUweBssyvlvxwHAwaqtnw
-yvsxczqcdZscetZDp14++P6hmccjKap+fpHjsBQG8sXi7yg53vFtSi4XuVGxVv5X
-TuMVRuNVF+8KLtG4/Jstt57JE+u7tErK6IKKFAH1+P3YDF5Yck31n107KHjOq7XY
-JwIDAQAB
------END PUBLIC KEY-----
-`.trim();
+    const publicKeyPEM = PUBLIC_KEY.trim();
 
     const dataToEncrypt = `${apiKey}:${secretKey}`;
 

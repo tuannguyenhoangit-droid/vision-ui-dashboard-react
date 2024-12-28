@@ -70,16 +70,21 @@ export default function App() {
       console.log("onAuthStateChanged", user);
 
       if (user) {
-        const data = {
-          displayName: user.displayName,
-          email: user.email,
-          uid: user.uid,
-          photoURL: user.photoURL,
-        };
-        dispatchRedux(setUser(data));
-        userSignIn(user.displayName, user.email, user.uid, user.photoURL);
-        history.push("/dashboard");
+        if (user.emailVerified) {
+          const data = {
+            displayName: user.displayName,
+            email: user.email,
+            uid: user.uid,
+            photoURL: user.photoURL,
+          };
+          dispatchRedux(setUser(data));
+          userSignIn(user.displayName, user.email, user.uid, user.photoURL);
+          history.push("/dashboard");
+        }
       } else {
+        if (!history.location.pathname.includes("/authentication/verify-email")) {
+          history.push("/authentication/sign-in");
+        }
         dispatchRedux(setUser(null));
       }
     });
@@ -165,32 +170,7 @@ export default function App() {
     </VuiBox>
   );
 
-  return direction === "rtl" ? (
-    <CacheProvider value={rtlCache}>
-      <ThemeProvider theme={themeRTL}>
-        <CssBaseline />
-        {layout === "dashboard" && (
-          <>
-            <Sidenav
-              color={sidenavColor}
-              brand=""
-              brandName="SA BOT"
-              routes={routes}
-              onMouseEnter={handleOnMouseEnter}
-              onMouseLeave={handleOnMouseLeave}
-            />
-            <Configurator />
-            {configsButton}
-          </>
-        )}
-        {layout === "vr" && <Configurator />}
-        <Switch>
-          {getRoutes(routes)}
-          <Redirect from="*" to="/dashboard" />
-        </Switch>
-      </ThemeProvider>
-    </CacheProvider>
-  ) : (
+  return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
       {layout === "dashboard" && (
