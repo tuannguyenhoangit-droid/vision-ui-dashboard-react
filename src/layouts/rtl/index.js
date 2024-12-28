@@ -292,7 +292,7 @@ function RTL() {
           </Grid>
         </Grid>
       </VuiBox>
-      <Footer />
+      {/* <Footer /> */}
     </DashboardLayout>
   );
 }

@@ -307,7 +307,7 @@ function Dashboard() {
           </Grid>
         </Grid>
       </VuiBox>
-      <Footer />
+      {/* <Footer /> */}
       <SymbolConfigModal
         onClose={() => openSymbolConfigModal(false)}
         open={isOpenSymbolConfigModal}

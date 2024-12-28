@@ -72,7 +72,7 @@ function Billing() {
           </Grid>
         </VuiBox>
       </VuiBox>
-      <Footer />
+      {/* <Footer /> */}
     </DashboardLayout>
   );
 }
