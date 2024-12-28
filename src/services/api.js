@@ -17,9 +17,16 @@ export const getBestPerformanceVolume = async (period = "DAY_1", dayAgo = 5) => 
 };
 
 export const getOpenOrders = async () => {
+  const token = await auth.currentUser?.getIdToken?.();
+  if (!token) return [];
   return new Promise(async (resolve, reject) => {
     await axios
-      .get(`https://sa.premierct.asia/v1/future/openOrders`)
+      .get(`https://sa.premierct.asia/v1/future/openOrders`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: ["Bearer", token].join(" "),
+        },
+      })
       .then((response) => {
         resolve(response.data);
       })
@@ -30,9 +37,16 @@ export const getOpenOrders = async () => {
 };
 
 export const getIncomePnL = async () => {
+  const token = await auth.currentUser?.getIdToken?.();
+  if (!token) return [];
   return new Promise(async (resolve, reject) => {
     await axios
-      .get(`https://sa.premierct.asia/v1/future/incomePnL`)
+      .get(`https://sa.premierct.asia/v1/future/incomePnL`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: ["Bearer", token].join(" "),
+        },
+      })
       .then((response) => {
         resolve(response.data);
       })
@@ -43,9 +57,16 @@ export const getIncomePnL = async () => {
 };
 
 export const getCurrentPositions = async () => {
+  const token = await auth.currentUser?.getIdToken?.();
+  if (!token) return [];
   return new Promise(async (resolve, reject) => {
     await axios
-      .get(`https://sa.premierct.asia/v1/future/positions`)
+      .get(`https://sa.premierct.asia/v1/future/positions`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: ["Bearer", token].join(" "),
+        },
+      })
       .then((response) => {
         resolve(response.data);
       })
@@ -56,9 +77,16 @@ export const getCurrentPositions = async () => {
 };
 
 export const getTradeList = async () => {
+  const token = await auth.currentUser?.getIdToken?.();
+  if (!token) return [];
   return new Promise(async (resolve, reject) => {
     await axios
-      .get(`https://sa.premierct.asia/v1/future/tradeList`)
+      .get(`https://sa.premierct.asia/v1/future/tradeList`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: ["Bearer", token].join(" "),
+        },
+      })
       .then((response) => {
         resolve(response.data);
       })
@@ -69,9 +97,16 @@ export const getTradeList = async () => {
 };
 
 export const getBalance = async () => {
+  const token = await auth.currentUser?.getIdToken?.();
+  if (!token) return [];
   return new Promise(async (resolve, reject) => {
     await axios
-      .get(`https://sa.premierct.asia/v1/future/balance`)
+      .get(`https://sa.premierct.asia/v1/future/balance`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: ["Bearer", token].join(" "),
+        },
+      })
       .then((response) => {
         resolve(response.data);
       })

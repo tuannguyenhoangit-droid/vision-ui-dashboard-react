@@ -165,8 +165,13 @@ function Dashboard() {
                 title={{ text: "Today Profit" }}
                 count={["$", incomePnL?.data?.[0]?.income || 0].join("")}
                 percentage={{
-                  color: todayProfitPercent > 0 ? "success" : "error",
-                  text: [todayProfitPercent > 0 ? "+" : "-", todayProfitPercent || 0, "%"].join(""),
+                  color: todayProfitPercent >= 0 ? "success" : "error",
+                  text: [
+                    "(",
+                    todayProfitPercent >= 0 ? "+" : "",
+                    todayProfitPercent || 0,
+                    "%)",
+                  ].join(""),
                 }}
                 icon={{ color: "info", component: <IoGlobe size="22px" color="white" /> }}
               />
@@ -178,9 +183,10 @@ function Dashboard() {
                 percentage={{
                   color: balance?.[0]?.crossUnPnl > 0 ? "success" : "error",
                   text: [
-                    unRealizedProfitPercent > 0 ? "+" : "-",
+                    "(",
+                    unRealizedProfitPercent > 0 ? "+" : "",
                     unRealizedProfitPercent || 0,
-                    "%",
+                    "%)",
                   ].join(""),
                 }}
                 icon={{ color: "info", component: <IoDocumentText size="22px" color="white" /> }}

@@ -145,7 +145,7 @@ function Projects(props) {
           <VuiBox display="flex" alignItems="center" lineHeight={0}>
             <BsCheckCircleFill color="green" size="15px" />
             <VuiTypography variant="button" fontWeight="regular" color="text" ml="5px">
-              &nbsp;<strong>30 done</strong> this month
+              Active configs
             </VuiTypography>
           </VuiBox>
         </VuiBox>
