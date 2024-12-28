@@ -71,6 +71,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { SymbolConfigModal } from "./components/SymbolConfigModal";
 import { setSymbolConfigData } from "../../redux/futures/symbolConfigSlice";
 
+import { getAuth } from "firebase/auth";
+import { firebaseApp } from "../../firebase";
+const auth = getAuth(firebaseApp);
+
 const startOrDay = new Date();
 startOrDay.setDate(startOrDay.getDate() - 1);
 startOrDay.setHours(7);
@@ -97,12 +101,14 @@ function Dashboard() {
 
   useEffect(() => {
     setTimeout(() => {
-      getCurrentPositions().then(setPosition);
-      getOpenOrders().then(setOpenOrders);
-      getTradeList().then(setTradeList);
-      getBalance().then(setBalance);
-      getIncomePnL().then(setIncomePnL);
-      getSymbolConfig().then((data) => dispatch(setSymbolConfigData(data)));
+      auth.currentUser?.getIdToken?.().then(() => {
+        getCurrentPositions().then(setPosition);
+        getOpenOrders().then(setOpenOrders);
+        getTradeList().then(setTradeList);
+        getBalance().then(setBalance);
+        getIncomePnL().then(setIncomePnL);
+        getSymbolConfig().then((data) => dispatch(setSymbolConfigData(data)));
+      });
     }, 1000);
   }, []);
 
