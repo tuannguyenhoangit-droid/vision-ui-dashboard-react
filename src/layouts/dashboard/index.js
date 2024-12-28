@@ -73,6 +73,7 @@ import { setSymbolConfigData } from "../../redux/futures/symbolConfigSlice";
 
 import { getAuth } from "firebase/auth";
 import { firebaseApp } from "../../firebase";
+import { useHistory } from "react-router-dom/cjs/react-router-dom";
 const auth = getAuth(firebaseApp);
 
 const startOrDay = new Date();
@@ -88,6 +89,7 @@ function Dashboard() {
   // modal handler
 
   const [isOpenSymbolConfigModal, openSymbolConfigModal] = useState(false);
+  const [symbolEditItem, setSymbolEditItem] = useState(null);
 
   const [openOrders, setOpenOrders] = useState([]);
   const [bestPerformanceVolume, setBestPerformanceVolume] = useState([]);
@@ -95,6 +97,7 @@ function Dashboard() {
   const [tradeList, setTradeList] = useState([]);
   const [balance, setBalance] = useState([]);
   const [incomePnL, setIncomePnL] = useState({});
+  const history = useHistory();
 
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
@@ -110,7 +113,7 @@ function Dashboard() {
         getSymbolConfig().then((data) => dispatch(setSymbolConfigData(data)));
       });
     }, 1000);
-  }, []);
+  }, [history.location.pathname]);
 
   const incomeBarChart = useMemo(() => {
     const chart = {
@@ -297,6 +300,9 @@ function Dashboard() {
         <Grid container spacing={3} direction="row" justifyContent="center" alignItems="stretch">
           <Grid item xs={12} md={6} lg={8}>
             <Projects
+              onEditItem={(item) => {
+                setSymbolEditItem(item);
+              }}
               onMenuClick={(action) => {
                 if (action === "add") openSymbolConfigModal(true);
               }}
@@ -309,8 +315,12 @@ function Dashboard() {
       </VuiBox>
       {/* <Footer /> */}
       <SymbolConfigModal
-        onClose={() => openSymbolConfigModal(false)}
-        open={isOpenSymbolConfigModal}
+        item={symbolEditItem}
+        onClose={() => {
+          openSymbolConfigModal(false);
+          setSymbolEditItem(null);
+        }}
+        open={isOpenSymbolConfigModal || symbolEditItem !== null}
       />
     </DashboardLayout>
   );

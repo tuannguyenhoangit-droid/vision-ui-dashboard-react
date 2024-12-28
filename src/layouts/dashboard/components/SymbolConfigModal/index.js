@@ -18,9 +18,10 @@ import { useDispatch } from "react-redux";
 import { createSymbolConfig, getSymbolConfig } from "../../../../services/api";
 import { setSymbolConfigData } from "../../../../redux/futures/symbolConfigSlice";
 
-const SUPPORT_CHART_FRAME = ["5m", "15m", "30m"];
+const SUPPORT_CHART_FRAME = ["3m", "5m", "15m", "30m"];
 
 const BUY_REQUIRE_CHART_FRAME = [
+  { id: "5m", label: "5m", pro: false },
   { id: "15m", label: "15m", pro: false },
   {
     id: "30m",
@@ -52,7 +53,7 @@ const initConfig = {
   buyRequireHistogram: [],
   optimizeEntry: false,
 };
-export function SymbolConfigModal({ open, onClose = () => null }) {
+export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
   const [loading, setLoading] = useState(false);
   const [requireFrame, setRequireFrame] = useState({});
   const [config, setConfig] = useState(initConfig);
@@ -68,6 +69,24 @@ export function SymbolConfigModal({ open, onClose = () => null }) {
       .filter((frame) => frame);
     onChange("buyRequireHistogram", frames);
   }, [requireFrame]);
+
+  useEffect(() => {
+    if (item) {
+      const requireFrame = {};
+      item.buyRequireHistogram.forEach((frame) => {
+        requireFrame[frame] = true;
+      });
+
+      setRequireFrame({ ...requireFrame });
+      setConfig(item);
+    }
+    return () => {
+      setConfig({
+        ...initConfig,
+      });
+      setRequireFrame({});
+    };
+  }, [item]);
 
   const tradeChartFrameButtons = useMemo(() => {
     return SUPPORT_CHART_FRAME.map((fr) => {
@@ -86,8 +105,10 @@ export function SymbolConfigModal({ open, onClose = () => null }) {
 
   const buyRequireChartFrameCheckbox = useMemo(() => {
     return BUY_REQUIRE_CHART_FRAME.map((it) => {
+      const currentChecked = requireFrame[it.id] || false;
       return (
         <VuiBox
+          id={it.id}
           mt={1.5}
           ml={1}
           display="flex"
@@ -97,8 +118,10 @@ export function SymbolConfigModal({ open, onClose = () => null }) {
         >
           <Checkbox
             sx={{ "& .MuiSvgIcon-root": { fontSize: 28, fill: it.pro ? "gray" : "#d6e6e6" } }}
-            id={it.id}
             disabled={it.pro}
+            color="success"
+            defaultChecked={currentChecked}
+            checked={currentChecked}
             onChange={(e, checked) =>
               setRequireFrame({
                 ...requireFrame,
@@ -334,7 +357,13 @@ export function SymbolConfigModal({ open, onClose = () => null }) {
             </VuiBox>
           </VuiBox>
           <VuiBox mt={4} mb={1}>
-            <VuiButton disabled={loading} onClick={onSubmit} color="info" fullWidth>
+            <VuiButton
+              loading={loading}
+              disabled={loading}
+              onClick={onSubmit}
+              color="info"
+              fullWidth
+            >
               <SyncIcon size="22px" color="white" />
               CREATE CONFIG
             </VuiButton>

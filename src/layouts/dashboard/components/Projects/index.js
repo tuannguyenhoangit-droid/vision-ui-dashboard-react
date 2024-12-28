@@ -23,7 +23,7 @@ import Card from "@mui/material/Card";
 import Icon from "@mui/material/Icon";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import { BsCheckCircleFill } from "react-icons/bs";
+import { BsCheckCircleFill, BsPencilSquare, BsTrash2Fill } from "react-icons/bs";
 
 // Vision UI Dashboard React components
 import VuiBox from "components/VuiBox";
@@ -34,8 +34,12 @@ import Table from "examples/Tables/Table";
 import { useSelector } from "react-redux";
 import VuiSwitch from "components/VuiSwitch";
 import { timeDifference } from "utils";
+import { FaTrashAlt } from "react-icons/fa";
+import colors from "assets/theme/base/colors";
 
-const SymbolConfigItem = ({ row }) => {
+const SymbolConfigItem = ({ row, onEditItem = () => null, onDeleteItem = () => null }) => {
+  const onEdit = () => onEditItem(row);
+  const onDelete = () => onDeleteItem(row);
   return {
     symbol: (
       <VuiBox display="flex" alignItems="center">
@@ -93,21 +97,33 @@ const SymbolConfigItem = ({ row }) => {
         {timeDifference(row.createdAt)}
       </VuiTypography>
     ),
+    action: (
+      <VuiBox display="flex" alignItems="center">
+        <BsPencilSquare onClick={onEdit} color="white" cursor="pointer" />
+        <VuiBox ml={1}>
+          <FaTrashAlt onClick={onDelete} color={colors.error.focus} cursor="pointer" />
+        </VuiBox>
+      </VuiBox>
+    ),
   };
 };
 
-function Projects(props) {
+function Projects({
+  onMenuClick = () => null,
+  onEditItem = () => null,
+  onDeleteItem = () => null,
+}) {
   const symbolConfig = useSelector((e) => e.symbolConfig.data);
   const [menu, setMenu] = useState(null);
 
   const openMenu = ({ currentTarget }) => setMenu(currentTarget);
   const closeMenu = (action) => {
     setMenu(null);
-    props?.onMenuClick?.(action);
+    onMenuClick?.(action);
   };
 
   const renderRow = useMemo(() => {
-    return symbolConfig.map((row) => SymbolConfigItem({ row }));
+    return symbolConfig.map((row) => SymbolConfigItem({ row, onEditItem, onDeleteItem }));
   }, [symbolConfig]);
 
   const renderMenu = (
@@ -180,6 +196,7 @@ function Projects(props) {
             { name: "require frames", align: "left" },
             { name: "optimized entry", align: "left" },
             { name: "uptime", align: "left" },
+            { name: "action", align: "center" },
           ]}
           rows={renderRow}
         />

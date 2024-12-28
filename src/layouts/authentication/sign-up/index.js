@@ -83,9 +83,8 @@ function SignIn() {
 
         // Send verification email
         await sendEmailVerification(user, {
-          url: "https://sa-bot.web.app",
+          url: "https://sa-bot.web.app/dashboard",
         });
-        console.log("result", result);
         setLoading(false);
       } else {
         // TODO

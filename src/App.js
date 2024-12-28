@@ -79,7 +79,9 @@ export default function App() {
           };
           dispatchRedux(setUser(data));
           userSignIn(user.displayName, user.email, user.uid, user.photoURL);
-          history.push("/dashboard");
+          setTimeout(() => {
+            history.push("/dashboard");
+          }, 1000);
         }
       } else {
         if (!history.location.pathname.includes("/authentication/verify-email")) {
