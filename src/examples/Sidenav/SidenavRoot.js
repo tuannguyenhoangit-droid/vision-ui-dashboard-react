@@ -1,14 +1,14 @@
 /*!
 
 =========================================================
-* Vision UI Free React - v1.0.0
+* SA BOT - v1.0.0
 =========================================================
 
-* Product Page: https://www.creative-tim.com/product/vision-ui-free-react
-* Copyright 2021 Creative Tim (https://www.creative-tim.com/)
-* Licensed under MIT (https://github.com/creativetimofficial/vision-ui-free-react/blob/master LICENSE.md)
 
-* Design and Coded by Simmmple & Creative Tim
+
+
+
+
 
 =========================================================
 
@@ -78,13 +78,9 @@ export default styled(Drawer)(({ theme, ownerState }) => {
       boxShadow: xxl,
       border: "none",
       background: transparentSidenav
-      ? transparent.main
-      : linearGradient(
-            gradients.sidenav.main,
-            gradients.sidenav.state,
-            gradients.sidenav.deg
-          ),
-    backdropFilter: transparentSidenav ? "unset" : "blur(120px)",
+        ? transparent.main
+        : linearGradient(gradients.sidenav.main, gradients.sidenav.state, gradients.sidenav.deg),
+      backdropFilter: transparentSidenav ? "unset" : "blur(120px)",
       ...(miniSidenav ? drawerCloseStyles() : drawerOpenStyles()),
     },
   };

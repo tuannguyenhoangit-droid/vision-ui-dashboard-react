@@ -1,14 +1,14 @@
 /*!
 
 =========================================================
-* Vision UI Free React - v1.0.0
+* SA BOT - v1.0.0
 =========================================================
 
-* Product Page: https://www.creative-tim.com/product/vision-ui-free-react
-* Copyright 2021 Creative Tim (https://www.creative-tim.com/)
-* Licensed under MIT (https://github.com/creativetimofficial/vision-ui-free-react/blob/master LICENSE.md)
 
-* Design and Coded by Simmmple & Creative Tim
+
+
+
+
 
 =========================================================
 
@@ -44,7 +44,7 @@ function Footer() {
     >
       <Grid container justifyContent="center">
         <Grid item xs={12} sx={{ textAlign: "center" }}>
-          <VuiTypography
+          {/* <VuiTypography
             variant="button"
             sx={{ textAlign: "center", fontWeight: "400 !important" }}
             color="text"
@@ -73,7 +73,7 @@ function Footer() {
               Creative Tim
             </VuiTypography>
             for a better web
-          </VuiTypography>
+          </VuiTypography> */}
         </Grid>
         <Grid item xs={10}>
           <VuiBox display="flex" justifyContent="center" flexWrap="wrap" mb={3}>

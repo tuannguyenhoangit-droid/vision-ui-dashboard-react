@@ -1,14 +1,14 @@
 /*!
 
 =========================================================
-* Vision UI Free React - v1.0.0
+* SA BOT - v1.0.0
 =========================================================
 
-* Product Page: https://www.creative-tim.com/product/vision-ui-free-react
-* Copyright 2021 Creative Tim (https://www.creative-tim.com/)
-* Licensed under MIT (https://github.com/creativetimofficial/vision-ui-free-react/blob/master LICENSE.md)
 
-* Design and Coded by Simmmple & Creative Tim
+
+
+
+
 
 =========================================================
 
@@ -116,13 +116,12 @@ function DefaultNavbar({ transparent, light, action }) {
               margin: "0 auto",
             }}
           >
-            VISION UI FREE
+            SA BOT
           </VuiTypography>
         </VuiBox>
         <VuiBox color="inherit" display={{ xs: "none", lg: "flex" }} m={0} p={0}>
           <DefaultNavbarLink icon="donut_large" name="dashboard" route="/dashboard" />
           <DefaultNavbarLink icon="person" name="profile" route="/profile" />
-          <DefaultNavbarLink icon="account_circle" name="sign up" route="/authentication/sign-up" />
           <DefaultNavbarLink icon="key" name="sign in" route="/authentication/sign-in" />
         </VuiBox>
         {action &&

@@ -6,10 +6,10 @@ export const timeDifference = (createdAt) => {
   const minutes = Math.floor(Math.abs(diff) / 60000); // Chuyển đổi sang phút
 
   if (diff > 0) {
-    return `${minutes} phút trước`; // Nếu thời gian đã qua
+    return `${minutes} minute(s) ago)`; // Nếu thời gian đã qua
   } else if (diff < 0) {
-    return `${minutes} phút sau`; // Nếu thời gian ở tương lai
+    return `${minutes} minute(s) before`; // Nếu thời gian ở tương lai
   } else {
-    return "Ngay bây giờ"; // Nếu thời gian khớp
+    return "just now"; // Nếu thời gian khớp
   }
 };
