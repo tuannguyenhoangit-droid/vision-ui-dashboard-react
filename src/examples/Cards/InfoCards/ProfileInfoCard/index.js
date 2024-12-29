@@ -37,7 +37,8 @@ import VuiButton from "components/VuiButton";
 import { useEffect, useState } from "react";
 import { accountUpdateKeys } from "../../../../services/api";
 import { PUBLIC_KEY } from "../../../../utils/key";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { setMessage } from "../../../../redux/futures/messageSlice";
 function ProfileInfoCard({ title, description, info }) {
   const labels = [];
   const values = [];
@@ -47,6 +48,7 @@ function ProfileInfoCard({ title, description, info }) {
   const [apiKey, setAPIKey] = useState("");
   const [secretKey, setSecretKey] = useState("");
   const [editKeys, setEditKeys] = useState(false);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (user?.apiKeyHidden && user?.secretKeyHidden) {
@@ -84,17 +86,33 @@ function ProfileInfoCard({ title, description, info }) {
   ));
 
   const handleEncrypt = async () => {
-    const publicKeyPEM = PUBLIC_KEY.trim();
+    try {
+      const publicKeyPEM = PUBLIC_KEY.trim();
 
-    const dataToEncrypt = `${apiKey}:${secretKey}`;
+      const dataToEncrypt = `${apiKey}:${secretKey}`;
 
-    // Khởi tạo JSEncrypt với Public Key
-    const encryptor = new JSEncrypt();
-    encryptor.setPublicKey(publicKeyPEM);
+      // Khởi tạo JSEncrypt với Public Key
+      const encryptor = new JSEncrypt();
+      encryptor.setPublicKey(publicKeyPEM);
 
-    // Mã hóa dữ liệu
-    const encryptedData = encryptor.encrypt(dataToEncrypt);
-    await accountUpdateKeys(encryptedData);
+      // Mã hóa dữ liệu
+      const encryptedData = encryptor.encrypt(dataToEncrypt);
+      await accountUpdateKeys(encryptedData);
+      dispatch(
+        setMessage({
+          message: "Your keys has been updated",
+          type: "success",
+        })
+      );
+      setEditKeys(false);
+    } catch (e) {
+      dispatch(
+        setMessage({
+          message: "Cannot update keys",
+          type: "error",
+        })
+      );
+    }
   };
 
   return (

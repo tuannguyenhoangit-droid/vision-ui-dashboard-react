@@ -29,11 +29,18 @@ import VuiBox from "components/VuiBox";
 
 // Vision UI Dashboard React context
 import { useVisionUIController, setLayout } from "context";
+import { useDispatch, useSelector } from "react-redux";
+import VuiTypography from "components/VuiTypography";
+import VuiAlert from "components/VuiAlert";
+import { setMessage } from "../../../redux/futures/messageSlice";
+import zIndex from "@mui/material/styles/zIndex";
 
 function DashboardLayout({ children }) {
   const [controller, dispatch] = useVisionUIController();
   const { miniSidenav } = controller;
   const { pathname } = useLocation();
+  const errorMessage = useSelector((e) => e.message);
+  const reduxDispatch = useDispatch();
 
   useEffect(() => {
     setLayout(dispatch, "dashboard");
@@ -55,6 +62,23 @@ function DashboardLayout({ children }) {
       })}
     >
       {children}
+      {errorMessage.message ? (
+        <VuiAlert
+          color={errorMessage.type || "success"}
+          style={{
+            position: "absolute",
+            top: 100,
+            right: 24,
+            zIndex: 999,
+          }}
+          dismissible
+          onClose={() => reduxDispatch(setMessage(""))}
+        >
+          <VuiTypography color="white" variant="button">
+            {errorMessage.message}
+          </VuiTypography>
+        </VuiAlert>
+      ) : null}
     </VuiBox>
   );
 }

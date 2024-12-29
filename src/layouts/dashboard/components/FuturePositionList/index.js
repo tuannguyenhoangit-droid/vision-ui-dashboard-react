@@ -23,7 +23,6 @@ import Card from "@mui/material/Card";
 import Icon from "@mui/material/Icon";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import { BsCheckCircleFill } from "react-icons/bs";
 
 // Vision UI Dashboard React components
 import VuiBox from "components/VuiBox";
@@ -108,7 +107,9 @@ function FuturePositionList(props) {
   const closeMenu = () => setMenu(null);
 
   const renderRow = () => {
-    return data.map((row) => FuturePositionItem({ row }));
+    return data
+      ?.filter((row) => parseFloat(row.notional) > 0)
+      .map((row) => FuturePositionItem({ row }));
   };
 
   const renderMenu = (

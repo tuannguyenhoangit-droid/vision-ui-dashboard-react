@@ -249,3 +249,23 @@ export const getSymbolConfig = async () => {
       });
   });
 };
+
+export const getExchangeInfo = async () => {
+  const token = await auth.currentUser?.getIdToken?.();
+  if (!token) return [];
+  return new Promise(async (resolve, reject) => {
+    await axios
+      .get("https://sa.premierct.asia/v1/future/exchangeInfo", {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: ["Bearer", token].join(" "),
+        },
+      })
+      .then((response) => {
+        resolve(response.data);
+      })
+      .catch((error) => {
+        console.log("error", error);
+      });
+  });
+};
