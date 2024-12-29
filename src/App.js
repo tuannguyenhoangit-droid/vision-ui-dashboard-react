@@ -66,19 +66,22 @@ export default function App() {
 
   useEffect(() => {
     const auth = getAuth(firebaseApp);
-    const unsubscribe = auth.onAuthStateChanged((user) => {
+    const unsubscribe = auth.onAuthStateChanged(async (user) => {
       console.log("onAuthStateChanged", user);
 
       if (user) {
         if (user.emailVerified) {
-          const data = {
-            displayName: user.displayName,
-            email: user.email,
-            uid: user.uid,
-            photoURL: user.photoURL,
-          };
-          dispatchRedux(setUser(data));
-          userSignIn(user.displayName, user.email, user.uid, user.photoURL);
+          // sync user latest data
+          const signedUser = await userSignIn(
+            user.displayName,
+            user.email,
+            user.uid,
+            user.photoURL
+          );
+
+          // set user data include keys
+          dispatchRedux(setUser(signedUser.data));
+
           setTimeout(() => {
             history.push("/dashboard");
           }, 1000);

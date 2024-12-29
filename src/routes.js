@@ -102,7 +102,6 @@ const routes = [
     noCollapse: true,
   },
   {
-    type: "collapse",
     name: "Sign In",
     key: "sign-in",
     route: "/authentication/sign-in",
@@ -111,8 +110,16 @@ const routes = [
     noCollapse: true,
   },
   {
-    type: "collapse",
     name: "Sign Up",
+    key: "sign-up",
+    route: "/authentication/sign-up",
+    icon: <IoRocketSharp size="15px" color="inherit" />,
+    component: SignUp,
+    noCollapse: true,
+  },
+  {
+    type: "collapse",
+    name: "Sign Out",
     key: "sign-up",
     route: "/authentication/sign-up",
     icon: <IoRocketSharp size="15px" color="inherit" />,

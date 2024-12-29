@@ -53,6 +53,7 @@ import { useDispatch } from "react-redux";
 import { setMessage } from "../../../redux/futures/messageSlice";
 import { useHistory } from "react-router-dom/cjs/react-router-dom";
 import { setUser } from "../../../redux/futures/userSlice";
+import { userSignIn } from "../../../services/api";
 
 const auth = getAuth(firebaseApp);
 
@@ -98,13 +99,15 @@ function SignIn() {
         const userCredential = await signInWithEmailAndPassword(auth, data.email, data.password);
         const user = userCredential.user;
         if (user.emailVerified) {
-          const data = {
-            displayName: user.displayName,
-            email: user.email,
-            uid: user.uid,
-            photoURL: user.photoURL,
-          };
-          dispatch(setUser({}));
+          // sync user latest data
+          const signedUser = await userSignIn(
+            user.displayName,
+            user.email,
+            user.uid,
+            user.photoURL
+          );
+          // set user data include keys
+          dispatch(setUser(signedUser.data));
           dispatch(
             setMessage({
               message: "Success",
@@ -113,7 +116,6 @@ function SignIn() {
 
           setTimeout(() => {
             history.push("/dashboard");
-            s;
           }, 1000);
         } else {
           dispatch(
@@ -216,8 +218,8 @@ function SignIn() {
           </VuiTypography>
         </VuiBox>
         <VuiBox mt={4} mb={1} alignItems="center">
-          <VuiButton onClick={handleSignInWithPassword} color="info" fullWidth>
-            SIGN IN
+          <VuiButton circular onClick={handleSignInWithPassword} color="info" fullWidth>
+            Sign In with Account
           </VuiButton>
           <VuiBox display="flex" alignItems="center" justifyContent="center" mt={2} mb={2}>
             <div
@@ -240,10 +242,10 @@ function SignIn() {
               }}
             />
           </VuiBox>
-          <VuiButton onClick={handleSignIn} color="black" fullWidth>
+          <VuiButton circular variant="contained" onClick={handleSignIn} color="black" fullWidth>
             <VuiAvatar src={googleImage} alt="name" size="xs" />
             <VuiTypography color="white" ml={2} variant="button">
-              SIGN IN WITH GOOGLE
+              Sign In with Google
             </VuiTypography>
           </VuiButton>
         </VuiBox>

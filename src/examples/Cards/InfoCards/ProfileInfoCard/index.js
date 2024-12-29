@@ -34,15 +34,27 @@ import radialGradient from "assets/theme/functions/radialGradient";
 import palette from "assets/theme/base/colors";
 import VuiInput from "components/VuiInput";
 import VuiButton from "components/VuiButton";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { accountUpdateKeys } from "../../../../services/api";
 import { PUBLIC_KEY } from "../../../../utils/key";
-function ProfileInfoCard({ title, description, info, social }) {
+import { useSelector } from "react-redux";
+function ProfileInfoCard({ title, description, info }) {
   const labels = [];
   const values = [];
 
+  const user = useSelector((e) => e.user.user);
+
   const [apiKey, setAPIKey] = useState("");
   const [secretKey, setSecretKey] = useState("");
+  const [editKeys, setEditKeys] = useState(false);
+
+  useEffect(() => {
+    if (user.apiKeyHidden && user.secretKeyHidden) {
+      setEditKeys(false);
+      setAPIKey(user.apiKeyHidden);
+      setSecretKey(user.secretKeyHidden);
+    }
+  }, [user]);
 
   // Convert this form `objectKey` of the object key in to this `object key`
   Object.keys(info).forEach((el) => {
@@ -83,7 +95,6 @@ function ProfileInfoCard({ title, description, info, social }) {
     // Mã hóa dữ liệu
     const encryptedData = encryptor.encrypt(dataToEncrypt);
     await accountUpdateKeys(encryptedData);
-    console.log("Dữ liệu đã mã hóa:", encryptedData);
   };
 
   return (
@@ -125,6 +136,7 @@ function ProfileInfoCard({ title, description, info, social }) {
                 <VuiInput
                   placeholder="Enter API Key"
                   value={apiKey}
+                  disabled={!editKeys}
                   onChange={({ nativeEvent }) => setAPIKey(nativeEvent.target.value)}
                   sx={({ typography: { size } }) => ({
                     fontSize: size.sm,
@@ -151,6 +163,7 @@ function ProfileInfoCard({ title, description, info, social }) {
                 <VuiInput
                   placeholder="Enter Secret Key"
                   value={secretKey}
+                  disabled={!editKeys}
                   onChange={({ nativeEvent }) => setSecretKey(nativeEvent.target.value)}
                   sx={({ typography: { size } }) => ({
                     fontSize: size.sm,
@@ -162,9 +175,23 @@ function ProfileInfoCard({ title, description, info, social }) {
           {renderItems}
         </VuiBox>
         <VuiBox display="flex" mt={1} justifyContent="flex-end">
-          <VuiButton onClick={handleEncrypt} color="info">
-            SAVE KEY
-          </VuiButton>
+          {editKeys ? (
+            <VuiBox display="flex">
+              <VuiButton onClick={() => setEditKeys(false)} color="dark">
+                CANCEL
+              </VuiButton>
+              <VuiBox ml={2}>
+                <VuiButton onClick={handleEncrypt} color="success">
+                  SAVE KEYS
+                </VuiButton>
+              </VuiBox>
+            </VuiBox>
+          ) : null}
+          {!editKeys ? (
+            <VuiButton onClick={() => setEditKeys(true)} color="info">
+              CHANGE KEYS
+            </VuiButton>
+          ) : null}
         </VuiBox>
       </VuiBox>
     </Card>

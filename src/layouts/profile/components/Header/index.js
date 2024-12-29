@@ -37,8 +37,10 @@ import { IoBuild } from "react-icons/io5";
 // Vision UI Dashboard React example components
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 
 function Header() {
+  const user = useSelector((e) => e.user.user);
   const [tabsOrientation, setTabsOrientation] = useState("horizontal");
   const [tabValue, setTabValue] = useState(0);
 
@@ -127,10 +129,10 @@ function Header() {
               })}
             >
               <VuiTypography variant="lg" color="white" fontWeight="bold">
-                Mark Johnson
+                {user.displayName}
               </VuiTypography>
               <VuiTypography variant="button" color="text" fontWeight="regular">
-                mark@simmmple.com
+                {user.email}
               </VuiTypography>
             </VuiBox>
           </Grid>

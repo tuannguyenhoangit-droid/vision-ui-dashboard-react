@@ -101,7 +101,7 @@ function Overview() {
               title="Binance API Key"
               description="Please note that we dont ask user to grant withdraw permission"
               info={{
-                Permisions: "Cho phép đọc, Cho phép Giao dịch Futures",
+                Permisions: "Allow Read, Allow Future Order",
               }}
             />
           </Grid>
