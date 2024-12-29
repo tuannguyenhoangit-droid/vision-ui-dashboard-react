@@ -132,6 +132,7 @@ export const userSignIn = async (displayName, email, uid, photoURL) => {
   return new Promise(async (resolve, reject) => {
     await axios
       .post("https://sa.premierct.asia/v1/account/sign-in", payload, {
+        // .post("http://localhost:3333/v1/account/sign-in", payload, {
         headers: {
           "Content-Type": "application/json",
           Authorization: ["Bearer", token].join(" "),

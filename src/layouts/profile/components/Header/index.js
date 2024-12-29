@@ -129,10 +129,10 @@ function Header() {
               })}
             >
               <VuiTypography variant="lg" color="white" fontWeight="bold">
-                {user.displayName}
+                {user?.displayName || ""}
               </VuiTypography>
               <VuiTypography variant="button" color="text" fontWeight="regular">
-                {user.email}
+                {user?.email || ""}
               </VuiTypography>
             </VuiBox>
           </Grid>

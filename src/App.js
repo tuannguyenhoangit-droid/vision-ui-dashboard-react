@@ -67,8 +67,6 @@ export default function App() {
   useEffect(() => {
     const auth = getAuth(firebaseApp);
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
-      console.log("onAuthStateChanged", user);
-
       if (user) {
         if (user.emailVerified) {
           // sync user latest data
@@ -97,6 +95,12 @@ export default function App() {
     // Cleanup subscription on unmount
     return () => unsubscribe();
   }, []);
+
+  useEffect(() => {
+    if (user.user === null) {
+      history.push("/authentication/sign-in");
+    }
+  }, [history]);
 
   // Cache for the rtl
   useMemo(() => {

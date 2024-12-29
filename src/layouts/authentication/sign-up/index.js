@@ -63,8 +63,6 @@ function SignIn() {
   };
 
   const onSubmit = async () => {
-    console.log("data", data);
-
     try {
       if (data.displayName && data.email && data.password) {
         setLoading(true);

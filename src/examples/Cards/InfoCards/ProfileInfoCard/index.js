@@ -49,7 +49,7 @@ function ProfileInfoCard({ title, description, info }) {
   const [editKeys, setEditKeys] = useState(false);
 
   useEffect(() => {
-    if (user.apiKeyHidden && user.secretKeyHidden) {
+    if (user?.apiKeyHidden && user?.secretKeyHidden) {
       setEditKeys(false);
       setAPIKey(user.apiKeyHidden);
       setSecretKey(user.secretKeyHidden);

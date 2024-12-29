@@ -54,8 +54,6 @@ function CoverLayout({
   const errorMessage = useSelector((e) => e.message);
   const dispatch = useDispatch();
 
-  console.log("errorMessage", errorMessage);
-
   return (
     <PageLayout
       background={tripleLinearGradient(

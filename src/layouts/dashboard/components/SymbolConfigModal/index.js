@@ -160,7 +160,7 @@ export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
           config.side,
           config.buyRequireHistogram
         );
-        console.log("result", result);
+
         setLoading(false);
         onClose();
 
@@ -171,7 +171,6 @@ export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
         });
       } catch (e) {
         setLoading(false);
-        console.log("e", e);
       }
     } else {
       console.log("Params missing");
