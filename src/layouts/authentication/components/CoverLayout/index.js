@@ -22,7 +22,7 @@ import PropTypes from "prop-types";
 // Vision UI Dashboard React components
 import VuiBox from "components/VuiBox";
 import VuiTypography from "components/VuiTypography";
-
+import VuiAlert from "components/VuiAlert";
 // Vision UI Dashboard React example components
 import DefaultNavbar from "examples/Navbars/DefaultNavbar";
 import PageLayout from "examples/LayoutContainers/PageLayout";
@@ -35,6 +35,8 @@ import colors from "assets/theme/base/colors";
 
 // Vision UI Dashboard React theme functions
 import tripleLinearGradient from "assets/theme/functions/tripleLinearGradient";
+import { useDispatch, useSelector } from "react-redux";
+import { setMessage } from "../../../../redux/futures/messageSlice";
 
 function CoverLayout({
   color,
@@ -49,6 +51,11 @@ function CoverLayout({
   children,
 }) {
   const { gradients } = colors;
+  const errorMessage = useSelector((e) => e.message);
+  const dispatch = useDispatch();
+
+  console.log("errorMessage", errorMessage);
+
   return (
     <PageLayout
       background={tripleLinearGradient(
@@ -208,6 +215,22 @@ function CoverLayout({
           <Footer />
         </VuiBox>
       </VuiBox>
+      {errorMessage.message ? (
+        <VuiAlert
+          color={errorMessage.type || "success"}
+          style={{
+            position: "absolute",
+            top: 12,
+            right: 12,
+          }}
+          dismissible
+          onClose={() => dispatch(setMessage(""))}
+        >
+          <VuiTypography color="white" variant="button">
+            {errorMessage.message}
+          </VuiTypography>
+        </VuiAlert>
+      ) : null}
     </PageLayout>
   );
 }

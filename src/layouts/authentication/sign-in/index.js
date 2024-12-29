@@ -33,15 +33,28 @@ import GradientBorder from "examples/GradientBorder";
 import radialGradient from "assets/theme/functions/radialGradient";
 import palette from "assets/theme/base/colors";
 import borders from "assets/theme/base/borders";
-
+import VuiAvatar from "components/VuiAvatar";
 // Authentication layout components
 import CoverLayout from "layouts/authentication/components/CoverLayout";
+import Alert from "@mui/material/Alert";
 
 // Images
 import bgSignIn from "assets/images/signInImage.png";
-
-import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import googleImage from "assets/images/logos/google.png";
+import {
+  getAuth,
+  signInWithPopup,
+  GoogleAuthProvider,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
 import { firebaseApp } from "../../../firebase";
+
+import { useDispatch } from "react-redux";
+import { setMessage } from "../../../redux/futures/messageSlice";
+import { useHistory } from "react-router-dom/cjs/react-router-dom";
+import { setUser } from "../../../redux/futures/userSlice";
+
+const auth = getAuth(firebaseApp);
 
 const provider = new GoogleAuthProvider();
 
@@ -49,9 +62,19 @@ function SignIn() {
   const [rememberMe, setRememberMe] = useState(true);
 
   const handleSetRememberMe = () => setRememberMe(!rememberMe);
+  const [data, setData] = useState({ email: "", password: "" });
+
+  const dispatch = useDispatch();
+  const history = useHistory();
+
+  const onChange = (key, value) => {
+    setData({
+      ...data,
+      [key]: value,
+    });
+  };
 
   const handleSignIn = () => {
-    const auth = getAuth(firebaseApp);
     signInWithPopup(auth, provider)
       .then((result) => {
         // success
@@ -67,6 +90,55 @@ function SignIn() {
         const credential = GoogleAuthProvider.credentialFromError(error);
         // ...
       });
+  };
+
+  const handleSignInWithPassword = async () => {
+    if (data.email && data.password) {
+      try {
+        const userCredential = await signInWithEmailAndPassword(auth, data.email, data.password);
+        const user = userCredential.user;
+        if (user.emailVerified) {
+          const data = {
+            displayName: user.displayName,
+            email: user.email,
+            uid: user.uid,
+            photoURL: user.photoURL,
+          };
+          dispatch(setUser({}));
+          dispatch(
+            setMessage({
+              message: "Success",
+            })
+          );
+
+          setTimeout(() => {
+            history.push("/dashboard");
+            s;
+          }, 1000);
+        } else {
+          dispatch(
+            setMessage({
+              message: "You need to verify email before login!",
+              type: "error",
+            })
+          );
+        }
+      } catch (e) {
+        dispatch(
+          setMessage({
+            message: "Email or Password is incorrect!",
+            type: "error",
+          })
+        );
+      }
+    } else {
+      dispatch(
+        setMessage({
+          message: "Please enter both email and password!",
+          type: "error",
+        })
+      );
+    }
   };
 
   return (
@@ -95,7 +167,13 @@ function SignIn() {
               palette.gradients.borderLight.angle
             )}
           >
-            <VuiInput type="email" placeholder="Your email..." fontWeight="500" />
+            <VuiInput
+              onChange={({ nativeEvent }) => onChange("email", nativeEvent.target.value)}
+              value={data.email}
+              type="email"
+              placeholder="Your email..."
+              fontWeight="500"
+            />
           </GradientBorder>
         </VuiBox>
         <VuiBox mb={2}>
@@ -116,6 +194,8 @@ function SignIn() {
           >
             <VuiInput
               type="password"
+              onChange={({ nativeEvent }) => onChange("password", nativeEvent.target.value)}
+              value={data.password}
               placeholder="Your password..."
               sx={({ typography: { size } }) => ({
                 fontSize: size.sm,
@@ -135,9 +215,36 @@ function SignIn() {
             &nbsp;&nbsp;&nbsp;&nbsp;Remember me
           </VuiTypography>
         </VuiBox>
-        <VuiBox mt={4} mb={1}>
-          <VuiButton onClick={handleSignIn} color="info" fullWidth>
+        <VuiBox mt={4} mb={1} alignItems="center">
+          <VuiButton onClick={handleSignInWithPassword} color="info" fullWidth>
             SIGN IN
+          </VuiButton>
+          <VuiBox display="flex" alignItems="center" justifyContent="center" mt={2} mb={2}>
+            <div
+              style={{
+                height: 1,
+                background: "white",
+                width: "60px",
+                marginRight: 6,
+              }}
+            />
+            <VuiTypography color="white" variant="button">
+              OR
+            </VuiTypography>
+            <div
+              style={{
+                height: 1,
+                background: "white",
+                width: "60px",
+                marginLeft: 6,
+              }}
+            />
+          </VuiBox>
+          <VuiButton onClick={handleSignIn} color="black" fullWidth>
+            <VuiAvatar src={googleImage} alt="name" size="xs" />
+            <VuiTypography color="white" ml={2} variant="button">
+              SIGN IN WITH GOOGLE
+            </VuiTypography>
           </VuiButton>
         </VuiBox>
         <VuiBox mt={3} textAlign="center">

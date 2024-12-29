@@ -1,24 +1,26 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  data: [],
+  message: "",
+  type: "",
 };
 
-export const symbolConfigSlice = createSlice({
-  name: "symbolConfig",
+export const messageSlice = createSlice({
+  name: "message",
   initialState,
   reducers: {
-    setSymbolConfigData: (state, action) => {
+    setMessage: (state, action) => {
       // Redux Toolkit allows us to write "mutating" logic in reducers. It
       // doesn't actually mutate the state because it uses the Immer library,
       // which detects changes to a "draft state" and produces a brand new
       // immutable state based off those changes
-      state.data = action.payload;
+      state.message = action.payload.message;
+      state.type = action.payload.type;
     },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { setSymbolConfigData } = symbolConfigSlice.actions;
+export const { setMessage } = messageSlice.actions;
 
-export default symbolConfigSlice.reducer;
+export default messageSlice.reducer;

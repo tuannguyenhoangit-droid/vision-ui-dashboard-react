@@ -16,7 +16,7 @@
 
 */
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 // prop-types is a library for typechecking of props
 import PropTypes from "prop-types";
@@ -31,10 +31,20 @@ import VuiBox from "components/VuiBox";
 import VuiAlertRoot from "components/VuiAlert/VuiAlertRoot";
 import VuiAlertCloseIcon from "components/VuiAlert/VuiAlertCloseIcon";
 
-function VuiAlert({ color, dismissible, children, ...rest }) {
+function VuiAlert({ color, dismissible, children, onClose, ...rest }) {
   const [alertStatus, setAlertStatus] = useState("mount");
 
-  const handleAlertStatus = () => setAlertStatus("fadeOut");
+  const handleAlertStatus = () => {
+    setAlertStatus("fadeOut");
+    onClose?.();
+  };
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      handleAlertStatus();
+    }, 2000);
+    return () => clearTimeout(timeout);
+  }, []);
 
   // The base template for the alert
   const alertTemplate = (mount = true) => (
@@ -44,7 +54,9 @@ function VuiAlert({ color, dismissible, children, ...rest }) {
           {children}
         </VuiBox>
         {dismissible ? (
-          <VuiAlertCloseIcon onClick={mount ? handleAlertStatus : null}>&times;</VuiAlertCloseIcon>
+          <VuiAlertCloseIcon color="white" onClick={mount ? handleAlertStatus : null}>
+            &times;
+          </VuiAlertCloseIcon>
         ) : null}
       </VuiAlertRoot>
     </Fade>
