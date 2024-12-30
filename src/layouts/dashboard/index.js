@@ -50,6 +50,7 @@ import BarChart from "examples/Charts/BarCharts/BarChart";
 import { barChartOptionsDashboard } from "layouts/dashboard/data/barChartOptions";
 import { useEffect, useMemo, useState } from "react";
 import {
+  deleteSymbolConfig,
   getBalance,
   getBestPerformanceVolume,
   getCurrentPositions,
@@ -68,6 +69,7 @@ import { setSymbolConfigData } from "../../redux/futures/symbolConfigSlice";
 import { getAuth } from "firebase/auth";
 import { firebaseApp } from "../../firebase";
 import { useHistory } from "react-router-dom/cjs/react-router-dom";
+import VuiDialog from "components/VuiDialog";
 
 const auth = getAuth(firebaseApp);
 
@@ -92,7 +94,7 @@ function Dashboard() {
   const [tradeList, setTradeList] = useState([]);
   const [balance, setBalance] = useState([]);
   const [incomePnL, setIncomePnL] = useState({});
-  const [exchangeInfo, setExchangeInfo] = useState({});
+  const [symbolDeleteItem, setSymbolDeleteItem] = useState(null);
   const history = useHistory();
 
   const user = useSelector((state) => state.user);
@@ -102,8 +104,6 @@ function Dashboard() {
     setTimeout(() => {
       if (history.location.pathname == "/dashboard") {
         auth.currentUser?.getIdToken?.().then((token) => {
-          console.log("token", token);
-
           getCurrentPositions().then(setPosition);
           getOpenOrders().then(setOpenOrders);
           getTradeList().then(setTradeList);
@@ -155,6 +155,12 @@ function Dashboard() {
 
   const unRealizedProfitPercent =
     Math.round(((balance?.[0]?.crossUnPnl || 0) / accountBalance) * 100 * 100) / 100;
+
+  const confirmDeleteSymbol = (item) => {
+    deleteSymbolConfig(item.symbol).then((response) => {
+      getSymbolConfig().then((data) => dispatch(setSymbolConfigData(data)));
+    });
+  };
 
   return (
     <DashboardLayout>
@@ -304,6 +310,9 @@ function Dashboard() {
               onEditItem={(item) => {
                 setSymbolEditItem(item);
               }}
+              onDeleteItem={(item) => {
+                setSymbolDeleteItem(item);
+              }}
               onMenuClick={(action) => {
                 if (action === "add") openSymbolConfigModal(true);
               }}
@@ -322,6 +331,17 @@ function Dashboard() {
           setSymbolEditItem(null);
         }}
         open={isOpenSymbolConfigModal || symbolEditItem !== null}
+      />
+      <VuiDialog
+        onConfirm={confirmDeleteSymbol}
+        cancelTitle="Cancel"
+        confirmTitle="Confirm"
+        description={`Confirm to delete symbol config: ${
+          symbolDeleteItem?.symbol || ""
+        }.\nYou will handle exist symbol position!`}
+        title="Delete symbol config"
+        onClose={() => setSymbolDeleteItem(null)}
+        openItem={symbolDeleteItem}
       />
     </DashboardLayout>
   );

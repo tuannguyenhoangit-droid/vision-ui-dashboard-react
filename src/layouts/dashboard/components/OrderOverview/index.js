@@ -33,7 +33,7 @@ import TimelineItem from "examples/Timeline/TimelineItem";
 // Vision UI Dashboard theme imports
 import palette from "assets/theme/base/colors";
 import { useMemo } from "react";
-import { RiMoneyDollarBoxFill, RiMoneyDollarCircleFill } from "react-icons/ri";
+import { RiMoneyDollarCircleFill } from "react-icons/ri";
 
 function OrdersOverview({ data = [] }) {
   const sumRealizedPnl = useMemo(() => {
@@ -44,6 +44,7 @@ function OrdersOverview({ data = [] }) {
       ) / 100
     );
   }, [data]);
+
   return (
     <Card className="h-100">
       <VuiBox mb="16px">
@@ -56,7 +57,7 @@ function OrdersOverview({ data = [] }) {
           return (
             <TimelineItem
               key={item.id}
-              realizedPnl={item.realizedPnl}
+              realizedPnl={parseFloat(item.realizedPnl) - parseFloat(item.commission)}
               icon={<RiMoneyDollarCircleFill size="16px" color={palette.info.main} />}
               title={[item.side, item.symbol].join(" ")}
               dateTime={new Date(item.time).toLocaleString()}
