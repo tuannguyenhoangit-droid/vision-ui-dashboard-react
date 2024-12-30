@@ -100,15 +100,19 @@ function Dashboard() {
 
   useEffect(() => {
     setTimeout(() => {
-      auth.currentUser?.getIdToken?.().then(() => {
-        getCurrentPositions().then(setPosition);
-        getOpenOrders().then(setOpenOrders);
-        getTradeList().then(setTradeList);
-        getBalance().then(setBalance);
-        getIncomePnL().then(setIncomePnL);
-        getSymbolConfig().then((data) => dispatch(setSymbolConfigData(data)));
-        // getExchangeInfo().then(setExchangeInfo);
-      });
+      if (history.location.pathname == "/dashboard") {
+        auth.currentUser?.getIdToken?.().then((token) => {
+          console.log("token", token);
+
+          getCurrentPositions().then(setPosition);
+          getOpenOrders().then(setOpenOrders);
+          getTradeList().then(setTradeList);
+          getBalance().then(setBalance);
+          getIncomePnL().then(setIncomePnL);
+          getSymbolConfig().then((data) => dispatch(setSymbolConfigData(data)));
+          // getExchangeInfo().then(setExchangeInfo);
+        });
+      }
     }, 1000);
   }, [history.location.pathname]);
 
