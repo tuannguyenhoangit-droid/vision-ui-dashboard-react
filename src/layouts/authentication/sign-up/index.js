@@ -47,10 +47,6 @@ import { getAuth, sendEmailVerification, signInWithEmailAndPassword } from "fire
 import { Checkbox } from "@mui/material";
 
 function SignIn() {
-  const [rememberMe, setRememberMe] = useState(true);
-
-  const handleSetRememberMe = () => setRememberMe(!rememberMe);
-
   const [data, setData] = useState({
     displayName: "",
     email: "",
@@ -98,10 +94,10 @@ function SignIn() {
     <CoverLayout
       title="Welcome!"
       color="white"
-      description="Use these awesome forms to login or create new account in your project for free."
+      description="Complete below form to be user of SA Trading Bot Platform"
       image={bgSignIn}
       premotto="INSPIRED BY THE FUTURE:"
-      motto="THE SA BOT DASHBOARD"
+      motto="THE SA TRADING BOT DASHBOARD"
       cardContent
     >
       <GradientBorder borderRadius={borders.borderRadius.form} minWidth="100%" maxWidth="100%">

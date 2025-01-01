@@ -150,7 +150,7 @@ function SignIn() {
       color="white"
       description="Enter your email and password to sign in"
       premotto="INSPIRED BY THE FUTURE:"
-      motto="THE SA BOT DASHBOARD"
+      motto="THE SA TRADING BOT DASHBOARD"
       image={bgSignIn}
     >
       <VuiBox component="form" role="form">
@@ -239,20 +239,7 @@ function SignIn() {
             </VuiTypography>
           </VuiButton>
         </VuiBox>
-        <VuiBox mt={3} textAlign="center">
-          <VuiTypography variant="button" color="text" fontWeight="regular">
-            Don&apos;t have an account?{" "}
-            <VuiTypography
-              component={Link}
-              to="/authentication/sign-up"
-              variant="button"
-              color="white"
-              fontWeight="medium"
-            >
-              Sign up
-            </VuiTypography>
-          </VuiTypography>
-        </VuiBox>
+
         <VuiBox mt={3} textAlign="center">
           <Checkbox
             sx={{ "& .MuiSvgIcon-root": { fontSize: 24, fill: "#d6e6e6" } }}
@@ -280,6 +267,20 @@ function SignIn() {
               fontWeight="medium"
             >
               Disclaimer
+            </VuiTypography>
+          </VuiTypography>
+        </VuiBox>
+        <VuiBox mt={3} textAlign="center">
+          <VuiTypography variant="button" color="text" fontWeight="regular">
+            Don&apos;t have an account?{" "}
+            <VuiTypography
+              component={Link}
+              to="/authentication/sign-up"
+              variant="button"
+              color="white"
+              fontWeight="medium"
+            >
+              Sign up
             </VuiTypography>
           </VuiTypography>
         </VuiBox>
