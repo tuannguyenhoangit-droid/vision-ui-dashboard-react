@@ -44,6 +44,7 @@ import { PUBLIC_KEY } from "../../../utils/key";
 import { accountSignUp } from "../../../services/api";
 import { firebaseApp } from "../../../firebase";
 import { getAuth, sendEmailVerification, signInWithEmailAndPassword } from "firebase/auth";
+import { Checkbox } from "@mui/material";
 
 function SignIn() {
   const [rememberMe, setRememberMe] = useState(true);
@@ -193,22 +194,41 @@ function SignIn() {
               />
             </GradientBorder>
           </VuiBox>
-          <VuiBox display="flex" alignItems="center">
-            <VuiSwitch color="info" checked={rememberMe} onChange={handleSetRememberMe} />
-            <VuiTypography
-              variant="caption"
-              color="white"
-              fontWeight="medium"
-              onClick={handleSetRememberMe}
-              sx={{ cursor: "pointer", userSelect: "none" }}
-            >
-              &nbsp;&nbsp;&nbsp;&nbsp;Remember me
-            </VuiTypography>
-          </VuiBox>
+
           <VuiBox mt={4} mb={1}>
             <VuiButton onClick={onSubmit} color="info" fullWidth>
               SIGN UP
             </VuiButton>
+          </VuiBox>
+          <VuiBox mt={3} textAlign="center">
+            <Checkbox
+              sx={{ "& .MuiSvgIcon-root": { fontSize: 24, fill: "#d6e6e6" } }}
+              color="success"
+              defaultChecked={true}
+              checked={true}
+            />
+            <VuiTypography variant="button" color="text" fontWeight="regular">
+              By signing-up to SA Trading Bot platform, I agree with the{" "}
+              <VuiTypography
+                component={Link}
+                to="/terms-and-conditions"
+                variant="button"
+                color="white"
+                fontWeight="medium"
+              >
+                Terms and Conditions
+              </VuiTypography>
+              {" and "}
+              <VuiTypography
+                component={Link}
+                to="/disclaimer"
+                variant="button"
+                color="white"
+                fontWeight="medium"
+              >
+                Disclaimer
+              </VuiTypography>
+            </VuiTypography>
           </VuiBox>
           <VuiBox mt={3} textAlign="center">
             <VuiTypography variant="button" color="text" fontWeight="regular">
