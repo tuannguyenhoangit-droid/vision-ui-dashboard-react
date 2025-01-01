@@ -53,6 +53,8 @@ import { setUser } from "./redux/futures/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { userSignIn } from "services/api";
 
+const NO_AUTH_PATHS = ["/disclaimer", "/authentication/email-verify", "/terms-and-conditions"];
+
 export default function App() {
   const [controller, dispatch] = useVisionUIController();
   const { miniSidenav, direction, layout, openConfigurator, sidenavColor } = controller;
@@ -66,40 +68,40 @@ export default function App() {
 
   useEffect(() => {
     const auth = getAuth(firebaseApp);
-    const unsubscribe = auth.onAuthStateChanged(async (user) => {
-      if (user) {
-        if (user.emailVerified) {
-          // sync user latest data
-          const signedUser = await userSignIn(
-            user.displayName,
-            user.email,
-            user.uid,
-            user.photoURL
-          );
+    let unsubscribe = null;
+    if (NO_AUTH_PATHS.includes(history.location.pathname)) {
+      // do nothing
+    } else {
+      //
+      unsubscribe = auth.onAuthStateChanged(async (user) => {
+        if (user) {
+          if (user.emailVerified) {
+            // sync user latest data
+            const signedUser = await userSignIn(
+              user.displayName,
+              user.email,
+              user.uid,
+              user.photoURL
+            );
 
-          // set user data include keys
-          dispatchRedux(setUser(signedUser.data));
+            // set user data include keys
+            dispatchRedux(setUser(signedUser.data));
 
-          setTimeout(() => {
-            history.push("/dashboard");
-          }, 1000);
+            setTimeout(() => {
+              history.push("/dashboard");
+            }, 1000);
+          }
+        } else {
+          if (!NO_AUTH_PATHS.includes(history.location.pathname)) {
+            history.push("/authentication/sign-in");
+          }
+          dispatchRedux(setUser(null));
         }
-      } else {
-        if (!history.location.pathname.includes("/authentication/verify-email")) {
-          history.push("/authentication/sign-in");
-        }
-        dispatchRedux(setUser(null));
-      }
-    });
+      });
+    }
 
     // Cleanup subscription on unmount
-    return () => unsubscribe();
-  }, []);
-
-  useEffect(() => {
-    if (user.user === null) {
-      history.push("/authentication/sign-in");
-    }
+    return () => unsubscribe?.();
   }, [history]);
 
   // Cache for the rtl

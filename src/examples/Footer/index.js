@@ -46,7 +46,7 @@ function Footer() {
             color="white"
             mr="2px"
           >
-            SA BOT
+            SA Trading Bot
           </VuiTypography>
           for automatic trading
         </VuiTypography>

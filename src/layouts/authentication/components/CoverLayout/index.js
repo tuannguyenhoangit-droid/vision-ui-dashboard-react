@@ -188,7 +188,7 @@ function CoverLayout({
             mx="auto"
             ml="auto !important"
             sx={({ breakpoints }) => ({
-              mt: cardContent ? "60px" : { top },
+              mt: cardContent ? "40px" : { top },
               maxWidth: cardContent ? "450px" : "350px",
               [breakpoints.down("xl")]: {
                 mr: cardContent ? "0px" : "100px",

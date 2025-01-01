@@ -54,6 +54,7 @@ import { setMessage } from "../../../redux/futures/messageSlice";
 import { useHistory } from "react-router-dom/cjs/react-router-dom";
 import { setUser } from "../../../redux/futures/userSlice";
 import { userSignIn } from "../../../services/api";
+import { Checkbox } from "@mui/material";
 
 const auth = getAuth(firebaseApp);
 
@@ -205,18 +206,7 @@ function SignIn() {
             />
           </GradientBorder>
         </VuiBox>
-        <VuiBox display="flex" alignItems="center">
-          <VuiSwitch color="info" checked={rememberMe} onChange={handleSetRememberMe} />
-          <VuiTypography
-            variant="caption"
-            color="white"
-            fontWeight="medium"
-            onClick={handleSetRememberMe}
-            sx={{ cursor: "pointer", userSelect: "none" }}
-          >
-            &nbsp;&nbsp;&nbsp;&nbsp;Remember me
-          </VuiTypography>
-        </VuiBox>
+
         <VuiBox mt={4} mb={1} alignItems="center">
           <VuiButton circular onClick={handleSignInWithPassword} color="info" fullWidth>
             Sign In with Account
@@ -260,6 +250,36 @@ function SignIn() {
               fontWeight="medium"
             >
               Sign up
+            </VuiTypography>
+          </VuiTypography>
+        </VuiBox>
+        <VuiBox mt={3} textAlign="center">
+          <Checkbox
+            sx={{ "& .MuiSvgIcon-root": { fontSize: 24, fill: "#d6e6e6" } }}
+            color="success"
+            defaultChecked={true}
+            checked={true}
+          />
+          <VuiTypography variant="button" color="text" fontWeight="regular">
+            By signing-in to SA Trading Bot platform, I agree with the{" "}
+            <VuiTypography
+              component={Link}
+              to="/terms-and-conditions"
+              variant="button"
+              color="white"
+              fontWeight="medium"
+            >
+              Terms and Conditions
+            </VuiTypography>
+            {" and "}
+            <VuiTypography
+              component={Link}
+              to="/disclaimer"
+              variant="button"
+              color="white"
+              fontWeight="medium"
+            >
+              Disclaimer
             </VuiTypography>
           </VuiTypography>
         </VuiBox>

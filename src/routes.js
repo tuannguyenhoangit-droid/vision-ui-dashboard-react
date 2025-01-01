@@ -48,11 +48,13 @@ import SignIn from "layouts/authentication/sign-in";
 import SignUp from "layouts/authentication/sign-up";
 
 // Vision UI Dashboard React icons
-import { IoRocketSharp } from "react-icons/io5";
+import { IoDocument, IoRocketSharp } from "react-icons/io5";
 import { IoIosDocument } from "react-icons/io";
 import { BsFillPersonFill } from "react-icons/bs";
 import { IoHome } from "react-icons/io5";
 import VerifyEmail from "layouts/authentication/verifyEmail";
+import Disclaimer from "layouts/authentication/disclaimer";
+import TermAndCondition from "layouts/authentication/term-and-condition";
 
 const routes = [
   {
@@ -121,9 +123,9 @@ const routes = [
     type: "collapse",
     name: "Sign Out",
     key: "sign-up",
-    route: "/authentication/sign-up",
+    route: "/authentication/sign-in",
     icon: <IoRocketSharp size="15px" color="inherit" />,
-    component: SignUp,
+    component: SignIn,
     noCollapse: true,
   },
   {
@@ -132,6 +134,22 @@ const routes = [
     route: "/authentication/verify-email",
     icon: <IoRocketSharp size="15px" color="inherit" />,
     component: VerifyEmail,
+    noCollapse: true,
+  },
+  {
+    name: "Disclaimer",
+    key: "disclaimer",
+    route: "/disclaimer",
+    icon: <IoDocument size="15px" color="inherit" />,
+    component: Disclaimer,
+    noCollapse: true,
+  },
+  {
+    name: "Term and Conditions",
+    key: "tnc",
+    route: "/terms-and-conditions",
+    icon: <IoDocument size="15px" color="inherit" />,
+    component: TermAndCondition,
     noCollapse: true,
   },
 ];
