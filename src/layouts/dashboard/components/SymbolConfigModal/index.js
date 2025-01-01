@@ -598,7 +598,7 @@ export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
                       flexDirection: "column",
                     },
                     [breakpoints.only("xl")]: {
-                      flexDirection: "row",
+                      flexDirection: "column",
                     },
                   })}
                 >

@@ -123,12 +123,15 @@ function Dashboard() {
         ...barChartOptionsDashboard,
         xaxis: {
           ...barChartOptionsDashboard.xaxis,
-          categories: (incomePnL?.data || []).map((ic) => ic.d),
+          categories: (incomePnL?.data || []).map((ic) => {
+            const m = ic.d.split("-")[1];
+            return [ic.d.split("-")[0], parseInt(m) + 1].join("-");
+          }),
         },
       },
       data: {
         name: "PnL",
-        data: (incomePnL.data || []).map(({ income }) => income),
+        data: (incomePnL.data || []).map(({ income }) => income).reverse(),
       },
     };
 
