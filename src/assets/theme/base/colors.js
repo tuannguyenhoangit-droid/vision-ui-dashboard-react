@@ -134,6 +134,21 @@ export default {
     body: "#030c1d",
   },
 
+  dribbble: {
+    main: "#ea4c89",
+    dark: "#e73177",
+  },
+
+  slack: {
+    main: "#3aaf85",
+    dark: "#329874",
+  },
+
+  instagram: {
+    main: "#125688",
+    dark: "#0e456d",
+  },
+
   gradients: {
     navbar: {
       deg: "123.64deg",

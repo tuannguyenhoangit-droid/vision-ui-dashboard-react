@@ -23,7 +23,7 @@ import { styled } from "@mui/material/styles";
 export default styled(Switch)(({ theme, ownerState }) => {
   const { palette } = theme;
   const { color } = ownerState;
-  const { white, secondary } = palette;
+  const { white, success, light } = palette;
 
   // styles for the button with variant="contained"
   const containedStyles = () => {
@@ -34,11 +34,11 @@ export default styled(Switch)(({ theme, ownerState }) => {
 
     return {
       "&.MuiSwitch-root": {
-        "& .MuiSwitch-thumb": {
+        "& .Mui-checked+.MuiSwitch-thumb": {
           backgroundColor: white.main,
         },
         "& .MuiSwitch-track": {
-          backgroundColor: `${secondary.main} !important`,
+          backgroundColor: `${light.focus} !important`,
           borderColor: "transparent",
         },
         "& .Mui-checked+.MuiSwitch-track": {

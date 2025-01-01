@@ -1,5 +1,6 @@
-import { ButtonGroup, Checkbox, Dialog } from "@mui/material";
-
+import { ButtonGroup, Checkbox, Dialog, Step, StepLabel, Stepper } from "@mui/material";
+import PropTypes from "prop-types";
+import { styled } from "@mui/material/styles";
 // Vision UI Dashboard React components
 import VuiBox from "components/VuiBox";
 import VuiTypography from "components/VuiTypography";
@@ -7,16 +8,117 @@ import VuiInput from "components/VuiInput";
 import VuiButton from "components/VuiButton";
 import VuiSwitch from "components/VuiSwitch";
 import GradientBorder from "examples/GradientBorder";
-
 // Vision UI Dashboard assets
 import radialGradient from "assets/theme/functions/radialGradient";
 import palette from "assets/theme/base/colors";
 import borders from "assets/theme/base/borders";
 import { useEffect, useMemo, useState } from "react";
-import SyncIcon from "@mui/icons-material/Sync";
 import { useDispatch } from "react-redux";
-import { createSymbolConfig, getSymbolConfig } from "../../../../services/api";
+import { createSymbolConfig, getSymbolConfig, getTickerPrice } from "../../../../services/api";
 import { setSymbolConfigData } from "../../../../redux/futures/symbolConfigSlice";
+import useDebounce from "utils";
+
+import SettingsIcon from "@mui/icons-material/Settings";
+import GroupAddIcon from "@mui/icons-material/GroupAdd";
+import VideoLabelIcon from "@mui/icons-material/VideoLabel";
+import StepConnector, { stepConnectorClasses } from "@mui/material/StepConnector";
+import MiniStatisticsCard from "examples/Cards/StatisticsCards/MiniStatisticsCard";
+import { FaFileInvoiceDollar } from "react-icons/fa";
+
+const ColorlibConnector = styled(StepConnector)(({ theme }) => ({
+  [`&.${stepConnectorClasses.alternativeLabel}`]: {
+    top: 22,
+  },
+  [`&.${stepConnectorClasses.active}`]: {
+    [`& .${stepConnectorClasses.line}`]: {
+      backgroundImage: "linear-gradient( 95deg, #125688 0%, #55acee 50%, #0077b5 100%)",
+    },
+  },
+  [`&.${stepConnectorClasses.completed}`]: {
+    [`& .${stepConnectorClasses.line}`]: {
+      backgroundImage: "linear-gradient( 95deg, #0077b5 0%, #55acee 50%, #125688 100%)",
+    },
+  },
+  [`& .${stepConnectorClasses.line}`]: {
+    height: 3,
+    border: 0,
+    backgroundColor: "#eaeaf0",
+    borderRadius: 1,
+    ...theme.applyStyles("dark", {
+      backgroundColor: theme.palette.grey[800],
+    }),
+  },
+}));
+
+const ColorlibStepIconRoot = styled("div")(({ theme }) => ({
+  backgroundColor: "#ccc",
+  zIndex: 1,
+  color: "#fff",
+  width: 50,
+  height: 50,
+  display: "flex",
+  borderRadius: "50%",
+  justifyContent: "center",
+  alignItems: "center",
+  ...theme.applyStyles("dark", {
+    backgroundColor: theme.palette.grey[700],
+  }),
+  variants: [
+    {
+      props: ({ ownerState }) => ownerState.active,
+      style: {
+        backgroundImage: "linear-gradient( 136deg, #2d8cfc 0%, #2d8cfc 50%, #2d8cfc 100%)",
+        boxShadow: "0 4px 10px 0 rgba(0,0,0,.25)",
+      },
+    },
+    {
+      props: ({ ownerState }) => ownerState.completed,
+      style: {
+        backgroundImage: "linear-gradient( 136deg, #0f4a91 0%, #0f4a91 50%, #0f4a91 100%)",
+      },
+    },
+    {
+      props: ({ ownerState }) => !ownerState.completed && !ownerState.active,
+      style: {
+        backgroundImage: "linear-gradient( 136deg, #0f4a91 0%, #0f4a91 50%, #0f4a91 100%)",
+      },
+    },
+  ],
+}));
+
+function ColorlibStepIcon(props) {
+  const { active, completed, className } = props;
+
+  const icons = {
+    1: <SettingsIcon />,
+    2: <GroupAddIcon />,
+    3: <VideoLabelIcon />,
+  };
+
+  return (
+    <ColorlibStepIconRoot ownerState={{ completed, active }} className={className}>
+      {icons[String(props.icon)]}
+    </ColorlibStepIconRoot>
+  );
+}
+
+ColorlibStepIcon.propTypes = {
+  /**
+   * Whether this step is active.
+   * @default false
+   */
+  active: PropTypes.bool,
+  className: PropTypes.string,
+  /**
+   * Mark the step as completed. Is passed to child components.
+   * @default false
+   */
+  completed: PropTypes.bool,
+  /**
+   * The label displayed in the step icon.
+   */
+  icon: PropTypes.node,
+};
 
 const SUPPORT_CHART_FRAME = ["3m", "5m", "15m", "30m"];
 
@@ -51,12 +153,17 @@ const initConfig = {
   maxBudget: 0,
   side: "BUY",
   buyRequireHistogram: [],
+  requireHistogramCondition: "AND",
   optimizeEntry: false,
+  optimizeEntryPercent: 0,
 };
 export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
   const [loading, setLoading] = useState(false);
   const [requireFrame, setRequireFrame] = useState({});
   const [config, setConfig] = useState(initConfig);
+  const [tickerPrice, setTickerPrice] = useState({});
+  const [currentStep, setCurrentStep] = useState(0);
+
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -85,6 +192,7 @@ export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
         ...initConfig,
       });
       setRequireFrame({});
+      setCurrentStep(0);
     };
   }, [item]);
 
@@ -102,6 +210,7 @@ export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
       );
     });
   }, [config]);
+  console.log("config", config);
 
   const buyRequireChartFrameCheckbox = useMemo(() => {
     return BUY_REQUIRE_CHART_FRAME.map((it) => {
@@ -118,7 +227,7 @@ export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
         >
           <Checkbox
             sx={{ "& .MuiSvgIcon-root": { fontSize: 28, fill: it.pro ? "gray" : "#d6e6e6" } }}
-            disabled={it.pro}
+            disabled={it.pro || !["AND", "OR"].includes(config.requireHistogramCondition)}
             color="success"
             defaultChecked={currentChecked}
             checked={currentChecked}
@@ -144,21 +253,43 @@ export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
   }, [requireFrame, config]);
 
   const onChange = (key, value) => {
+    if (key === "symbol") setTickerPrice({});
     setConfig({ ...config, [key]: value });
   };
+
+  useDebounce(
+    () => {
+      if (config.symbol) {
+        getTickerPrice(config.symbol).then((tickerPrice) => {
+          if (tickerPrice.status === 1) {
+            setTickerPrice(tickerPrice);
+            // not found market lot size && ticker price
+            const marketLotSize = tickerPrice?.exchangeInfo?.filters.find(
+              (ft) => ft.filterType === "MARKET_LOT_SIZE"
+            );
+            onChange("buyAmount", parseFloat(marketLotSize.minQty));
+          }
+        });
+      }
+    },
+    [config.symbol],
+    800
+  );
 
   const onSubmit = async () => {
     if (config.symbol && config.frame && config.buyAmount) {
       setLoading(true);
       try {
         const result = await createSymbolConfig(
+          config.side,
           config.symbol,
-          config.frame,
           parseFloat(config.buyAmount),
           parseInt(config.maxBudget),
+          config.frame,
+          config.requireHistogramCondition,
+          config.buyRequireHistogram,
           config.optimizeEntry,
-          config.side,
-          config.buyRequireHistogram
+          config.optimizeEntryPercent
         );
 
         setLoading(false);
@@ -177,196 +308,399 @@ export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
     }
   };
 
+  const buttonStepSymbolDisabled = useMemo(() => {
+    // loading
+    if (loading) return true;
+
+    if (config?.symbol?.length === 0 || !["BUY", "SELL"].includes(config?.side)) return true;
+
+    // not found market lot size && ticker price
+    const marketLotSize = tickerPrice?.exchangeInfo?.filters.find(
+      (ft) => ft.filterType === "MARKET_LOT_SIZE"
+    );
+    if (marketLotSize === undefined) return true;
+    // invalid amount, cannot create order
+    if (
+      config.buyAmount < parseFloat(marketLotSize.minQty) ||
+      config.buyAmount > parseFloat(marketLotSize.maxQty) ||
+      config.buyAmount === 0
+    ) {
+      return true;
+    }
+    return false;
+  }, [loading, tickerPrice, config]);
+
+  const steps = ["Symbol", "Frame", "Optimize"];
+
   return (
-    <Dialog onClose={onClose} open={open}>
-      <GradientBorder borderRadius={"6"} maxWidth="100%">
+    <Dialog onClose={onClose} open={open} maxWidth>
+      <GradientBorder borderRadius={"6"} fullWidth="100%">
         <VuiBox
           component="form"
           role="form"
           borderRadius="inherit"
-          p="45px"
+          p="24px"
+          width="420px"
           sx={({ palette: { secondary } }) => ({
             backgroundColor: secondary.focus,
           })}
         >
-          <VuiTypography
-            color="white"
-            fontWeight="bold"
-            textAlign="center"
-            mb="24px"
-            sx={({ typography: { size } }) => ({
-              fontSize: size.lg,
+          <Stepper
+            sx={({}) => ({
+              marginTop: 2,
+              marginBottom: 6,
+              marginLeft: 0,
+              marginRight: 0,
             })}
+            activeStep={currentStep}
+            connector={<ColorlibConnector />}
+            alternativeLabel
           >
-            Add Symbol Config
-          </VuiTypography>
-          <VuiBox
-            display="flex"
-            sx={({ breakpoints }) => ({
-              [breakpoints.up("sm")]: {
-                flexDirection: "column",
-              },
-              [breakpoints.up("md")]: {
-                flexDirection: "row",
-              },
-              [breakpoints.only("xl")]: {
-                flexDirection: "row",
-              },
-            })}
-          >
-            <VuiBox mb={2}>
-              <VuiBox mb={1} ml={0.5}>
+            {steps.map((label) => (
+              <Step key={label}>
+                <StepLabel StepIconComponent={ColorlibStepIcon}>{label}</StepLabel>
+              </Step>
+            ))}
+          </Stepper>
+
+          {currentStep === 0 ? (
+            <VuiBox>
+              <VuiBox mb={4} display="flex" justifyContent="space-between" alignItems="center">
                 <VuiTypography component="label" variant="button" color="white" fontWeight="medium">
-                  Symbol
+                  SIDE
                 </VuiTypography>
+                <ButtonGroup variant="contained" aria-label="Basic button group">
+                  {!item?.side || item?.side === "BUY" ? (
+                    <VuiButton
+                      onClick={() => onChange("side", "BUY")}
+                      color={config.side === "BUY" ? "success" : "light"}
+                    >
+                      BUY
+                    </VuiButton>
+                  ) : null}
+                  {!item?.side || item?.side === "SELL" ? (
+                    <VuiButton
+                      onClick={() => onChange("side", "SELL")}
+                      color={config.side === "SELL" ? "error" : "light"}
+                    >
+                      SELL
+                    </VuiButton>
+                  ) : null}
+                </ButtonGroup>
               </VuiBox>
-              <GradientBorder
-                minWidth="100%"
-                borderRadius={borders.borderRadius.lg}
-                padding="1px"
-                backgroundImage={radialGradient(
-                  palette.gradients.borderLight.main,
-                  palette.gradients.borderLight.state,
-                  palette.gradients.borderLight.angle
-                )}
-              >
-                <VuiInput
-                  placeholder="BNB"
-                  value={config.symbol}
-                  onChange={(e) => onChange("symbol", e.nativeEvent.target.value)}
-                  sx={({ typography: { size } }) => ({
-                    fontSize: size.sm,
-                  })}
-                />
-              </GradientBorder>
-            </VuiBox>
-            <VuiBox mb={2} ml={2}>
-              <VuiBox mb={1} ml={0.5}>
+              <VuiBox mb={4} justifyContent="space-between" display="flex" alignItems="center">
+                <VuiBox>
+                  <VuiTypography
+                    component="label"
+                    variant="button"
+                    color="white"
+                    fontWeight="medium"
+                  >
+                    Symbol
+                  </VuiTypography>
+                </VuiBox>
+                <GradientBorder
+                  borderRadius={borders.borderRadius.lg}
+                  padding="1px"
+                  backgroundImage={radialGradient(
+                    palette.gradients.borderLight.main,
+                    palette.gradients.borderLight.state,
+                    palette.gradients.borderLight.angle
+                  )}
+                >
+                  <VuiInput
+                    placeholder="BNB"
+                    disabled={item?.symbol}
+                    value={config.symbol}
+                    onChange={(e) => onChange("symbol", e.nativeEvent.target.value)}
+                    sx={({ typography: { size } }) => ({
+                      fontSize: size.sm,
+                    })}
+                  />
+                </GradientBorder>
+              </VuiBox>
+              <VuiBox mb={4} justifyContent="space-between" display="flex" alignItems="center">
                 <VuiTypography component="label" variant="button" color="white" fontWeight="medium">
                   Buy Amount
                 </VuiTypography>
+                <GradientBorder
+                  borderRadius={borders.borderRadius.lg}
+                  padding="1px"
+                  backgroundImage={radialGradient(
+                    palette.gradients.borderLight.main,
+                    palette.gradients.borderLight.state,
+                    palette.gradients.borderLight.angle
+                  )}
+                >
+                  <VuiInput
+                    type="text"
+                    value={config.buyAmount}
+                    placeholder="0.1"
+                    onChange={(e) => onChange("buyAmount", e.nativeEvent.target.value)}
+                    sx={({ typography: { size } }) => ({
+                      fontSize: size.sm,
+                    })}
+                  />
+                </GradientBorder>
               </VuiBox>
-              <GradientBorder
-                minWidth="100%"
-                borderRadius={borders.borderRadius.lg}
-                padding="1px"
-                backgroundImage={radialGradient(
-                  palette.gradients.borderLight.main,
-                  palette.gradients.borderLight.state,
-                  palette.gradients.borderLight.angle
-                )}
-              >
-                <VuiInput
-                  type="text"
-                  value={config.buyAmount}
-                  placeholder="0.1"
-                  onChange={(e) => onChange("buyAmount", e.nativeEvent.target.value)}
-                  sx={({ typography: { size } }) => ({
-                    fontSize: size.sm,
-                  })}
-                />
-              </GradientBorder>
-            </VuiBox>
-          </VuiBox>
-          <VuiBox mb={2}>
-            <VuiBox mb={1} ml={0.5}>
-              <VuiTypography component="label" variant="button" color="white" fontWeight="medium">
-                Trade Chart Frame
-              </VuiTypography>
-            </VuiBox>
-            <ButtonGroup variant="contained" aria-label="Basic button group">
-              {tradeChartFrameButtons}
-            </ButtonGroup>
-          </VuiBox>
-
-          <VuiBox mb={2}>
-            <VuiBox mb={1} ml={0.5}>
-              <VuiTypography component="label" variant="button" color="white" fontWeight="medium">
-                Require Matching All Histogram in Frame
-              </VuiTypography>
-            </VuiBox>
-            <VuiBox
-              display="flex"
-              sx={({ breakpoints }) => ({
-                [breakpoints.up("sm")]: {
-                  flexDirection: "column",
-                },
-                [breakpoints.up("md")]: {
-                  flexDirection: "column",
-                },
-                [breakpoints.only("xl")]: {
-                  flexDirection: "column",
-                },
-              })}
-            >
-              {buyRequireChartFrameCheckbox}
-            </VuiBox>
-          </VuiBox>
-          <VuiBox mb={2}>
-            <VuiBox mb={1} ml={0.5}>
-              <VuiTypography component="label" variant="button" color="white" fontWeight="medium">
-                Max Budget
-              </VuiTypography>
-            </VuiBox>
-            <GradientBorder
-              minWidth="100%"
-              borderRadius={borders.borderRadius.lg}
-              padding="1px"
-              backgroundImage={radialGradient(
-                palette.gradients.borderLight.main,
-                palette.gradients.borderLight.state,
-                palette.gradients.borderLight.angle
-              )}
-            >
-              <VuiInput
-                type="text"
-                value={config.maxBudget}
-                onChange={(e) => onChange("maxBudget", e.nativeEvent.target.value)}
-                placeholder="500 USDT"
-                sx={({ typography: { size } }) => ({
-                  fontSize: size.sm,
-                })}
-              />
-            </GradientBorder>
-          </VuiBox>
-          <VuiBox mb={2}>
-            <VuiBox mb={1} ml={0.5}>
-              <VuiTypography component="label" variant="button" color="white" fontWeight="medium">
-                Optimize Entry Position
-              </VuiTypography>
-            </VuiBox>
-            <VuiBox display="flex" alignItems="center">
-              <VuiSwitch
-                color="success"
-                checked={config.optimizeEntry}
-                onChange={(e, switched) => {
-                  onChange("optimizeEntry", switched);
+              <MiniStatisticsCard
+                title={{ text: "Per order (including leverage)", fontWeight: "regular" }}
+                count={[
+                  "$",
+                  Math.round((tickerPrice?.data?.price || 0) * config.buyAmount * 100) / 100,
+                ].join("")}
+                percentage={{ color: "success", text: "" }}
+                icon={{
+                  color: "info",
+                  component: <FaFileInvoiceDollar size="22px" color="white" />,
                 }}
               />
-              <VuiTypography
-                ml={1}
-                variant="caption"
-                color="white"
-                fontWeight="normal"
-                onClick={() => onChange("optimizeEntry", !config.optimizeEntry)}
-                sx={{ cursor: "pointer", userSelect: "none" }}
-              >
-                When position size in USDT reach Maximum Budget
-              </VuiTypography>
+
+              <VuiBox mt={4} justifyContent="space-between" display="flex" alignItems="center">
+                <VuiTypography component="label" variant="button" color="white" fontWeight="medium">
+                  Max Budget
+                </VuiTypography>
+                <GradientBorder
+                  borderRadius={borders.borderRadius.lg}
+                  padding="1px"
+                  backgroundImage={radialGradient(
+                    palette.gradients.borderLight.main,
+                    palette.gradients.borderLight.state,
+                    palette.gradients.borderLight.angle
+                  )}
+                >
+                  <VuiInput
+                    type="text"
+                    value={config.maxBudget}
+                    onChange={(e) => onChange("maxBudget", e.nativeEvent.target.value)}
+                    placeholder="500 USDT"
+                    sx={({ typography: { size } }) => ({
+                      fontSize: size.sm,
+                    })}
+                  />
+                </GradientBorder>
+              </VuiBox>
+              <VuiBox display="flex" mt={1}>
+                <VuiTypography component="label" variant="button" color="text" fontWeight="light">
+                  Maximum DCA budget for the symbol (including leverage)
+                </VuiTypography>
+              </VuiBox>
+              <VuiBox mt={6}>
+                <VuiButton
+                  onClick={() => setCurrentStep(1)}
+                  disabled={buttonStepSymbolDisabled}
+                  color={"info"}
+                  fullWidth
+                >
+                  NEXT
+                </VuiButton>
+              </VuiBox>
             </VuiBox>
-          </VuiBox>
-          <VuiBox mt={4} mb={1}>
-            <VuiButton
-              loading={loading}
-              disabled={loading}
-              onClick={onSubmit}
-              color="info"
-              fullWidth
-            >
-              <SyncIcon size="22px" color="white" />
-              CREATE CONFIG
-            </VuiButton>
-          </VuiBox>
+          ) : null}
+
+          {currentStep === 1 ? (
+            <VuiBox>
+              <VuiBox mb={4}>
+                <VuiBox mb={1}>
+                  <VuiTypography
+                    component="label"
+                    variant="button"
+                    color="white"
+                    fontWeight="medium"
+                  >
+                    Trade Chart Frame
+                  </VuiTypography>
+                </VuiBox>
+                <ButtonGroup variant="contained" aria-label="Basic button group">
+                  {tradeChartFrameButtons}
+                </ButtonGroup>
+                <VuiBox mt={1} display="flex">
+                  <VuiTypography component="label" variant="button" color="text" fontWeight="light">
+                    Main frame that Bot open buy and sell order
+                  </VuiTypography>
+                </VuiBox>
+              </VuiBox>
+
+              <VuiBox mb={4}>
+                <VuiBox display="flex" justifyContent="space-between" alignItems="center">
+                  <VuiBox display="vertical">
+                    <VuiTypography
+                      component="label"
+                      variant="button"
+                      color="white"
+                      fontWeight="medium"
+                    >
+                      Histogram Condition{" "}
+                    </VuiTypography>
+                    <VuiTypography
+                      component="label"
+                      variant="button"
+                      color="text"
+                      fontWeight="light"
+                    >
+                      (Optional)
+                    </VuiTypography>
+                  </VuiBox>
+                  <ButtonGroup variant="contained" aria-label="Basic button group">
+                    <VuiButton
+                      onClick={() => onChange("requireHistogramCondition", "AND")}
+                      color={config.requireHistogramCondition === "AND" ? "orange" : "light"}
+                    >
+                      AND
+                    </VuiButton>
+                    <VuiButton
+                      onClick={() => onChange("requireHistogramCondition", "OR")}
+                      color={config.requireHistogramCondition === "OR" ? "dribbble" : "light"}
+                    >
+                      OR
+                    </VuiButton>
+                  </ButtonGroup>
+                </VuiBox>
+                {/* <VuiBox>
+                  <VuiTypography component="label" variant="button" color="text" fontWeight="light">
+                    Main frame that Bot open buy and sell order
+                  </VuiTypography>
+                </VuiBox> */}
+              </VuiBox>
+
+              <VuiBox mb={2}>
+                <VuiBox mb={1} justifyContent="space-between" display="flex" alignItems="center">
+                  <VuiBox>
+                    <VuiBox>
+                      <VuiTypography
+                        component="label"
+                        variant="button"
+                        color="white"
+                        fontWeight="medium"
+                      >
+                        Require Matching Histogram{" "}
+                      </VuiTypography>
+                      <VuiTypography
+                        component="label"
+                        variant="button"
+                        color="text"
+                        fontWeight="light"
+                      >
+                        (Optional)
+                      </VuiTypography>
+                    </VuiBox>
+                    <VuiBox display="flex" mt={0.5} mb={1}>
+                      <VuiTypography
+                        component="label"
+                        variant="button"
+                        color="text"
+                        fontWeight="light"
+                      >
+                        {config.requireHistogramCondition === "AND"
+                          ? "Open order when ALL of following frame are matched"
+                          : "Open order when ONE of following frame is matched"}
+                      </VuiTypography>
+                    </VuiBox>
+                  </VuiBox>
+                </VuiBox>
+                <VuiBox
+                  display="flex"
+                  sx={({ breakpoints }) => ({
+                    [breakpoints.up("sm")]: {
+                      flexDirection: "column",
+                    },
+                    [breakpoints.up("md")]: {
+                      flexDirection: "column",
+                    },
+                    [breakpoints.only("xl")]: {
+                      flexDirection: "row",
+                    },
+                  })}
+                >
+                  {buyRequireChartFrameCheckbox}
+                </VuiBox>
+              </VuiBox>
+              <VuiBox mt={6} justifyContent="space-between" display="flex" alignItems="center">
+                <VuiBox minWidth="46%">
+                  <VuiButton onClick={() => setCurrentStep(0)} color={"light"} fullWidth>
+                    BACK
+                  </VuiButton>
+                </VuiBox>
+                <VuiBox minWidth="46%">
+                  <VuiButton
+                    onClick={() => setCurrentStep(2)}
+                    color={!config.frame || !config.requireHistogramCondition ? "dark" : "info"}
+                    fullWidth
+                  >
+                    NEXT
+                  </VuiButton>
+                </VuiBox>
+              </VuiBox>
+            </VuiBox>
+          ) : null}
+
+          {currentStep === 2 ? (
+            <VuiBox>
+              <VuiBox mb={4}>
+                <VuiBox mb={1} alignItems="center" justifyContent="space-between" display="flex">
+                  <VuiTypography
+                    component="label"
+                    variant="button"
+                    color="white"
+                    fontWeight="medium"
+                  >
+                    Optimize Entry Position
+                  </VuiTypography>
+                  <VuiSwitch
+                    color="success"
+                    checked={config.optimizeEntry}
+                    onChange={(e, switched) => {
+                      onChange("optimizeEntry", switched);
+                    }}
+                  />
+                </VuiBox>
+
+                <VuiBox display="flex">
+                  <VuiTypography component="label" variant="button" color="text" fontWeight="light">
+                    When position size in USDT (including leverage) reach Maximum Budget. By cutting
+                    off P% to release USDT so that BOT can do a new DCA.
+                  </VuiTypography>
+                </VuiBox>
+                <VuiBox mt={2}>
+                  <GradientBorder
+                    borderRadius={borders.borderRadius.lg}
+                    padding="1px"
+                    backgroundImage={radialGradient(
+                      palette.gradients.borderLight.main,
+                      palette.gradients.borderLight.state,
+                      palette.gradients.borderLight.angle
+                    )}
+                  >
+                    <VuiInput
+                      placeholder="5%"
+                      disabled={!config.optimizeEntry}
+                      value={config.optimizeEntryPercent}
+                      onChange={(e) => onChange("optimizeEntryPercent", e.nativeEvent.target.value)}
+                      sx={({ typography: { size } }) => ({
+                        fontSize: size.sm,
+                      })}
+                    />
+                  </GradientBorder>
+                </VuiBox>
+              </VuiBox>
+              <VuiBox mt={6} justifyContent="space-between" display="flex" alignItems="center">
+                <VuiBox minWidth="46%">
+                  <VuiButton onClick={() => setCurrentStep(1)} color={"light"} fullWidth>
+                    BACK
+                  </VuiButton>
+                </VuiBox>
+                <VuiBox minWidth="46%">
+                  <VuiButton
+                    onClick={onSubmit}
+                    color={!config.frame || !config.requireHistogramCondition ? "dark" : "info"}
+                    fullWidth
+                  >
+                    CREATE
+                  </VuiButton>
+                </VuiBox>
+              </VuiBox>
+            </VuiBox>
+          ) : null}
           <VuiBox mt={3} textAlign="center">
             <VuiTypography variant="button" color="text" fontWeight="regular">
               View setup guide

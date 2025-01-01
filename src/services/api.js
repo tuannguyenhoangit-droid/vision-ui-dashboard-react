@@ -195,23 +195,27 @@ export const accountUpdateKeys = async (signature) => {
 };
 
 export const createSymbolConfig = async (
+  side = "BUY",
   symbol,
-  frame,
   buyAmount,
   maxBudget,
+  frame,
+  requireHistogramCondition,
+  buyRequireHistogram = [],
   optimizeEntry,
-  side = "BUY",
-  buyRequireHistogram = []
+  optimizeEntryPercent
 ) => {
   const token = await auth.currentUser?.getIdToken?.();
   const payload = {
+    side,
     symbol,
-    frame,
     buyAmount,
     maxBudget,
+    frame,
+    requireHistogramCondition,
     optimizeEntry,
-    side,
     buyRequireHistogram,
+    optimizeEntryPercent,
   };
   return new Promise(async (resolve, reject) => {
     await axios
@@ -270,12 +274,12 @@ export const deleteSymbolConfig = async (symbol) => {
   });
 };
 
-export const getExchangeInfo = async () => {
+export const getTickerPrice = async (symbol) => {
   const token = await auth.currentUser?.getIdToken?.();
-  if (!token) return [];
+  if (!token) return {};
   return new Promise(async (resolve, reject) => {
     await axios
-      .get("https://sa.premierct.asia/v1/future/exchangeInfo", {
+      .get(`https://sa.premierct.asia/v1/future/ticker/price/${[symbol, "USDT"].join("")}`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: ["Bearer", token].join(" "),

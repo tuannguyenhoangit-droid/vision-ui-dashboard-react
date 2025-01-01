@@ -1,3 +1,5 @@
+import { useEffect, useCallback } from "react";
+
 export const timeDifference = (createdAt) => {
   const now = Date.now(); // Lấy thời gian hiện tại (milliseconds)
   const diff = now - createdAt; // Tính độ lệch thời gian (milliseconds)
@@ -19,3 +21,12 @@ export const timeDifference = (createdAt) => {
     return "just now"; // Nếu thời gian khớp
   }
 };
+
+export default function useDebounce(effect, dependencies, delay) {
+  const callback = useCallback(effect, dependencies);
+
+  useEffect(() => {
+    const timeout = setTimeout(callback, delay);
+    return () => clearTimeout(timeout);
+  }, [callback, delay]);
+}

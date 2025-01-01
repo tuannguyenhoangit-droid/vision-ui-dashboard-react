@@ -110,7 +110,6 @@ function Dashboard() {
           getBalance().then(setBalance);
           getIncomePnL().then(setIncomePnL);
           getSymbolConfig().then((data) => dispatch(setSymbolConfigData(data)));
-          // getExchangeInfo().then(setExchangeInfo);
         });
       }
     }, 1000);
