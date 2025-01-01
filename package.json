@@ -3,7 +3,7 @@
   "version": "3.0.0",
   "private": true,
   "author": "Ris Nguyen",
-  "description": "SA BOT Dashboard",
+  "description": "SA Trading BOT",
   "homepage": "https://sa-bot.web.app",
   "dependencies": {
     "@emotion/cache": "11.4.0",

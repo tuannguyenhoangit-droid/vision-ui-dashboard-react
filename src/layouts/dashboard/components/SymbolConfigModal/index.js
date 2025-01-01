@@ -520,7 +520,7 @@ export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
                     color="white"
                     fontWeight="medium"
                   >
-                    Trade Chart Frame
+                    Trading Frame
                   </VuiTypography>
                 </VuiBox>
                 <ButtonGroup variant="contained" aria-label="Basic button group">
@@ -610,7 +610,7 @@ export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
                 percentage={{
                   color: "success",
                   text: [
-                    "When histogram of Trade Frame is in",
+                    "When histogram of Trading Frame is in",
                     config.side === "BUY" ? "Bottom" : "Top",
                     "and",
                     config.requireHistogramCondition === "AND"
@@ -620,7 +620,7 @@ export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
                     config.side === "BUY" ? "Bottom" : "Top",
                     "then Bot will open a Limit Order at",
                     config.side === "BUY" ? "Bottom" : "Top",
-                    "of Bollinger Band of Trade Frame and cancel the Order if it not filled after",
+                    "of Bollinger Band of Trading Frame and cancel the Order if it not filled after",
                     config.frame,
                   ].join(" "),
                 }}

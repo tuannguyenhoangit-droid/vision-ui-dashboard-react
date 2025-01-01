@@ -43,7 +43,7 @@ function Disclaimer() {
       }
       image={bgSignIn}
       premotto="INSPIRED BY THE FUTURE:"
-      motto="THE SA BOT DASHBOARD"
+      motto="THE SA TRADING BOT DASHBOARD"
       cardContent
     >
       <GradientBorder m="12px" borderRadius={borders.borderRadius.form} width="100%">

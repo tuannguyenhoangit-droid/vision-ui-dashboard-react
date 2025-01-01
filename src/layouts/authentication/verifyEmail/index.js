@@ -38,10 +38,10 @@ function VerifyEmail() {
     <CoverLayout
       title="Verify Email"
       color="white"
-      description={"The email need to be verified before access SA BOT"}
+      description={"The email need to be verified before access SA Trading Bot"}
       image={bgSignIn}
       premotto="INSPIRED BY THE FUTURE:"
-      motto="THE SA BOT DASHBOARD"
+      motto="THE SA TRADING BOT DASHBOARD"
       cardContent
     >
       <GradientBorder borderRadius={borders.borderRadius.form} minWidth="100%" maxWidth="100%">

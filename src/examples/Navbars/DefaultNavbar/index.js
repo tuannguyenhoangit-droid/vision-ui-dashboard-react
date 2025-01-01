@@ -1,7 +1,7 @@
 /*!
 
 =========================================================
-* SA BOT - v1.0.0
+
 =========================================================
 
 
@@ -115,7 +115,7 @@ function DefaultNavbar({ transparent, light, action }) {
               margin: "0 auto",
             }}
           >
-            SA BOT
+            SA Trading Bot  
           </VuiTypography>
         </VuiBox>
         <VuiBox color="inherit" display={{ xs: "none", lg: "flex" }} m={0} p={0}>
