@@ -193,6 +193,7 @@ export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
       });
       setRequireFrame({});
       setCurrentStep(0);
+      setTickerPrice({});
     };
   }, [item]);
 
@@ -210,7 +211,6 @@ export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
       );
     });
   }, [config]);
-  console.log("config", config);
 
   const buyRequireChartFrameCheckbox = useMemo(() => {
     return BUY_REQUIRE_CHART_FRAME.map((it) => {
@@ -267,7 +267,10 @@ export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
             const marketLotSize = tickerPrice?.exchangeInfo?.filters.find(
               (ft) => ft.filterType === "MARKET_LOT_SIZE"
             );
-            onChange("buyAmount", parseFloat(marketLotSize.minQty));
+            if (item === null) {
+              // case new config then set amount default from exchange data
+              onChange("buyAmount", parseFloat(marketLotSize.minQty));
+            }
           }
         });
       }
@@ -289,7 +292,7 @@ export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
           config.requireHistogramCondition,
           config.buyRequireHistogram,
           config.optimizeEntry,
-          config.optimizeEntryPercent
+          parseFloat(config.optimizeEntryPercent)
         );
 
         setLoading(false);

@@ -47,7 +47,7 @@ function TimelineItem({ color, icon, title, dateTime, description, realizedPnl }
       <VuiBox ml="20px" pt={description ? 0.7 : 0.5} lineHeight={0} maxWidth="30rem">
         <VuiBox>
           <VuiTypography variant="button" fontWeight="medium" color="success">
-            {[realizedPnl > 0 ? "+ $" : "- $", Math.round(realizedPnl * 100) / 100]}
+            {[realizedPnl >= 0.0 ? "+ $" : "- $", Math.round(realizedPnl * 100) / 100]}
           </VuiTypography>
           <VuiTypography ml={0.5} variant="button" fontWeight="medium" color="white">
             {title}

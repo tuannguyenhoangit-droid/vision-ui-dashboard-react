@@ -57,7 +57,7 @@ function OrdersOverview({ data = [] }) {
           return (
             <TimelineItem
               key={item.id}
-              realizedPnl={parseFloat(item.realizedPnl) - parseFloat(item.commission)}
+              realizedPnl={Math.max(parseFloat(item.realizedPnl) - parseFloat(item.commission), 0)}
               icon={<RiMoneyDollarCircleFill size="16px" color={palette.info.main} />}
               title={[item.side, item.symbol].join(" ")}
               dateTime={new Date(item.time).toLocaleString()}

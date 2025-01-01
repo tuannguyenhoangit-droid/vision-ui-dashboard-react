@@ -43,7 +43,7 @@ import ReferralTracking from "layouts/dashboard/components/ReferralTracking";
 import { IoGlobe } from "react-icons/io5";
 import { IoWallet } from "react-icons/io5";
 import { IoDocumentText } from "react-icons/io5";
-import { FaShoppingCart } from "react-icons/fa";
+import { FaFileInvoiceDollar, FaShoppingCart } from "react-icons/fa";
 
 // Data
 import BarChart from "examples/Charts/BarCharts/BarChart";
@@ -70,6 +70,8 @@ import { getAuth } from "firebase/auth";
 import { firebaseApp } from "../../firebase";
 import { useHistory } from "react-router-dom/cjs/react-router-dom";
 import VuiDialog from "components/VuiDialog";
+import { RiFile2Fill, RiMoneyDollarCircleFill } from "react-icons/ri";
+import { PowerOffOutlined } from "@mui/icons-material";
 
 const auth = getAuth(firebaseApp);
 
@@ -138,6 +140,8 @@ function Dashboard() {
   };
 
   const todayTrade = useMemo(() => {
+    console.log("tradeList", tradeList);
+
     const trade = tradeList.filter(({ time }) => time > startOrDay.getTime());
     return {
       count: trade.length,
@@ -188,7 +192,10 @@ function Dashboard() {
                     "%)",
                   ].join(""),
                 }}
-                icon={{ color: "info", component: <IoGlobe size="22px" color="white" /> }}
+                icon={{
+                  color: "info",
+                  component: <RiMoneyDollarCircleFill size="22px" color="white" />,
+                }}
               />
             </Grid>
             <Grid item xs={12} md={6} xl={3}>
@@ -204,14 +211,17 @@ function Dashboard() {
                     "%)",
                   ].join(""),
                 }}
-                icon={{ color: "info", component: <IoDocumentText size="22px" color="white" /> }}
+                icon={{
+                  color: "info",
+                  component: <RiMoneyDollarCircleFill size="22px" color="white" />,
+                }}
               />
             </Grid>
             <Grid item xs={12} md={6} xl={3}>
               <MiniStatisticsCard
                 title={{ text: "Today trades" }}
                 count={todayTrade.count}
-                icon={{ color: "info", component: <FaShoppingCart size="20px" color="white" /> }}
+                icon={{ color: "info", component: <IoDocumentText size="20px" color="white" /> }}
               />
             </Grid>
           </Grid>
