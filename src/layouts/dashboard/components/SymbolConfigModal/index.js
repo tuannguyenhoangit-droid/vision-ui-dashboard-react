@@ -23,7 +23,7 @@ import GroupAddIcon from "@mui/icons-material/GroupAdd";
 import VideoLabelIcon from "@mui/icons-material/VideoLabel";
 import StepConnector, { stepConnectorClasses } from "@mui/material/StepConnector";
 import MiniStatisticsCard from "examples/Cards/StatisticsCards/MiniStatisticsCard";
-import { FaFileInvoiceDollar } from "react-icons/fa";
+import { FaFileInvoiceDollar, FaIdeal } from "react-icons/fa";
 
 const ColorlibConnector = styled(StepConnector)(({ theme }) => ({
   [`&.${stepConnectorClasses.alternativeLabel}`]: {
@@ -130,19 +130,21 @@ const BUY_REQUIRE_CHART_FRAME = [
     label: "30m",
     pro: false,
   },
+];
+const BUY_REQUIRE_CHART_FRAME_P2 = [
   {
     id: "1h",
-    label: "1h (Pro version)",
+    label: "1h",
     pro: true,
   },
   {
     id: "2h",
-    label: "2h (Pro version)",
+    label: "2h",
     pro: true,
   },
   {
     id: "4h",
-    label: "4h (Pro version)",
+    label: "4h",
     pro: true,
   },
 ];
@@ -213,7 +215,7 @@ export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
   }, [config]);
 
   const buyRequireChartFrameCheckbox = useMemo(() => {
-    return BUY_REQUIRE_CHART_FRAME.map((it) => {
+    const renderFrames = (it) => {
       const currentChecked = requireFrame[it.id] || false;
       return (
         <VuiBox
@@ -249,7 +251,14 @@ export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
           </VuiTypography>
         </VuiBox>
       );
-    });
+    };
+
+    return (
+      <VuiBox display="flex" justifyContent="flex-start">
+        <VuiBox width="35%">{BUY_REQUIRE_CHART_FRAME.map((it) => renderFrames(it))}</VuiBox>
+        <VuiBox>{BUY_REQUIRE_CHART_FRAME_P2.map((it) => renderFrames(it))}</VuiBox>
+      </VuiBox>
+    );
   }, [requireFrame, config]);
 
   const onChange = (key, value) => {
@@ -333,7 +342,7 @@ export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
     return false;
   }, [loading, tickerPrice, config]);
 
-  const steps = ["Symbol", "Frame", "Optimize"];
+  const steps = ["Symbol", "Strategy", "Optimize"];
 
   return (
     <Dialog onClose={onClose} open={open} maxWidth>
@@ -461,7 +470,7 @@ export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
 
               <VuiBox mt={4} justifyContent="space-between" display="flex" alignItems="center">
                 <VuiTypography component="label" variant="button" color="white" fontWeight="medium">
-                  Max Budget
+                  Max Budget ($)
                 </VuiTypography>
                 <GradientBorder
                   borderRadius={borders.borderRadius.lg}
@@ -535,14 +544,6 @@ export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
                     >
                       Histogram Condition{" "}
                     </VuiTypography>
-                    <VuiTypography
-                      component="label"
-                      variant="button"
-                      color="text"
-                      fontWeight="light"
-                    >
-                      (Optional)
-                    </VuiTypography>
                   </VuiBox>
                   <ButtonGroup variant="contained" aria-label="Basic button group">
                     <VuiButton
@@ -569,36 +570,22 @@ export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
               <VuiBox mb={2}>
                 <VuiBox mb={1} justifyContent="space-between" display="flex" alignItems="center">
                   <VuiBox>
-                    <VuiBox>
-                      <VuiTypography
-                        component="label"
-                        variant="button"
-                        color="white"
-                        fontWeight="medium"
-                      >
-                        Require Matching Histogram{" "}
-                      </VuiTypography>
-                      <VuiTypography
-                        component="label"
-                        variant="button"
-                        color="text"
-                        fontWeight="light"
-                      >
-                        (Optional)
-                      </VuiTypography>
-                    </VuiBox>
-                    <VuiBox display="flex" mt={0.5} mb={1}>
-                      <VuiTypography
-                        component="label"
-                        variant="button"
-                        color="text"
-                        fontWeight="light"
-                      >
-                        {config.requireHistogramCondition === "AND"
-                          ? "Open order when ALL of following frame are matched"
-                          : "Open order when ONE of following frame is matched"}
-                      </VuiTypography>
-                    </VuiBox>
+                    <VuiTypography
+                      component="label"
+                      variant="button"
+                      color="white"
+                      fontWeight="medium"
+                    >
+                      Require Matching Histogram{" "}
+                    </VuiTypography>
+                    <VuiTypography
+                      component="label"
+                      variant="button"
+                      color="text"
+                      fontWeight="light"
+                    >
+                      (Optional)
+                    </VuiTypography>
                   </VuiBox>
                 </VuiBox>
                 <VuiBox
@@ -618,6 +605,26 @@ export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
                   {buyRequireChartFrameCheckbox}
                 </VuiBox>
               </VuiBox>
+              <MiniStatisticsCard
+                title={{ text: "Strategy", fontWeight: "regular" }}
+                percentage={{
+                  color: "success",
+                  text: [
+                    "When histogram of Trade Frame is in",
+                    config.side === "BUY" ? "Bottom" : "Top",
+                    "and",
+                    config.requireHistogramCondition === "AND"
+                      ? "All of Require frames"
+                      : "One of Require frame",
+                    config.requireHistogramCondition === "AND" ? "are in" : "is in",
+                    config.side === "BUY" ? "Bottom" : "Top",
+                    "then Bot will open a Limit Order at",
+                    config.side === "BUY" ? "Bottom" : "Top",
+                    "of Bollinger Band of Trade Frame and cancel the Order if it not filled after",
+                    config.frame,
+                  ].join(" "),
+                }}
+              />
               <VuiBox mt={6} justifyContent="space-between" display="flex" alignItems="center">
                 <VuiBox minWidth="46%">
                   <VuiButton onClick={() => setCurrentStep(0)} color={"light"} fullWidth>

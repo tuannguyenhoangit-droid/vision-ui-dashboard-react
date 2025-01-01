@@ -37,7 +37,7 @@ function MiniStatisticsCard({ bgColor, title, count, percentage, icon, direction
       <VuiBox>
         <VuiBox>
           <Grid container alignItems="center">
-            {direction === "left" ? (
+            {direction === "left" && icon?.component ? (
               <Grid item>
                 <VuiBox
                   bgColor={info}
@@ -54,7 +54,7 @@ function MiniStatisticsCard({ bgColor, title, count, percentage, icon, direction
                 </VuiBox>
               </Grid>
             ) : null}
-            <Grid item xs={8}>
+            <Grid item xs={icon?.component ? 8 : 12}>
               <VuiBox ml={direction === "left" ? 2 : 0} lineHeight={1}>
                 <VuiTypography
                   variant="caption"
@@ -73,7 +73,7 @@ function MiniStatisticsCard({ bgColor, title, count, percentage, icon, direction
                 </VuiTypography>
               </VuiBox>
             </Grid>
-            {direction === "right" ? (
+            {direction === "right" && icon?.component ? (
               <Grid item xs={4}>
                 <VuiBox
                   bgColor="#0075FF"
