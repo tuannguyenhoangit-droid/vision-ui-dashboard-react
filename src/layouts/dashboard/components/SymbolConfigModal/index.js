@@ -1,4 +1,4 @@
-import { ButtonGroup, Checkbox, Dialog, Step, StepLabel, Stepper } from "@mui/material";
+import { Alert, ButtonGroup, Checkbox, Dialog, Step, StepLabel, Stepper } from "@mui/material";
 import PropTypes from "prop-types";
 import { styled } from "@mui/material/styles";
 // Vision UI Dashboard React components
@@ -314,6 +314,9 @@ export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
         setConfig({
           ...initConfig,
         });
+        setRequireFrame({});
+        setCurrentStep(0);
+        setTickerPrice({});
       } catch (e) {
         setLoading(false);
       }
@@ -345,6 +348,10 @@ export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
   }, [loading, tickerPrice, config]);
 
   const steps = ["Symbol", "Strategy", "Optimize"];
+
+  const pricePerOrderLeverage =
+    Math.round((tickerPrice?.data?.price || 0) * config.buyAmount * 100) / 100;
+  const pricePerOrder = Math.round((pricePerOrderLeverage / 20) * 100) / 100;
 
   return (
     <Dialog onClose={onClose} open={open} maxWidth>
@@ -379,7 +386,26 @@ export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
 
           {currentStep === 0 ? (
             <VuiBox>
-              <VuiBox mb={2} display="flex" justifyContent="space-between" alignItems="center">
+              <Alert
+                sx={{
+                  borderColor: "#0075ff",
+                  borderRadius: 4,
+                  fontSize: 14,
+                  fontWeight: "medium",
+                  alignItems: "center",
+                }}
+                variant="outlined"
+                severity="warning"
+              >
+                Estimation base on sample leverage x20. Adjust leverage level in Binance please.
+              </Alert>
+              <VuiBox
+                mt={3}
+                mb={2}
+                display="flex"
+                justifyContent="space-between"
+                alignItems="center"
+              >
                 <VuiTypography component="label" variant="button" color="white" fontWeight="medium">
                   SIDE
                 </VuiTypography>
@@ -459,14 +485,10 @@ export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
               </VuiBox>
               <MiniStatisticsCard
                 title={{ text: "Per order (including leverage)", fontWeight: "regular" }}
-                count={[
-                  "$",
-                  Math.round((tickerPrice?.data?.price || 0) * config.buyAmount * 100) / 100,
-                ].join("")}
-                percentage={{ color: "success", text: "" }}
-                icon={{
-                  color: "info",
-                  component: <FaFileInvoiceDollar size="22px" color="white" />,
+                count={["$", pricePerOrderLeverage].join("")}
+                percentage={{
+                  color: "success",
+                  text: ["(or $", pricePerOrder, " exclude leverage)"].join(""),
                 }}
               />
 
