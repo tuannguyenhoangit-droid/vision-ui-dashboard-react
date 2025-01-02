@@ -87,6 +87,11 @@ const SymbolConfigItem = ({ row, onEditItem = () => null, onDeleteItem = () => n
         ))}
       </VuiBox>
     ),
+    "auto take profit": (
+      <VuiTypography variant="button" color="white" fontWeight="bold">
+        <VuiSwitch color="success" checked={row.autoTakeProfit}></VuiSwitch>
+      </VuiTypography>
+    ),
     "optimized entry": (
       <VuiTypography variant="button" color="white" fontWeight="bold">
         <VuiSwitch color="success" checked={row.optimizeEntry}></VuiSwitch>
@@ -194,6 +199,7 @@ function Projects({
             { name: "amount", align: "left" },
             { name: "max budget", align: "left" },
             { name: "require frames", align: "left" },
+            { name: "auto take profit", align: "left" },
             { name: "optimized entry", align: "left" },
             { name: "uptime", align: "left" },
             { name: "action", align: "center" },

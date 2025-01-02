@@ -149,11 +149,12 @@ const BUY_REQUIRE_CHART_FRAME_P2 = [
   },
 ];
 const initConfig = {
+  side: "BUY",
   symbol: "",
-  frame: "",
   buyAmount: 0,
   maxBudget: 0,
-  side: "BUY",
+  autoTakeProfit: true,
+  frame: "3m",
   buyRequireHistogram: [],
   requireHistogramCondition: "AND",
   optimizeEntry: false,
@@ -300,6 +301,7 @@ export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
           config.frame,
           config.requireHistogramCondition,
           config.buyRequireHistogram,
+          config.autoTakeProfit,
           config.optimizeEntry,
           parseFloat(config.optimizeEntryPercent)
         );
@@ -360,7 +362,7 @@ export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
           <Stepper
             sx={({}) => ({
               marginTop: 2,
-              marginBottom: 6,
+              marginBottom: 4,
               marginLeft: 0,
               marginRight: 0,
             })}
@@ -377,7 +379,7 @@ export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
 
           {currentStep === 0 ? (
             <VuiBox>
-              <VuiBox mb={4} display="flex" justifyContent="space-between" alignItems="center">
+              <VuiBox mb={2} display="flex" justifyContent="space-between" alignItems="center">
                 <VuiTypography component="label" variant="button" color="white" fontWeight="medium">
                   SIDE
                 </VuiTypography>
@@ -400,7 +402,7 @@ export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
                   ) : null}
                 </ButtonGroup>
               </VuiBox>
-              <VuiBox mb={4} justifyContent="space-between" display="flex" alignItems="center">
+              <VuiBox mb={2} justifyContent="space-between" display="flex" alignItems="center">
                 <VuiBox>
                   <VuiTypography
                     component="label"
@@ -431,7 +433,7 @@ export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
                   />
                 </GradientBorder>
               </VuiBox>
-              <VuiBox mb={4} justifyContent="space-between" display="flex" alignItems="center">
+              <VuiBox mb={2} justifyContent="space-between" display="flex" alignItems="center">
                 <VuiTypography component="label" variant="button" color="white" fontWeight="medium">
                   Buy Amount
                 </VuiTypography>
@@ -468,7 +470,7 @@ export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
                 }}
               />
 
-              <VuiBox mt={4} justifyContent="space-between" display="flex" alignItems="center">
+              <VuiBox mt={2} justifyContent="space-between" display="flex" alignItems="center">
                 <VuiTypography component="label" variant="button" color="white" fontWeight="medium">
                   Max Budget ($)
                 </VuiTypography>
@@ -497,7 +499,8 @@ export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
                   Maximum DCA budget for the symbol (including leverage)
                 </VuiTypography>
               </VuiBox>
-              <VuiBox mt={6}>
+
+              <VuiBox mt={4}>
                 <VuiButton
                   onClick={() => setCurrentStep(1)}
                   disabled={buttonStepSymbolDisabled}
@@ -512,7 +515,7 @@ export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
 
           {currentStep === 1 ? (
             <VuiBox>
-              <VuiBox mb={4}>
+              <VuiBox mb={2}>
                 <VuiBox mb={1}>
                   <VuiTypography
                     component="label"
@@ -521,50 +524,20 @@ export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
                     fontWeight="medium"
                   >
                     Trading Frame
+                    <VuiTypography
+                      component="label"
+                      variant="button"
+                      color="text"
+                      fontWeight="light"
+                    >
+                      {" "}
+                      (Main frame for trading)
+                    </VuiTypography>
                   </VuiTypography>
                 </VuiBox>
                 <ButtonGroup variant="contained" aria-label="Basic button group">
                   {tradeChartFrameButtons}
                 </ButtonGroup>
-                <VuiBox mt={1} display="flex">
-                  <VuiTypography component="label" variant="button" color="text" fontWeight="light">
-                    Main frame that Bot open buy and sell order
-                  </VuiTypography>
-                </VuiBox>
-              </VuiBox>
-
-              <VuiBox mb={4}>
-                <VuiBox display="flex" justifyContent="space-between" alignItems="center">
-                  <VuiBox display="vertical">
-                    <VuiTypography
-                      component="label"
-                      variant="button"
-                      color="white"
-                      fontWeight="medium"
-                    >
-                      Histogram Condition{" "}
-                    </VuiTypography>
-                  </VuiBox>
-                  <ButtonGroup variant="contained" aria-label="Basic button group">
-                    <VuiButton
-                      onClick={() => onChange("requireHistogramCondition", "AND")}
-                      color={config.requireHistogramCondition === "AND" ? "orange" : "light"}
-                    >
-                      AND
-                    </VuiButton>
-                    <VuiButton
-                      onClick={() => onChange("requireHistogramCondition", "OR")}
-                      color={config.requireHistogramCondition === "OR" ? "dribbble" : "light"}
-                    >
-                      OR
-                    </VuiButton>
-                  </ButtonGroup>
-                </VuiBox>
-                {/* <VuiBox>
-                  <VuiTypography component="label" variant="button" color="text" fontWeight="light">
-                    Main frame that Bot open buy and sell order
-                  </VuiTypography>
-                </VuiBox> */}
               </VuiBox>
 
               <VuiBox mb={2}>
@@ -605,27 +578,89 @@ export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
                   {buyRequireChartFrameCheckbox}
                 </VuiBox>
               </VuiBox>
+
+              {config.buyRequireHistogram.length > 0 ? (
+                <VuiBox mb={2}>
+                  <VuiBox display="flex" justifyContent="space-between" alignItems="center">
+                    <VuiBox display="vertical">
+                      <VuiTypography
+                        component="label"
+                        variant="button"
+                        color="white"
+                        fontWeight="medium"
+                      >
+                        Histogram Condition{" "}
+                      </VuiTypography>
+                    </VuiBox>
+                    <ButtonGroup variant="contained" aria-label="Basic button group">
+                      <VuiButton
+                        onClick={() => onChange("requireHistogramCondition", "AND")}
+                        color={config.requireHistogramCondition === "AND" ? "orange" : "light"}
+                      >
+                        AND
+                      </VuiButton>
+                      <VuiButton
+                        onClick={() => onChange("requireHistogramCondition", "OR")}
+                        color={config.requireHistogramCondition === "OR" ? "dribbble" : "light"}
+                      >
+                        OR
+                      </VuiButton>
+                    </ButtonGroup>
+                  </VuiBox>
+                </VuiBox>
+              ) : null}
               <MiniStatisticsCard
                 title={{ text: "Strategy", fontWeight: "regular" }}
                 percentage={{
                   color: "success",
                   text: [
                     "When histogram of Trading Frame is in",
-                    config.side === "BUY" ? "Bottom" : "Top",
-                    "and",
-                    config.requireHistogramCondition === "AND"
-                      ? "All of Require frames"
-                      : "One of Require frame",
-                    config.requireHistogramCondition === "AND" ? "are in" : "is in",
-                    config.side === "BUY" ? "Bottom" : "Top",
-                    "then Bot will open a Limit Order at",
-                    config.side === "BUY" ? "Bottom" : "Top",
+                    config.side === "BUY" ? "bottom" : "top",
+                    config.buyRequireHistogram.length > 0
+                      ? [
+                          "and",
+                          config.requireHistogramCondition === "AND"
+                            ? "All of Require frames"
+                            : "One of Require frame",
+                          config.requireHistogramCondition === "AND" ? "are in" : "is in",
+                          config.side === "BUY" ? "bottom" : "top",
+                        ].join(" ")
+                      : "",
+                    `then Bot will open a ${config.side} Limit Order at`,
+                    config.side === "BUY" ? "bottom" : "top",
                     "of Bollinger Band of Trading Frame and cancel the Order if it not filled after",
                     config.frame,
                   ].join(" "),
                 }}
               />
-              <VuiBox mt={6} justifyContent="space-between" display="flex" alignItems="center">
+              <VuiBox mt={3} mb={2}>
+                <VuiBox alignItems="center" justifyContent="space-between" display="flex">
+                  <VuiTypography
+                    component="label"
+                    variant="button"
+                    color="white"
+                    fontWeight="medium"
+                  >
+                    Bot takes profit for you?
+                  </VuiTypography>
+                  <VuiSwitch
+                    color="success"
+                    checked={config.autoTakeProfit}
+                    onChange={(e, switched) => {
+                      onChange("autoTakeProfit", switched);
+                    }}
+                  />
+                </VuiBox>
+
+                <VuiBox display="flex">
+                  <VuiTypography component="label" variant="button" color="text" fontWeight="light">
+                    {config.autoTakeProfit
+                      ? "Yes, Bot helps me to take profit"
+                      : "No, I take profit manually"}
+                  </VuiTypography>
+                </VuiBox>
+              </VuiBox>
+              <VuiBox mt={4} justifyContent="space-between" display="flex" alignItems="center">
                 <VuiBox minWidth="46%">
                   <VuiButton onClick={() => setCurrentStep(0)} color={"light"} fullWidth>
                     BACK
@@ -646,7 +681,7 @@ export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
 
           {currentStep === 2 ? (
             <VuiBox>
-              <VuiBox mb={4}>
+              <VuiBox mb={2}>
                 <VuiBox mb={1} alignItems="center" justifyContent="space-between" display="flex">
                   <VuiTypography
                     component="label"
@@ -693,7 +728,7 @@ export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
                   </GradientBorder>
                 </VuiBox>
               </VuiBox>
-              <VuiBox mt={6} justifyContent="space-between" display="flex" alignItems="center">
+              <VuiBox mt={4} justifyContent="space-between" display="flex" alignItems="center">
                 <VuiBox minWidth="46%">
                   <VuiButton onClick={() => setCurrentStep(1)} color={"light"} fullWidth>
                     BACK

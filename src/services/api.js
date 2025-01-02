@@ -202,6 +202,7 @@ export const createSymbolConfig = async (
   frame,
   requireHistogramCondition,
   buyRequireHistogram = [],
+  autoTakeProfit,
   optimizeEntry,
   optimizeEntryPercent
 ) => {
@@ -213,6 +214,7 @@ export const createSymbolConfig = async (
     maxBudget,
     frame,
     requireHistogramCondition,
+    autoTakeProfit,
     optimizeEntry,
     buyRequireHistogram,
     optimizeEntryPercent,
