@@ -89,7 +89,7 @@ const SymbolConfigItem = ({ row, onEditItem = () => null, onDeleteItem = () => n
     ),
     "auto take profit": (
       <VuiTypography variant="button" color="white" fontWeight="bold">
-        <VuiSwitch color="success" checked={row.autoTakeProfit}></VuiSwitch>
+        <VuiSwitch color="success" checked={row.autoTakeProfit || false}></VuiSwitch>
       </VuiTypography>
     ),
     "optimized entry": (
