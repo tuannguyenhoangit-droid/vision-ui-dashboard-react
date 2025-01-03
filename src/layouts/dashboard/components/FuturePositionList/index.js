@@ -50,10 +50,10 @@ const FuturePositionItem = ({ row }) => {
     side: (
       <VuiTypography
         variant="button"
-        color={parseInt(row.positionAmt) > 0 ? "success" : "error"}
+        color={parseInt(row.positionAmt) >= 0 ? "success" : "error"}
         fontWeight="bold"
       >
-        {parseInt(row.positionAmt) > 0 ? "BUY" : "SELL"}
+        {parseInt(row.positionAmt) >= 0 ? "BUY" : "SELL"}
       </VuiTypography>
     ),
     size: (

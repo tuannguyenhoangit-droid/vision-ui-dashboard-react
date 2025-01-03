@@ -37,6 +37,7 @@ import { timeDifference } from "utils";
 import { FaTrashAlt } from "react-icons/fa";
 import colors from "assets/theme/base/colors";
 import VuiButton from "components/VuiButton";
+import { isMobile } from "react-device-detect";
 import { getSymbolConfig, quickChangeFrame } from "../../../../services/api";
 import { setMessage } from "../../../../redux/futures/messageSlice";
 import { setSymbolConfigData } from "../../../../redux/futures/symbolConfigSlice";
@@ -133,27 +134,35 @@ function Projects({
   };
 
   const handleQuickChangeFrame = async (frame, buyRequireHistogram) => {
-    quickChangeFrame(frame, buyRequireHistogram).then(async({status})=> {
-      if (status === 1) {
-        dispatch(setMessage({
-          message: "Change frame success",
-          type: "success"
-        }))
-        const userSymbolConfig = await getSymbolConfig();
-        dispatch(setSymbolConfigData(userSymbolConfig));
-      } else {
-        dispatch(setMessage({
-          message: "Change frame error",
-          type: "error"
-        }))  
-      }
-    }).catch((e) => {
-      dispatch(setMessage({
-        message: "Change frame error",
-        type: "error"
-      }))
-    })
-  }
+    quickChangeFrame(frame, buyRequireHistogram)
+      .then(async ({ status }) => {
+        if (status === 1) {
+          dispatch(
+            setMessage({
+              message: "Change frame success",
+              type: "success",
+            })
+          );
+          const userSymbolConfig = await getSymbolConfig();
+          dispatch(setSymbolConfigData(userSymbolConfig));
+        } else {
+          dispatch(
+            setMessage({
+              message: "Change frame error",
+              type: "error",
+            })
+          );
+        }
+      })
+      .catch((e) => {
+        dispatch(
+          setMessage({
+            message: "Change frame error",
+            type: "error",
+          })
+        );
+      });
+  };
 
   const renderRow = useMemo(() => {
     return symbolConfig.map((row) => SymbolConfigItem({ row, onEditItem, onDeleteItem }));
@@ -187,33 +196,47 @@ function Projects({
       }}
     >
       <VuiBox display="flex" justifyContent="space-between" alignItems="center" mb="32px">
-        <VuiBox mb="auto">
-          <VuiTypography color="white" variant="lg" mb="6px" gutterBottom>
-            Running Symbol Configs
-          </VuiTypography>
-          <VuiBox display="flex" alignItems="center" lineHeight={0}>
-            <BsCheckCircleFill color="green" size="15px" />
-            <VuiTypography variant="button" fontWeight="regular" color="text" ml="5px">
-              Active configs
+        {isMobile ? null : (
+          <VuiBox mb="auto">
+            <VuiTypography color="white" variant="lg" mb="6px" gutterBottom>
+              Running Symbol Configs
             </VuiTypography>
+            <VuiBox display="flex" alignItems="center" lineHeight={0}>
+              <BsCheckCircleFill color="green" size="15px" />
+              <VuiTypography variant="button" fontWeight="regular" color="text" ml="5px">
+                Active configs
+              </VuiTypography>
+            </VuiBox>
           </VuiBox>
-        </VuiBox>
-        <VuiBox display="flex" alignItems="center">
+        )}
+        <VuiBox display="flex" alignItems="center" justifyContent="flex-end">
           <VuiBox display="flex" alignItems="center">
-            <VuiButton onClick={()=>handleQuickChangeFrame('3m', ['5m'])} size="small" color="dribbble">
+            <VuiButton
+              onClick={() => handleQuickChangeFrame("3m", ["5m"])}
+              size="small"
+              color="dribbble"
+            >
               3m - 5m
             </VuiButton>
             <VuiBox ml={1}>
-              <VuiButton onClick={()=>handleQuickChangeFrame('5m', ['15m'])} size="small" color="dribbble">
+              <VuiButton
+                onClick={() => handleQuickChangeFrame("5m", ["15m"])}
+                size="small"
+                color="dribbble"
+              >
                 5m - 15m
               </VuiButton>
             </VuiBox>
           </VuiBox>
           <VuiBox color="text" px={2}>
-            <Icon sx={{ cursor: "pointer", fontWeight: "bold" }} fontSize="small" onClick={openMenu}>
+            <Icon
+              sx={{ cursor: "pointer", fontWeight: "bold" }}
+              fontSize="small"
+              onClick={openMenu}
+            >
               more_vert
             </Icon>
-        </VuiBox>
+          </VuiBox>
         </VuiBox>
         {renderMenu}
       </VuiBox>

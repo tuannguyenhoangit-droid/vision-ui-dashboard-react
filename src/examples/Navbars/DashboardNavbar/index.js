@@ -34,7 +34,6 @@ import Icon from "@mui/material/Icon";
 // Vision UI Dashboard React components
 import VuiBox from "components/VuiBox";
 import VuiTypography from "components/VuiTypography";
-import VuiInput from "components/VuiInput";
 
 // Vision UI Dashboard React example components
 import Breadcrumbs from "examples/Breadcrumbs";
@@ -61,9 +60,8 @@ import {
 import team2 from "assets/images/team-2.jpg";
 import logoSpotify from "assets/images/small-logos/logo-spotify.svg";
 import { useSelector } from "react-redux";
-import MiniStatisticsCard from "examples/Cards/StatisticsCards/MiniStatisticsCard";
-import { IoWallet } from "react-icons/io5";
-import { Card, Grid } from "@mui/material";
+import { isMobile } from "react-device-detect";
+import { Card } from "@mui/material";
 import VuiSwitch from "components/VuiSwitch";
 import { changeFutureActive } from "../../../services/api";
 
@@ -163,20 +161,15 @@ function DashboardNavbar({ absolute, light, isMini }) {
       sx={(theme) => navbar(theme, { transparentNavbar, absolute, light })}
     >
       <Toolbar sx={(theme) => navbarContainer(theme)}>
-        <VuiBox
-          color="inherit"
-          mb={{ xs: 1, md: 0 }}
-          sx={(theme) => {
-            return {
-              ...navbarRow(theme, { isMini }),
-              [theme.breakpoints.only("xs")]: {
-                display: "none",
-              },
-            };
-          }}
-        >
-          <Breadcrumbs icon="home" title={route[route.length - 1]} route={route} light={light} />
-        </VuiBox>
+        {isMobile ? null : (
+          <VuiBox
+            color="inherit"
+            mb={{ xs: 1, md: 0 }}
+            sx={(theme) => navbarRow(theme, { isMini })}
+          >
+            <Breadcrumbs icon="home" title={route[route.length - 1]} route={route} light={light} />
+          </VuiBox>
+        )}
         {isMini ? null : (
           <VuiBox sx={(theme) => navbarRow(theme, { isMini })}>
             <VuiBox
@@ -244,13 +237,15 @@ function DashboardNavbar({ absolute, light, isMini }) {
                   >
                     account_circle
                   </Icon>
-                  <VuiTypography
-                    variant="button"
-                    fontWeight="medium"
-                    color={light ? "white" : "dark"}
-                  >
-                    {user.user?.displayName}
-                  </VuiTypography>
+                  {isMobile ? null : (
+                    <VuiTypography
+                      variant="button"
+                      fontWeight="medium"
+                      color={light ? "white" : "dark"}
+                    >
+                      {user.user?.displayName}
+                    </VuiTypography>
+                  )}
                 </IconButton>
               </Link>
               <IconButton

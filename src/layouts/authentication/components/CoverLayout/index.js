@@ -31,7 +31,7 @@ import Footer from "layouts/authentication/components/Footer";
 
 // Vision UI Dashboard React theme functions
 import colors from "assets/theme/base/colors";
-
+import { isMobile } from "react-device-detect";
 // Vision UI Dashboard React theme functions
 import tripleLinearGradient from "assets/theme/functions/tripleLinearGradient";
 import { useDispatch, useSelector } from "react-redux";
@@ -183,7 +183,7 @@ function CoverLayout({
           </VuiBox>
           <VuiBox
             px={3}
-            mb="50px"
+            mb={isMobile ? "0px" : "50px"}
             mx="auto"
             ml="auto !important"
             sx={({ breakpoints }) => ({
@@ -238,7 +238,7 @@ CoverLayout.defaultProps = {
   title: "",
   description: "",
   color: "info",
-  top: 20,
+  top: isMobile ? 6 : 20,
 };
 
 // Typechecking props for the CoverLayout
