@@ -236,6 +236,32 @@ export const createSymbolConfig = async (
   });
 };
 
+export const quickChangeFrame = async (
+  frame,
+  buyRequireHistogram = [],
+) => {
+  const token = await auth.currentUser?.getIdToken?.();
+  const payload = {
+    frame,
+    buyRequireHistogram,
+  };
+  return new Promise(async (resolve, reject) => {
+    await axios
+      .post("https://sa.premierct.asia/v1/future/symbol-config/quick-change-frame", payload, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: ["Bearer", token].join(" "),
+        },
+      })
+      .then((response) => {
+        resolve(response.data);
+      })
+      .catch((error) => {
+        console.log("error", error);
+      });
+  });
+};
+
 export const getSymbolConfig = async () => {
   const token = await auth.currentUser?.getIdToken?.();
   if (!token) return [];

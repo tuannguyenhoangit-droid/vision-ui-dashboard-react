@@ -23,7 +23,7 @@ import Card from "@mui/material/Card";
 import Icon from "@mui/material/Icon";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import { BsCheckCircleFill, BsPencilSquare, BsTrash2Fill } from "react-icons/bs";
+import { BsCheckCircleFill, BsPencilSquare } from "react-icons/bs";
 
 // Vision UI Dashboard React components
 import VuiBox from "components/VuiBox";
@@ -31,11 +31,15 @@ import VuiTypography from "components/VuiTypography";
 
 // Vision UI Dashboard Materail-UI example components
 import Table from "examples/Tables/Table";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import VuiSwitch from "components/VuiSwitch";
 import { timeDifference } from "utils";
 import { FaTrashAlt } from "react-icons/fa";
 import colors from "assets/theme/base/colors";
+import VuiButton from "components/VuiButton";
+import { getSymbolConfig, quickChangeFrame } from "../../../../services/api";
+import { setMessage } from "../../../../redux/futures/messageSlice";
+import { setSymbolConfigData } from "../../../../redux/futures/symbolConfigSlice";
 
 const SymbolConfigItem = ({ row, onEditItem = () => null, onDeleteItem = () => null }) => {
   const onEdit = () => onEditItem(row);
@@ -80,7 +84,7 @@ const SymbolConfigItem = ({ row, onEditItem = () => null, onDeleteItem = () => n
     ),
     "require frames": (
       <VuiBox width="8rem" textAlign="left">
-        {row.buyRequireHistogram.map((frame) => (
+        {row?.buyRequireHistogram?.map?.((frame) => (
           <VuiTypography variant="button" color="white" fontWeight="bold">
             {frame}
           </VuiTypography>
@@ -120,12 +124,36 @@ function Projects({
 }) {
   const symbolConfig = useSelector((e) => e.symbolConfig.data);
   const [menu, setMenu] = useState(null);
+  const dispatch = useDispatch();
 
   const openMenu = ({ currentTarget }) => setMenu(currentTarget);
   const closeMenu = (action) => {
     setMenu(null);
     onMenuClick?.(action);
   };
+
+  const handleQuickChangeFrame = async (frame, buyRequireHistogram) => {
+    quickChangeFrame(frame, buyRequireHistogram).then(async({status})=> {
+      if (status === 1) {
+        dispatch(setMessage({
+          message: "Change frame success",
+          type: "success"
+        }))
+        const userSymbolConfig = await getSymbolConfig();
+        dispatch(setSymbolConfigData(userSymbolConfig));
+      } else {
+        dispatch(setMessage({
+          message: "Change frame error",
+          type: "error"
+        }))  
+      }
+    }).catch((e) => {
+      dispatch(setMessage({
+        message: "Change frame error",
+        type: "error"
+      }))
+    })
+  }
 
   const renderRow = useMemo(() => {
     return symbolConfig.map((row) => SymbolConfigItem({ row, onEditItem, onDeleteItem }));
@@ -170,10 +198,22 @@ function Projects({
             </VuiTypography>
           </VuiBox>
         </VuiBox>
-        <VuiBox color="text" px={2}>
-          <Icon sx={{ cursor: "pointer", fontWeight: "bold" }} fontSize="small" onClick={openMenu}>
-            more_vert
-          </Icon>
+        <VuiBox display="flex" alignItems="center">
+          <VuiBox display="flex" alignItems="center">
+            <VuiButton onClick={()=>handleQuickChangeFrame('3m', ['5m'])} size="small" color="dribbble">
+              3m - 5m
+            </VuiButton>
+            <VuiBox ml={1}>
+              <VuiButton onClick={()=>handleQuickChangeFrame('5m', ['15m'])} size="small" color="dribbble">
+                5m - 15m
+              </VuiButton>
+            </VuiBox>
+          </VuiBox>
+          <VuiBox color="text" px={2}>
+            <Icon sx={{ cursor: "pointer", fontWeight: "bold" }} fontSize="small" onClick={openMenu}>
+              more_vert
+            </Icon>
+        </VuiBox>
         </VuiBox>
         {renderMenu}
       </VuiBox>

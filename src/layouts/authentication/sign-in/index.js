@@ -152,6 +152,7 @@ function SignIn() {
       premotto="INSPIRED BY THE FUTURE:"
       motto="THE SA TRADING BOT DASHBOARD"
       image={bgSignIn}
+      cardContent
     >
       <VuiBox component="form" role="form">
         <VuiBox mb={2}>
