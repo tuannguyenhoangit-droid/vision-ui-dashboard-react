@@ -47,9 +47,18 @@ const FuturePositionItem = ({ row }) => {
         </VuiTypography>
       </VuiBox>
     ),
+    side: (
+      <VuiTypography
+        variant="button"
+        color={parseInt(row.positionAmt) > 0 ? "success" : "error"}
+        fontWeight="bold"
+      >
+        {parseInt(row.positionAmt) > 0 ? "BUY" : "SELL"}
+      </VuiTypography>
+    ),
     size: (
       <VuiTypography variant="button" color="white" fontWeight="bold">
-        {[Math.round(row.notional * 1000) / 1000, "USDT"].join(" ")}
+        {[Math.abs(Math.round(row.notional * 1000) / 1000), "USDT"].join(" ")}
       </VuiTypography>
     ),
     entry: (
@@ -108,7 +117,7 @@ function FuturePositionList(props) {
 
   const renderRow = () => {
     return data
-      ?.filter((row) => parseFloat(row.notional) > 0)
+      ?.filter((row) => parseFloat(row.notional) !== 0)
       .map((row) => FuturePositionItem({ row }));
   };
 
@@ -175,6 +184,7 @@ function FuturePositionList(props) {
         <Table
           columns={[
             { name: "symbol", align: "left" },
+            { name: "side", align: "left" },
             { name: "size", align: "left" },
             { name: "entry", align: "left" },
             { name: "price", align: "left" },
