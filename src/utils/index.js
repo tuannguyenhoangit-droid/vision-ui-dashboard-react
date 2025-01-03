@@ -22,6 +22,18 @@ export const timeDifference = (createdAt) => {
   }
 };
 
+export const dayDifference = (createdAt) => {
+  const now = Date.now(); // Lấy thời gian hiện tại (milliseconds)
+  const diff = now - createdAt; // Tính độ lệch thời gian (milliseconds)
+
+  const absDiff = Math.abs(diff); // Giá trị tuyệt đối của độ lệch
+  const days = Math.floor(absDiff / (60000 * 60 * 24)); // Chuyển đổi sang ngày
+
+  if (days > 0) {
+    return days;
+  }
+};
+
 export default function useDebounce(effect, dependencies, delay) {
   const callback = useCallback(effect, dependencies);
 

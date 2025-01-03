@@ -55,6 +55,7 @@ import { IoHome } from "react-icons/io5";
 import VerifyEmail from "layouts/authentication/verifyEmail";
 import Disclaimer from "layouts/authentication/disclaimer";
 import TermAndCondition from "layouts/authentication/term-and-condition";
+import Subscription from "layouts/subscription";
 
 const routes = [
   {
@@ -101,6 +102,15 @@ const routes = [
     route: "/profile",
     icon: <BsFillPersonFill size="15px" color="inherit" />,
     component: Profile,
+    noCollapse: true,
+  },
+  {
+    type: "collapse",
+    name: "Subscription",
+    key: "subscription",
+    route: "/subscription",
+    icon: <BsFillPersonFill size="15px" color="inherit" />,
+    component: Subscription,
     noCollapse: true,
   },
   {

@@ -295,3 +295,23 @@ export const getTickerPrice = async (symbol) => {
       });
   });
 };
+
+export const getSubscription = async (symbol) => {
+  const token = await auth.currentUser?.getIdToken?.();
+  if (!token) return {};
+  return new Promise(async (resolve, reject) => {
+    await axios
+      .get("https://sa.premierct.asia/v1/account/subscription", {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: ["Bearer", token].join(" "),
+        },
+      })
+      .then((response) => {
+        resolve(response.data);
+      })
+      .catch((error) => {
+        console.log("error", error);
+      });
+  });
+};

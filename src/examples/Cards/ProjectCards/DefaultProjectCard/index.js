@@ -30,8 +30,21 @@ import VuiBox from "components/VuiBox";
 import VuiTypography from "components/VuiTypography";
 import VuiButton from "components/VuiButton";
 import VuiAvatar from "components/VuiAvatar";
-
-function DefaultProjectCard({ image, label, title, description, action, authors }) {
+import { IoCheckmark } from "react-icons/io5";
+import colors from "assets/theme/base/colors";
+const { success } = colors;
+function DefaultProjectCard({
+  image,
+  label,
+  title,
+  features,
+  description,
+  action,
+  authors,
+  monthlyPrice,
+  quarterlyPrice,
+  active,
+}) {
   const renderAuthors = authors.map(({ image: media, name }) => (
     <Tooltip key={name} title={name} placement="bottom">
       <VuiAvatar
@@ -85,7 +98,7 @@ function DefaultProjectCard({ image, label, title, description, action, authors 
             {label}
           </VuiTypography>
         </VuiBox>
-        <VuiBox mb={1}>
+        <VuiBox mb={2}>
           {action.type === "internal" ? (
             <VuiTypography
               component={Link}
@@ -111,11 +124,51 @@ function DefaultProjectCard({ image, label, title, description, action, authors 
           )}
         </VuiBox>
         <VuiBox mb={3} lineHeight={0}>
+          <VuiBox mb={1} lineHeight={0}>
+            <VuiTypography variant="h6" color="text" fontWeight="light">
+              Feature & Quota
+            </VuiTypography>
+          </VuiBox>
+          {Array.isArray(features)
+            ? features.map((des) => (
+                <VuiBox mb={1} alignItems="center" display="flex">
+                  <IoCheckmark size={20} color={success.main} />
+                  <VuiBox ml={1}>
+                    <VuiTypography variant="button" fontWeight="regular" color="white">
+                      {des}
+                    </VuiTypography>
+                  </VuiBox>
+                </VuiBox>
+              ))
+            : null}
+        </VuiBox>
+        <VuiBox mb={3} lineHeight={0}>
           <VuiTypography variant="button" fontWeight="regular" color="text">
             {description}
           </VuiTypography>
         </VuiBox>
-        <VuiBox display="flex" justifyContent="space-between" alignItems="center">
+        <VuiBox>
+          <VuiButton
+            color={active ? "orange" : "primary"}
+            fullWidth
+            alignItems="center"
+            display="flex"
+          >
+            <VuiTypography color="white">
+              {["$", Math.round((quarterlyPrice / 3) * 100) / 100]}
+              <VuiTypography
+                variant="button"
+                color="white"
+                sx={{
+                  marginLeft: 1,
+                }}
+              >
+                {["per month with quarterly price"]}
+              </VuiTypography>
+            </VuiTypography>
+          </VuiButton>
+        </VuiBox>
+        {/* <VuiBox display="flex" justifyContent="space-between" alignItems="center">
           {action.type === "internal" ? (
             <VuiButton
               component={Link}
@@ -140,7 +193,7 @@ function DefaultProjectCard({ image, label, title, description, action, authors 
             </VuiButton>
           )}
           <VuiBox display="flex">{renderAuthors}</VuiBox>
-        </VuiBox>
+        </VuiBox> */}
       </VuiBox>
     </VuiBox>
   );
