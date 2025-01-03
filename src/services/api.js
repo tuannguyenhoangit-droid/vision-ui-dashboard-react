@@ -236,11 +236,9 @@ export const createSymbolConfig = async (
   });
 };
 
-export const quickChangeFrame = async (
-  frame,
-  buyRequireHistogram = [],
-) => {
+export const quickChangeFrame = async (frame, buyRequireHistogram = []) => {
   const token = await auth.currentUser?.getIdToken?.();
+  if (!token) return Promise.reject("Cannot get user token");
   const payload = {
     frame,
     buyRequireHistogram,
@@ -264,7 +262,7 @@ export const quickChangeFrame = async (
 
 export const getSymbolConfig = async () => {
   const token = await auth.currentUser?.getIdToken?.();
-  if (!token) return [];
+  if (!token) return Promise.reject("Cannot get user token");
   return new Promise(async (resolve, reject) => {
     await axios
       .get("https://sa.premierct.asia/v1/future/symbol-config", {
@@ -284,7 +282,7 @@ export const getSymbolConfig = async () => {
 
 export const deleteSymbolConfig = async (symbol) => {
   const token = await auth.currentUser?.getIdToken?.();
-  if (!token) return [];
+  if (!token) return Promise.reject("Cannot get user token");
   return new Promise(async (resolve, reject) => {
     await axios
       .delete(`https://sa.premierct.asia/v1/future/symbol-config/${symbol}`, {
@@ -304,7 +302,7 @@ export const deleteSymbolConfig = async (symbol) => {
 
 export const getTickerPrice = async (symbol) => {
   const token = await auth.currentUser?.getIdToken?.();
-  if (!token) return {};
+  if (!token) return Promise.reject("Cannot get user token");
   return new Promise(async (resolve, reject) => {
     await axios
       .get(`https://sa.premierct.asia/v1/future/ticker/price/${[symbol, "USDT"].join("")}`, {
@@ -322,12 +320,35 @@ export const getTickerPrice = async (symbol) => {
   });
 };
 
-export const getSubscription = async (symbol) => {
+export const getSubscription = async () => {
   const token = await auth.currentUser?.getIdToken?.();
-  if (!token) return {};
+  if (!token) return Promise.reject("Cannot get user token");
   return new Promise(async (resolve, reject) => {
     await axios
       .get("https://sa.premierct.asia/v1/account/subscription", {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: ["Bearer", token].join(" "),
+        },
+      })
+      .then((response) => {
+        resolve(response.data);
+      })
+      .catch((error) => {
+        console.log("error", error);
+      });
+  });
+};
+
+export const changeFutureActive = async (futureActive) => {
+  const payload = {
+    futureActive,
+  };
+  const token = await auth.currentUser?.getIdToken?.();
+  if (!token) return Promise.reject("Cannot get user token");
+  return new Promise(async (resolve, reject) => {
+    await axios
+      .post("https://sa.premierct.asia/v1/account/future-active", payload, {
         headers: {
           "Content-Type": "application/json",
           Authorization: ["Bearer", token].join(" "),

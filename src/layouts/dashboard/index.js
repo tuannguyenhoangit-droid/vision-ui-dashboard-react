@@ -145,8 +145,6 @@ function Dashboard() {
   };
 
   const todayTrade = useMemo(() => {
-    console.log("tradeList", tradeList);
-
     const trade = tradeList.filter(({ time }) => time > startOrDay.getTime());
     return {
       count: trade.length,

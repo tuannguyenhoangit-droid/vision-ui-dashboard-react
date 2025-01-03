@@ -103,10 +103,10 @@ function ReferralTracking(props) {
               <VuiTypography color="white" variant="lg" fontWeight="bold">
                 {[
                   "$",
-                  Math.round(
+                  Math.abs(Math.round(
                     position.map((p) => parseFloat(p.notional)).reduce((pre, cur) => pre + cur, 0) *
                       100
-                  ) / 100,
+                  ) / 100),
                 ].join("")}
               </VuiTypography>
             </VuiBox>

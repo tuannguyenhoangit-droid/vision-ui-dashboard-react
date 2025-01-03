@@ -61,6 +61,11 @@ import {
 import team2 from "assets/images/team-2.jpg";
 import logoSpotify from "assets/images/small-logos/logo-spotify.svg";
 import { useSelector } from "react-redux";
+import MiniStatisticsCard from "examples/Cards/StatisticsCards/MiniStatisticsCard";
+import { IoWallet } from "react-icons/io5";
+import { Card, Grid } from "@mui/material";
+import VuiSwitch from "components/VuiSwitch";
+import { changeFutureActive } from "../../../services/api";
 
 function DashboardNavbar({ absolute, light, isMini }) {
   const [navbarType, setNavbarType] = useState();
@@ -69,6 +74,7 @@ function DashboardNavbar({ absolute, light, isMini }) {
   const [openMenu, setOpenMenu] = useState(false);
   const route = useLocation().pathname.split("/").slice(1);
   const user = useSelector((state) => state.user);
+  const [futureActive, setFutureActive] = useState(user?.user?.futureActive);
 
   useEffect(() => {
     // Setting the navbar type
@@ -100,6 +106,16 @@ function DashboardNavbar({ absolute, light, isMini }) {
   const handleConfiguratorOpen = () => setOpenConfigurator(dispatch, !openConfigurator);
   const handleOpenMenu = (event) => setOpenMenu(event.currentTarget);
   const handleCloseMenu = () => setOpenMenu(false);
+
+  const handleChangeFutureActive = async (switched) => {
+    await changeFutureActive(switched).then((res) => {
+      setFutureActive(res.futureActive);
+    });
+  };
+
+  useEffect(() => {
+    setFutureActive(user?.user?.futureActive);
+  }, [user?.user?.futureActive]);
 
   // Render the notifications menu
   const renderMenu = () => (
@@ -152,20 +168,51 @@ function DashboardNavbar({ absolute, light, isMini }) {
         </VuiBox>
         {isMini ? null : (
           <VuiBox sx={(theme) => navbarRow(theme, { isMini })}>
-            <VuiBox pr={1}>
-              <VuiInput
-                placeholder="Type here..."
-                icon={{ component: "search", direction: "left" }}
-                sx={({ breakpoints }) => ({
-                  [breakpoints.down("sm")]: {
-                    maxWidth: "80px",
-                  },
-                  [breakpoints.only("sm")]: {
-                    maxWidth: "80px",
-                  },
-                  backgroundColor: "info.main !important",
-                })}
-              />
+            <VuiBox
+              pr={1}
+              sx={({ breakpoints }) => ({
+                [breakpoints.down("sm")]: {
+                  maxWidth: "80px",
+                },
+                [breakpoints.only("sm")]: {
+                  maxWidth: "80px",
+                },
+                backgroundColor: "info.main !important",
+              })}
+            >
+              <Card
+                sx={{
+                  paddingLeft: 3,
+                  paddingRight: 3,
+                  paddingTop: 1.5,
+                  paddingBottom: 1.5,
+                }}
+              >
+                <VuiBox
+                  alignItems="center"
+                  display="flex"
+                  sx={{
+                    gap: 2,
+                  }}
+                >
+                  <VuiTypography
+                    variant="button"
+                    color={"white"}
+                    opacity={0.7}
+                    textTransform="capitalize"
+                    fontWeight="medium"
+                  >
+                    Futures
+                  </VuiTypography>
+                  <VuiSwitch
+                    color="success"
+                    checked={futureActive}
+                    onChange={(e, switched) => {
+                      handleChangeFutureActive(switched);
+                    }}
+                  />
+                </VuiBox>
+              </Card>
             </VuiBox>
             <VuiBox color={light ? "white" : "inherit"}>
               <Link to="/authentication/sign-in">
