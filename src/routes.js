@@ -114,6 +114,14 @@ const routes = [
     noCollapse: true,
   },
   {
+    name: "Checkout",
+    key: "checkout",
+    route: "/subscription/checkout",
+    icon: <BsFillPersonFill size="15px" color="inherit" />,
+    component: Subscription,
+    noCollapse: true,
+  },
+  {
     name: "Sign In",
     key: "sign-in",
     route: "/authentication/sign-in",
