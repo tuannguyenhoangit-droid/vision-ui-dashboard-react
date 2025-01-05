@@ -199,7 +199,7 @@ function Projects({
         {isMobile ? null : (
           <VuiBox mb="auto">
             <VuiTypography color="white" variant="lg" mb="6px" gutterBottom>
-              Running Symbol Configs
+              Symbol Configs
             </VuiTypography>
             <VuiBox display="flex" alignItems="center" lineHeight={0}>
               <BsCheckCircleFill color="green" size="15px" />

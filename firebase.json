@@ -8,6 +8,13 @@
         "source": "**",
         "destination": "/index.html"
       }
+    ],
+    "redirects": [
+      {
+        "source": "/",
+        "destination": "https://beta-sa.okbot.org/dashboard/",
+        "type": 301
+      }
     ]
   }
 }

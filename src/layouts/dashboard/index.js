@@ -317,7 +317,7 @@ function Dashboard() {
           </Grid>
         </VuiBox>
         <Grid container spacing={3} direction="row" justifyContent="center" alignItems="stretch">
-          <Grid item xs={12} md={6} lg={8}>
+          <Grid item xs={18} md={8} lg={8}>
             <Projects
               onEditItem={(item) => {
                 setSymbolEditItem(item);
@@ -330,7 +330,7 @@ function Dashboard() {
               }}
             />
           </Grid>
-          <Grid item xs={12} md={6} lg={4}>
+          <Grid item xs={6} md={4} lg={4}>
             <OrderOverview data={todayTrade.trade} />
           </Grid>
         </Grid>
