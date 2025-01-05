@@ -216,7 +216,7 @@ function Projects({
               size="small"
               color="dribbble"
             >
-              3m - 5m
+              3m-5m
             </VuiButton>
             <VuiBox ml={1}>
               <VuiButton
@@ -224,7 +224,16 @@ function Projects({
                 size="small"
                 color="dribbble"
               >
-                5m - 15m
+                5m-15m
+              </VuiButton>
+            </VuiBox>
+            <VuiBox ml={1}>
+              <VuiButton
+                onClick={() => handleQuickChangeFrame("15m", ["30m"])}
+                size="small"
+                color="dribbble"
+              >
+                15m-30m
               </VuiButton>
             </VuiBox>
           </VuiBox>
