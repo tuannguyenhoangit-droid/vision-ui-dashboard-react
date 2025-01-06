@@ -8,7 +8,7 @@ axios.defaults.baseURL = process.env.REACT_APP_Server_Endpoint;
 export const getBestPerformanceVolume = async (period = "DAY_1", dayAgo = 5) => {
   return new Promise(async (resolve, reject) => {
     await axios
-      .get(`/top-volume-performance?period=${period}&dayAgo=${dayAgo}`)
+      .get(`http://localhost:3000/top-volume-performance?period=${period}&dayAgo=${dayAgo}`)
       .then((response) => {
         resolve(response.data.slice(0, 6));
       })
