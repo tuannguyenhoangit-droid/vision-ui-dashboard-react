@@ -38,9 +38,9 @@ import { FaTrashAlt } from "react-icons/fa";
 import colors from "assets/theme/base/colors";
 import VuiButton from "components/VuiButton";
 import { isMobile } from "react-device-detect";
-import { getSymbolConfig, quickChangeFrame } from "../../../../services/api";
-import { setMessage } from "../../../../redux/futures/messageSlice";
-import { setSymbolConfigData } from "../../../../redux/futures/symbolConfigSlice";
+import { getSymbolConfig, quickChangeFrame } from "../../../../../services/api";
+import { setMessage } from "../../../../../redux/futures/messageSlice";
+import { setSymbolConfigData } from "../../../../../redux/futures/symbolConfigSlice";
 
 const SymbolConfigItem = ({ row, onEditItem = () => null, onDeleteItem = () => null }) => {
   const onEdit = () => onEditItem(row);
@@ -183,9 +183,7 @@ function Projects({
       open={Boolean(menu)}
       onClose={closeMenu}
     >
-      <MenuItem onClick={() => closeMenu("add")}>Add Config</MenuItem>
-      <MenuItem onClick={closeMenu}>Another action</MenuItem>
-      <MenuItem onClick={closeMenu}>Something else</MenuItem>
+      <MenuItem onClick={() => closeMenu("add")}>Add Strategy</MenuItem>
     </Menu>
   );
 
@@ -199,12 +197,12 @@ function Projects({
         {isMobile ? null : (
           <VuiBox mb="auto">
             <VuiTypography color="white" variant="lg" mb="6px" gutterBottom>
-              Symbol Configs
+              Strategies
             </VuiTypography>
             <VuiBox display="flex" alignItems="center" lineHeight={0}>
               <BsCheckCircleFill color="green" size="15px" />
               <VuiTypography variant="button" fontWeight="regular" color="text" ml="5px">
-                Active configs
+                Active strategies
               </VuiTypography>
             </VuiBox>
           </VuiBox>

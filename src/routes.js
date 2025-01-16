@@ -56,6 +56,8 @@ import VerifyEmail from "layouts/authentication/verifyEmail";
 import Disclaimer from "layouts/authentication/disclaimer";
 import TermAndCondition from "layouts/authentication/term-and-condition";
 import Subscription from "layouts/subscription";
+import StrategyBuilder from "layouts/agent-creation-wizard/strategy-builder";
+import Performance from "layouts/performance-analytics/performance";
 
 const routes = [
   {
@@ -94,6 +96,27 @@ const routes = [
   //   component: RTL,
   //   noCollapse: true,
   // },
+  { type: "title", title: "Agent Creation Wizard", key: "agent-creation-wizard" },
+  {
+    type: "collapse",
+    name: "Strategy Builder",
+    key: "strategy-builder",
+    route: "/strategy-builder",
+    icon: <IoRocketSharp size="15px" color="inherit" />,
+    component: StrategyBuilder,
+    noCollapse: true,
+  },
+  { type: "title", title: "Performance Analytics", key: "performance-analytics" },
+  {
+    type: "collapse",
+    name: "Performance",
+    key: "performance-analytics",
+    route: "/performance-analytics",
+    icon: <IoRocketSharp size="15px" color="inherit" />,
+    component: Performance,
+    noCollapse: true,
+  },
+
   { type: "title", title: "Account Pages", key: "account-pages" },
   {
     type: "collapse",
