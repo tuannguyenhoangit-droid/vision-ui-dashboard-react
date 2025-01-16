@@ -14,8 +14,8 @@ import palette from "assets/theme/base/colors";
 import borders from "assets/theme/base/borders";
 import { useEffect, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
-import { createSymbolConfig, getSymbolConfig, getTickerPrice } from "../../../../services/api";
-import { setSymbolConfigData } from "../../../../redux/futures/symbolConfigSlice";
+import { createSymbolConfig, getSymbolConfig, getTickerPrice } from "../../../../../services/api";
+import { setSymbolConfigData } from "../../../../../redux/futures/symbolConfigSlice";
 import useDebounce from "utils";
 
 import SettingsIcon from "@mui/icons-material/Settings";
@@ -23,7 +23,6 @@ import GroupAddIcon from "@mui/icons-material/GroupAdd";
 import VideoLabelIcon from "@mui/icons-material/VideoLabel";
 import StepConnector, { stepConnectorClasses } from "@mui/material/StepConnector";
 import MiniStatisticsCard from "examples/Cards/StatisticsCards/MiniStatisticsCard";
-import { FaFileInvoiceDollar, FaIdeal } from "react-icons/fa";
 
 const ColorlibConnector = styled(StepConnector)(({ theme }) => ({
   [`&.${stepConnectorClasses.alternativeLabel}`]: {

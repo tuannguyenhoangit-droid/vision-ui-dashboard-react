@@ -41,10 +41,8 @@ import { IoDocumentText } from "react-icons/io5";
 
 // Data
 
-import { barChartOptionsDashboard } from "layouts/dashboard/data/barChartOptions";
 import { useEffect, useMemo, useState } from "react";
 import {
-  deleteSymbolConfig,
   getBalance,
   getCurrentPositions,
   getIncomePnL,
@@ -53,14 +51,13 @@ import {
   getTradeList,
 } from "../../services/api";
 import FuturePositionList from "./components/FuturePositionList";
-import { useDispatch, useSelector } from "react-redux";
-import { SymbolConfigModal } from "./components/SymbolConfigModal";
+import { useDispatch } from "react-redux";
 import { setSymbolConfigData } from "../../redux/futures/symbolConfigSlice";
 
 import { getAuth } from "firebase/auth";
 import { firebaseApp } from "../../firebase";
 import { useHistory } from "react-router-dom/cjs/react-router-dom";
-import VuiDialog from "components/VuiDialog";
+
 import { RiMoneyDollarCircleFill } from "react-icons/ri";
 
 const auth = getAuth(firebaseApp);
@@ -77,15 +74,12 @@ function Dashboard() {
 
   // modal handler
 
-  const [isOpenSymbolConfigModal, openSymbolConfigModal] = useState(false);
-  const [symbolEditItem, setSymbolEditItem] = useState(null);
-
   const [openOrders, setOpenOrders] = useState([]);
   const [position, setPosition] = useState([]);
   const [tradeList, setTradeList] = useState([]);
   const [balance, setBalance] = useState([]);
   const [incomePnL, setIncomePnL] = useState({});
-  const [symbolDeleteItem, setSymbolDeleteItem] = useState(null);
+
   const history = useHistory();
 
   const dispatch = useDispatch();
@@ -122,12 +116,6 @@ function Dashboard() {
 
   const unRealizedProfitPercent =
     Math.round(((balance?.[0]?.crossUnPnl || 0) / accountBalance) * 100 * 100) / 100;
-
-  const confirmDeleteSymbol = (item) => {
-    deleteSymbolConfig(item.symbol).then((response) => {
-      getSymbolConfig().then((data) => dispatch(setSymbolConfigData(data)));
-    });
-  };
 
   return (
     <DashboardLayout>
@@ -229,26 +217,6 @@ function Dashboard() {
           </Grid>
         </VuiBox>
       </VuiBox>
-      {/* <Footer /> */}
-      <SymbolConfigModal
-        item={symbolEditItem}
-        onClose={() => {
-          openSymbolConfigModal(false);
-          setSymbolEditItem(null);
-        }}
-        open={isOpenSymbolConfigModal || symbolEditItem !== null}
-      />
-      <VuiDialog
-        onConfirm={confirmDeleteSymbol}
-        cancelTitle="Cancel"
-        confirmTitle="Confirm"
-        description={`Confirm to delete symbol config: ${
-          symbolDeleteItem?.symbol || ""
-        }.\nYou will handle exist symbol position!`}
-        title="Delete symbol config"
-        onClose={() => setSymbolDeleteItem(null)}
-        openItem={symbolDeleteItem}
-      />
     </DashboardLayout>
   );
 }

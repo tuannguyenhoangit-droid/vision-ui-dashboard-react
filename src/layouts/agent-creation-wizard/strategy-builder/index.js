@@ -6,12 +6,26 @@ import BestPerformanceVolumeList from "layouts/agent-creation-wizard/strategy-bu
 import { getBestPerformanceVolume } from "services/api";
 import { useState } from "react";
 import Projects from "layouts/agent-creation-wizard/strategy-builder/components/Projects";
-
+import { SymbolConfigModal } from "./components/SymbolConfigModal";
+import VuiDialog from "components/VuiDialog";
+import { deleteSymbolConfig, getSymbolConfig } from "../../../services/api";
+import { setSymbolConfigData } from "../../../redux/futures/symbolConfigSlice";
+import { useDispatch } from "react-redux";
 function StrategyBuilder() {
   const [bestPerformanceVolume, setBestPerformanceVolume] = useState([]);
+  const [symbolDeleteItem, setSymbolDeleteItem] = useState(null);
+  const [symbolEditItem, setSymbolEditItem] = useState(null);
+  const [isOpenSymbolConfigModal, openSymbolConfigModal] = useState(false);
+  const dispatch = useDispatch();
 
   const onFilterChangeBestPerformanceVolume = (frame, dayAgo) => {
     getBestPerformanceVolume(frame, dayAgo).then(setBestPerformanceVolume);
+  };
+
+  const confirmDeleteSymbol = (item) => {
+    deleteSymbolConfig(item.symbol).then((response) => {
+      getSymbolConfig().then((data) => dispatch(setSymbolConfigData(data)));
+    });
   };
 
   return (
@@ -42,6 +56,26 @@ function StrategyBuilder() {
           />
         </Grid>
       </Grid>
+      {/* <Footer /> */}
+      <SymbolConfigModal
+        item={symbolEditItem}
+        onClose={() => {
+          openSymbolConfigModal(false);
+          setSymbolEditItem(null);
+        }}
+        open={isOpenSymbolConfigModal || symbolEditItem !== null}
+      />
+      <VuiDialog
+        onConfirm={confirmDeleteSymbol}
+        cancelTitle="Cancel"
+        confirmTitle="Confirm"
+        description={`Confirm to delete symbol config: ${
+          symbolDeleteItem?.symbol || ""
+        }.\nYou will handle exist symbol position!`}
+        title="Delete symbol config"
+        onClose={() => setSymbolDeleteItem(null)}
+        openItem={symbolDeleteItem}
+      />
     </DashboardLayout>
   );
 }
