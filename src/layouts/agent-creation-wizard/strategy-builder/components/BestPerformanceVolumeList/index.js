@@ -160,12 +160,12 @@ function BestPerformanceVolumeList(props) {
       <VuiBox display="flex" justifyContent="space-between" alignItems="center" mb="32px">
         <VuiBox mb="auto">
           <VuiTypography color="white" variant="lg" mb="6px" gutterBottom>
-            Best Volume Performance
+            Best Inflow
           </VuiTypography>
           <VuiBox display="flex" alignItems="center" lineHeight={0}>
             {/* <BsCheckCircleFill color="green" size="15px" /> */}
             <VuiTypography variant="button" fontWeight="regular" color="text">
-              &nbsp;<strong>Top token</strong> has best volume by 7 days
+              &nbsp;<strong>Top token</strong> has best inflow
             </VuiTypography>
           </VuiBox>
         </VuiBox>
