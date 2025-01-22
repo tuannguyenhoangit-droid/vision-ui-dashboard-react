@@ -40,30 +40,12 @@ function DefaultProjectCard({
   features,
   description,
   action,
-  authors,
   monthlyPrice,
   quarterlyPrice,
   active,
+  onClick = () => { },
 }) {
-  const renderAuthors = authors.map(({ image: media, name }) => (
-    <Tooltip key={name} title={name} placement="bottom">
-      <VuiAvatar
-        src={media}
-        alt={name}
-        size="xs"
-        sx={({ borders: { borderWidth }, palette: { dark }, functions: { rgba } }) => ({
-          border: `${borderWidth[2]} solid ${rgba(dark.focus, 0.5)}`,
-          cursor: "pointer",
-          position: "relative",
-          ml: -1.25,
 
-          "&:hover, &:focus": {
-            zIndex: "10",
-          },
-        })}
-      />
-    </Tooltip>
-  ));
 
   return (
     <VuiBox
@@ -131,15 +113,15 @@ function DefaultProjectCard({
           </VuiBox>
           {Array.isArray(features)
             ? features.map((des) => (
-                <VuiBox mb={1} alignItems="center" display="flex">
-                  <IoCheckmark size={20} color={success.main} />
-                  <VuiBox ml={1}>
-                    <VuiTypography variant="button" fontWeight="regular" color="white">
-                      {des}
-                    </VuiTypography>
-                  </VuiBox>
+              <VuiBox mb={1} alignItems="center" display="flex">
+                <IoCheckmark size={20} color={success.main} />
+                <VuiBox ml={1}>
+                  <VuiTypography variant="button" fontWeight="regular" color="white">
+                    {des}
+                  </VuiTypography>
                 </VuiBox>
-              ))
+              </VuiBox>
+            ))
             : null}
         </VuiBox>
         <VuiBox mb={3} lineHeight={0}>
@@ -153,19 +135,34 @@ function DefaultProjectCard({
             fullWidth
             alignItems="center"
             display="flex"
+            onClick={onClick}
           >
-            <VuiTypography color="white">
-              {["$", Math.round((quarterlyPrice / 3) * 100) / 100]}
-              <VuiTypography
-                variant="button"
-                color="white"
-                sx={{
-                  marginLeft: 1,
-                }}
-              >
-                {["per month with quarterly price"]}
-              </VuiTypography>
-            </VuiTypography>
+            {
+              monthlyPrice ? <VuiTypography color="white">
+                {["$", monthlyPrice]}
+                <VuiTypography
+                  variant="button"
+                  color="white"
+                  sx={{
+                    marginLeft: 1,
+                  }}
+                >
+                  {["per month"]}
+                </VuiTypography>
+              </VuiTypography> : null}
+            {
+              quarterlyPrice ? <VuiTypography color="white">
+                {["$", Math.round((quarterlyPrice / 3) * 100) / 100]}
+                <VuiTypography
+                  variant="button"
+                  color="white"
+                  sx={{
+                    marginLeft: 1,
+                  }}
+                >
+                  {["per month with quarterly price"]}
+                </VuiTypography>
+              </VuiTypography> : null}
           </VuiButton>
         </VuiBox>
         {/* <VuiBox display="flex" justifyContent="space-between" alignItems="center">

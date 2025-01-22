@@ -21,13 +21,8 @@
 
 import Card from "@mui/material/Card";
 import Grid from "@mui/material/Grid";
-import team1 from "assets/images/avatar1.png";
-import team2 from "assets/images/avatar2.png";
-import team3 from "assets/images/avatar3.png";
-import team4 from "assets/images/avatar4.png";
 // Images
 import profile1 from "assets/images/profile-1.png";
-import profile3 from "assets/images/profile-3.png";
 // Vision UI Dashboard React components
 import VuiBox from "components/VuiBox";
 import VuiTypography from "components/VuiTypography";
@@ -38,18 +33,18 @@ import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import Header from "layouts/subscription/components/Header";
 import { useEffect, useState } from "react";
 import { getSubscription } from "../../services/api";
-import { useSelector } from "react-redux";
 import { Tab, Tabs } from "@mui/material";
-import colors from "assets/theme/base/colors";
-const { dark } = colors;
+import { useHistory } from "react-router-dom";
 
 function Subscription() {
+  const history = useHistory();
+
   const [subscription, setSubscription] = useState({
     current: "",
     data: [],
   });
 
-  const [tabValue, setTabValue] = useState(0);
+  const [tabValue, setTabValue] = useState("quarterly");
 
   const handleSetTabValue = (event, newValue) => setTabValue(newValue);
 
@@ -88,13 +83,15 @@ function Subscription() {
                       maxHeight: 100,
                     }}
                   >
-                    <Tab label="Monthly Price" />
-                    <Tab label="Quarterly price" />
+                    <Tab value="monthly" label="Monthly Price" />
+                    <Tab value="quarterly" label="Quarterly price" />
                   </Tabs>
                 </VuiBox>
               </VuiBox>
               <Grid container spacing={3}>
                 {subscription.data?.map((sub) => {
+                  console.log('sub', sub);
+
                   return (
                     <Grid key={sub.id} item xs={12} md={4} xl={4}>
                       <Card
@@ -103,12 +100,22 @@ function Subscription() {
                         }}
                       >
                         <DefaultProjectCard
+                          onClick={() => {
+                            history.push("/subscription/checkout", {
+                              subscription: sub,
+                              type: tabValue,
+                            });
+                            // setSubscription({
+                            //   current: sub.id,
+                            //   data: subscription.data,
+                            // });
+                          }}
                           active={subscription.current === sub.id}
                           image={profile1}
                           label={sub.description}
                           title={sub.name}
-                          monthlyPrice={sub.monthlyPrice}
-                          quarterlyPrice={sub.quarterlyPrice}
+                          monthlyPrice={sub.prices.find((s) => s.type === tabValue && tabValue === "monthly")?.price}
+                          quarterlyPrice={sub.prices.find((s) => s.type === tabValue && tabValue === "quarterly")?.price}
                           features={[
                             ["Spot symbol configs", sub.maxSpotSymbol].join(": "),
                             ["Futures symbol configs", sub.maxSymbol].join(": "),

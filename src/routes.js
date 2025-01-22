@@ -50,7 +50,7 @@ import SignUp from "layouts/authentication/sign-up";
 // Vision UI Dashboard React icons
 import { IoDocument, IoRocketSharp } from "react-icons/io5";
 import { IoIosDocument } from "react-icons/io";
-import { BsFillPersonFill } from "react-icons/bs";
+import { BsCreditCardFill, BsFillPersonFill } from "react-icons/bs";
 import { IoHome } from "react-icons/io5";
 import VerifyEmail from "layouts/authentication/verifyEmail";
 import Disclaimer from "layouts/authentication/disclaimer";
@@ -58,6 +58,7 @@ import TermAndCondition from "layouts/authentication/term-and-condition";
 import Subscription from "layouts/subscription";
 import StrategyBuilder from "layouts/agent-creation-wizard/strategy-builder";
 import Performance from "layouts/performance-analytics/performance";
+import SubscriptionCheckout from "layouts/subscription-checkout";
 
 const routes = [
   {
@@ -78,15 +79,15 @@ const routes = [
   //   component: Tables,
   //   noCollapse: true,
   // },
-  // {
-  //   type: "collapse",
-  //   name: "Billing",
-  //   key: "billing",
-  //   route: "/billing",
-  //   icon: <BsCreditCardFill size="15px" color="inherit" />,
-  //   component: Billing,
-  //   noCollapse: true,
-  // },
+  {
+    type: "collapse",
+    name: "Billing",
+    key: "billing",
+    route: "/billing",
+    icon: <BsCreditCardFill size="15px" color="inherit" />,
+    component: Billing,
+    noCollapse: true,
+  },
   // {
   //   type: "collapse",
   //   name: "RTL",
@@ -137,11 +138,11 @@ const routes = [
     noCollapse: true,
   },
   {
-    name: "Checkout",
-    key: "checkout",
+    name: "Subscription",
+    key: "subscription",
     route: "/subscription/checkout",
     icon: <BsFillPersonFill size="15px" color="inherit" />,
-    component: Subscription,
+    component: SubscriptionCheckout,
     noCollapse: true,
   },
   {

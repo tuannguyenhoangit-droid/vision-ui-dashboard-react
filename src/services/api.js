@@ -342,6 +342,27 @@ export const getSubscription = async () => {
   });
 };
 
+// /v1/payment-config 
+
+export const getPaymentConfigs = async () => {
+  const token = await auth.currentUser?.getIdToken?.();
+  if (!token) return Promise.reject("Cannot get user token");
+  return new Promise(async (resolve, reject) => {
+    await axios.get("/v1/payment-configs", {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: ["Bearer", token].join(" "),
+      },
+    })
+      .then((response) => {
+        resolve(response.data);
+      })
+      .catch((error) => {
+        console.log("error", error);
+      });
+  });
+};
+
 export const changeFutureActive = async (futureActive) => {
   const payload = {
     futureActive,

@@ -23,10 +23,6 @@ import Card from "@mui/material/Card";
 import VuiBox from "components/VuiBox";
 import VuiTypography from "components/VuiTypography";
 
-// React icons
-import { BsCheckCircleFill } from "react-icons/bs";
-import { FaDollarSign } from "react-icons/fa";
-
 // Vision UI Dashboard React example components
 import TimelineItem from "examples/Timeline/TimelineItem";
 
@@ -40,7 +36,7 @@ function OrdersOverview({ data = [] }) {
     return (
       Math.round(
         data.map(({ realizedPnl }) => parseFloat(realizedPnl)).reduce((pre, cur) => pre + cur, 0) *
-          100
+        100
       ) / 100
     );
   }, [data]);
