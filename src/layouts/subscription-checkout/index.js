@@ -2,7 +2,7 @@
 
 import Card from "@mui/material/Card";
 import Grid from "@mui/material/Grid";
-import { Alert, ButtonGroup, Checkbox, Dialog, FormControl, InputLabel, Link, MenuItem, Select, Step, StepLabel, Stepper, Typography } from "@mui/material";
+import { Checkbox, Link, Step, StepLabel, Stepper } from "@mui/material";
 import StepConnector, { stepConnectorClasses } from "@mui/material/StepConnector";
 import PropTypes from "prop-types";
 import { styled } from "@mui/material/styles";
@@ -11,14 +11,11 @@ import profile1 from "assets/images/profile-1.png";
 // Vision UI Dashboard React components
 import VuiBox from "components/VuiBox";
 import VuiTypography from "components/VuiTypography";
-import DefaultProjectCard from "examples/Cards/ProjectCards/DefaultProjectCard";
 // Vision UI Dashboard React example components
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 // Overview page components
-import Header from "layouts/subscription/components/Header";
 import { useEffect, useState } from "react";
-import { getPaymentConfigs } from "../../services/api";
-import { Tab, Tabs } from "@mui/material";
+import { createTransaction, getPaymentConfigs, getPendingTransaction } from "../../services/api";
 import { useHistory } from "react-router-dom";
 
 import SettingsIcon from "@mui/icons-material/Settings";
@@ -31,6 +28,11 @@ import VuiInput from "components/VuiInput";
 import VuiButton from "components/VuiButton";
 import SubscriptionReview from "./components/SubscriptionReview";
 import { BsPencilSquare } from "react-icons/bs";
+import { useDispatch, useSelector } from "react-redux";
+import { setMessage } from "../../redux/futures/messageSlice";
+import { checkoutPriceType } from "../../redux/futures/subscription";
+import { setPendingTransaction } from "../../redux/futures/transaction";
+import PendingTransaction from "./components/PendingTransaction";
 
 const ColorlibConnector = styled(StepConnector)(({ theme }) => ({
     [`&.${stepConnectorClasses.alternativeLabel}`]: {
@@ -132,21 +134,56 @@ ColorlibStepIcon.propTypes = {
 
 
 function SubscriptionCheckout({ location }) {
-    const { subscription } = location?.state || {};
+    const { data, checkout: { subscription, priceType } } = useSelector((e) => e.subscription);
+    const { pendingTransaction } = useSelector((e) => e.transaction);
+    const dispatch = useDispatch();
 
     const [currentStep, setCurrentStep] = useState(0);
-    const [selectedPrice, setSelectedPrice] = useState(subscription.prices[0]);
+
     const [paymentConfig, setPaymentConfig] = useState([]);
     const [selectedPaymentConfig, setSelectedPaymentConfig] = useState({});
 
     const history = useHistory();
 
     useEffect(() => {
-        getPaymentConfigs().then((paymentConfig) => {
-            setPaymentConfig(paymentConfig.data);
-            setSelectedPaymentConfig(paymentConfig.data[0]);
+        if (pendingTransaction === null) {
+            getPaymentConfigs().then((paymentConfig) => {
+                if (paymentConfig?.data?.length > 0) {
+                    setPaymentConfig(paymentConfig.data);
+                    setSelectedPaymentConfig(paymentConfig.data[0]);
+                } else {
+                    dispatch(setMessage({
+                        message: paymentConfig.message,
+                        type: 'warning'
+                    }))
+                }
+            });
+        } else {
+            setCurrentStep(1)
+        }
+    }, [pendingTransaction]);
+
+    const onCreateTransaction = () => {
+        console.log('selectedPaymentConfig', selectedPaymentConfig);
+        console.log('priceType', priceType);
+        console.log('subscription', subscription);
+
+        // validate params
+
+        if (!subscription?.id || !selectedPaymentConfig?.network || !priceType?.type) {
+            return dispatch(setMessage({
+                message: 'Invalid payment config',
+                type: "warning"
+            }))
+        }
+
+        // create transaction
+        createTransaction(subscription.id, selectedPaymentConfig.network, priceType.type).then((response) => {
+            dispatch(setPendingTransaction(response.data))
         });
-    }, []);
+
+
+    }
 
 
 
@@ -172,7 +209,8 @@ function SubscriptionCheckout({ location }) {
                         ))}
                     </Stepper>
                 </Grid>
-                <Grid container xs={12} md={12} xl={12}>
+
+                {currentStep === 0 ? <Grid container xs={12} md={12} xl={12}>
                     <Grid xs={12} md={6} xl={6} >
                         <VuiBox ml={4} mr={4}>
                             <VuiBox>
@@ -181,21 +219,20 @@ function SubscriptionCheckout({ location }) {
                                         1. Choose a plan
                                     </VuiTypography>
                                     <VuiTypography component="label" variant="h5" color="success" fontWeight="medium">
-                                        {subscription.name}
+                                        {subscription?.name}
                                         <BsPencilSquare style={{ marginLeft: 10 }} onClick={() => { history.goBack() }} color="white" cursor="pointer" />
                                     </VuiTypography>
                                 </VuiBox>
-                                {subscription.prices.map((price) => {
-                                    console.log(selectedPrice.type, price.type);
-
+                                {(subscription?.prices || []).map((price) => {
+                                    console.log(priceType?.type, price.type);
                                     return (
                                         <SubscriptionPrice
                                             name={price.type}
-                                            price={["$", price.price, "for", price.description].join(" ")}
+                                            price={[`$${price.price.toFixed(1)}`, "for", price.description].join(" ")}
                                             priceDescription={price.discountDescription}
-                                            checked={selectedPrice.type === price.type}
+                                            checked={priceType?.type === price.type}
                                             noGutter
-                                            onChange={() => setSelectedPrice(price)}
+                                            onChange={() => dispatch(checkoutPriceType(price))}
                                         />
                                     )
                                 })}
@@ -216,15 +253,12 @@ function SubscriptionCheckout({ location }) {
                             </VuiBox>
                         </VuiBox>
                     </Grid>
-
-
                     <Grid xs={12} md={1} xl={1} alignItems="center">
                         <Divider style={{
                             backgroundColor: "white",
                             margin: "auto"
                         }} orientation="vertical" flexItem />
                     </Grid>
-
                     <Grid xs={12} md={5} xl={5}>
                         <VuiBox ml={4} mr={4}>
                             <VuiTypography component="label" variant="h5" color="white" fontWeight="medium">
@@ -242,11 +276,11 @@ function SubscriptionCheckout({ location }) {
                                 4. Review
                             </VuiTypography>
 
-                            <SubscriptionReview priceType={selectedPrice.type} subscription={subscription} selectedNetwork={selectedPaymentConfig} />
+                            <SubscriptionReview selectedNetwork={selectedPaymentConfig} />
 
                         </VuiBox>
                         <VuiBox ml={4} mr={4}>
-                            <VuiButton color="info" fullWidth>Continue With Crypto</VuiButton>
+                            <VuiButton onClick={onCreateTransaction} color="info" fullWidth>Continue With Crypto</VuiButton>
 
                             <VuiBox mt={3} textAlign="center">
                                 <Checkbox
@@ -282,9 +316,12 @@ function SubscriptionCheckout({ location }) {
                             </VuiBox>
                         </VuiBox>
                     </Grid>
-
-                </Grid>
-
+                </Grid> : null}
+                {currentStep === 1 ? <Grid container xs={12} md={12} xl={12} justifyContent={"center"}>
+                    <Grid xs={12} md={8} xl={6}>
+                        <PendingTransaction />
+                    </Grid>
+                </Grid> : null}
             </Grid>
         </Card>
     </DashboardLayout>

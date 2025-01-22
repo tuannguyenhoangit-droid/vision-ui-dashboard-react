@@ -19,17 +19,16 @@
 // prop-types is a library for typechecking of props
 import PropTypes from "prop-types";
 
-// @mui material components
-import Icon from "@mui/material/Icon";
 // Vision UI Dashboard React components
 import VuiBox from "components/VuiBox";
 import linearGradient from "assets/theme/functions/linearGradient";
 import colors from "assets/theme/base/colors";
-import { FormControl, MenuItem, Select } from "@mui/material";
 import VuiTypography from "components/VuiTypography";
+import { useSelector } from "react-redux";
 
 
-function SubscriptionReview({ subscription, priceType, selectedNetwork }) {
+function SubscriptionReview({ selectedNetwork }) {
+    const { checkout: { subscription, priceType } } = useSelector((e) => e.subscription);
     const { gradients } = colors;
     const { bill } = gradients;
 
@@ -47,7 +46,7 @@ function SubscriptionReview({ subscription, priceType, selectedNetwork }) {
                 mt="24px"
             >
                 <VuiTypography color="success" variant="h6">
-                    {subscription.name}
+                    {subscription?.name}
                 </VuiTypography>
             </VuiBox>
 
@@ -74,7 +73,7 @@ function SubscriptionReview({ subscription, priceType, selectedNetwork }) {
                         color="white"
                         fontWeight="medium"
                         textTransform="capitalize">
-                        {['$', subscription.prices.find(price => price.type === priceType).price.toFixed(1)].join('')}
+                        {['$', (subscription?.prices || []).find(price => price.type === priceType?.type)?.price?.toFixed(1)].join('')}
                     </VuiTypography>
                 </VuiBox>
 
@@ -89,7 +88,7 @@ function SubscriptionReview({ subscription, priceType, selectedNetwork }) {
                         color="white"
                         fontWeight="medium"
                         textTransform="capitalize">
-                        {subscription.prices.find(price => price.type === priceType).description}
+                        {(subscription?.prices || []).find(price => price.type === priceType?.type)?.description || ""}
                     </VuiTypography>
                 </VuiBox>
                 <VuiBox mt={1} display="flex" flexDirection="row" justifyContent="space-between" width="100%">

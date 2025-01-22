@@ -74,6 +74,8 @@ export default function App() {
     } else {
       //
       unsubscribe = auth.onAuthStateChanged(async (user) => {
+        console.log('user', user);
+
         if (user) {
           if (user.emailVerified) {
             // sync user latest data

@@ -385,3 +385,99 @@ export const changeFutureActive = async (futureActive) => {
       });
   });
 };
+
+// createTransaction: curl -X POST http://localhost:3000/v1/transaction -H "Authorization: Bearer <token>" -d "{\"subscriptionId\":\"SUB_COPY_TRADING_LEADER\",\"network\":\"TRON\",\"priceType\":\"monthly\"}"
+
+export const createTransaction = async (subscriptionId, network, priceType) => {
+  const payload = {
+    subscriptionId, network, priceType,
+  };
+  const token = await auth.currentUser?.getIdToken?.();
+  if (!token) return Promise.reject("Cannot get user token");
+  return new Promise(async (resolve, reject) => {
+    await axios
+      .post("/v1/transaction", payload, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: ["Bearer", token].join(" "),
+        },
+      })
+      .then((response) => {
+        resolve(response.data);
+      })
+      .catch((error) => {
+        console.log("error", error);
+      });
+  });
+}
+
+// getPendingTransaction: curl -X GET http://localhost:3000/v1/transaction -H "Authorization: Bearer <token>"
+
+export const getPendingTransaction = async () => {
+  const token = await auth.currentUser?.getIdToken?.();
+  if (!token) return Promise.reject("Cannot get user token");
+  return new Promise(async (resolve, reject) => {
+    await axios.get("/v1/transaction", {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: ["Bearer", token].join(" "),
+      },
+    })
+      .then((response) => {
+        resolve(response.data);
+      })
+      .catch((error) => {
+        console.log("error", error);
+      });
+  });
+}
+
+// validateTransaction: curl -X POST http://localhost:3000/v1/transaction/validate -H "Authorization: Bearer <token>" -d "{\"transactionId\":\"<transactionId>\",\"transactionHash\":\"<transactionHash>\"}"
+
+export const validateTransaction = async (transactionId, transactionHash) => {
+  const payload = {
+    transactionId, transactionHash
+  };
+  const token = await auth.currentUser?.getIdToken?.();
+  if (!token) return Promise.reject("Cannot get user token");
+  return new Promise(async (resolve, reject) => {
+    await axios
+      .post("/v1/transaction/validate", payload, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: ["Bearer", token].join(" "),
+        },
+      })
+      .then((response) => {
+        resolve(response.data);
+      })
+      .catch((error) => {
+        console.log("error", error);
+      });
+  });
+}
+
+// cancelTransaction: curl -X POST http://localhost:3000/v1/transaction/cancel -H "Authorization: Bearer <token>" -d "{\"transactionId\":\"<transactionId>\"}"
+
+export const cancelTransaction = async (transactionId) => {
+  const payload = {
+    transactionId,
+  };
+  const token = await auth.currentUser?.getIdToken?.();
+  if (!token) return Promise.reject("Cannot get user token");
+  return new Promise(async (resolve, reject) => {
+    await axios
+      .post("/v1/transaction/cancel", payload, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: ["Bearer", token].join(" "),
+        },
+      })
+      .then((response) => {
+        resolve(response.data);
+      })
+      .catch((error) => {
+        console.log("error", error);
+      });
+  });
+}

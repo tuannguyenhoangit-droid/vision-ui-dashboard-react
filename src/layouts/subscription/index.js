@@ -32,25 +32,41 @@ import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 // Overview page components
 import Header from "layouts/subscription/components/Header";
 import { useEffect, useState } from "react";
-import { getSubscription } from "../../services/api";
+import { getPendingTransaction, getSubscription } from "../../services/api";
 import { Tab, Tabs } from "@mui/material";
 import { useHistory } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { setPendingTransaction } from "../../redux/futures/transaction";
+import { checkoutSubscription, setSubscription } from "../../redux/futures/subscription";
 
 function Subscription() {
   const history = useHistory();
+  const dispatch = useDispatch();
+  const subscription = useSelector((e) => e.subscription)
 
-  const [subscription, setSubscription] = useState({
-    current: "",
-    data: [],
-  });
+
 
   const [tabValue, setTabValue] = useState("quarterly");
 
   const handleSetTabValue = (event, newValue) => setTabValue(newValue);
 
   useEffect(() => {
-    getSubscription().then(setSubscription);
+
+    // get current pending transaction
+    getPendingTransaction().then((res) => {
+      const pendingTransaction = res.data?.[0];
+      if (pendingTransaction) {
+        dispatch(setPendingTransaction(pendingTransaction))
+        history.push("/subscription/checkout");
+      } else {
+        // no transaction, then display subscription
+        getSubscription().then((subscription) => {
+          dispatch(setSubscription(subscription))
+        });
+      }
+    })
   }, []);
+
 
   return (
     <DashboardLayout>
@@ -90,8 +106,6 @@ function Subscription() {
               </VuiBox>
               <Grid container spacing={3}>
                 {subscription.data?.map((sub) => {
-                  console.log('sub', sub);
-
                   return (
                     <Grid key={sub.id} item xs={12} md={4} xl={4}>
                       <Card
@@ -101,14 +115,8 @@ function Subscription() {
                       >
                         <DefaultProjectCard
                           onClick={() => {
-                            history.push("/subscription/checkout", {
-                              subscription: sub,
-                              type: tabValue,
-                            });
-                            // setSubscription({
-                            //   current: sub.id,
-                            //   data: subscription.data,
-                            // });
+                            dispatch(checkoutSubscription(sub))
+                            history.push("/subscription/checkout");
                           }}
                           active={subscription.current === sub.id}
                           image={profile1}
