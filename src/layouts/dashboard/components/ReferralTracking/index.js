@@ -8,14 +8,12 @@ import linearGradient from "assets/theme/functions/linearGradient";
 import CircularProgress from "@mui/material/CircularProgress";
 
 function ReferralTracking(props) {
-  const { balance, position = [] } = props;
+  const { balance, position = [], profit = 0 } = props;
   const { info, gradients } = colors;
   const { cardContent } = gradients;
 
-  const health =
-    (position.map((p) => parseFloat(p.initialMargin)).reduce((pre, cur) => pre + cur, 0) /
-      balance) *
-    100;
+  const positionMargin = position.map((p) => parseFloat(p.initialMargin)).reduce((pre, cur) => pre + cur, 0);
+  const health = (positionMargin / (parseFloat(balance) + parseFloat(profit))) * 100;
   return (
     <Card
       sx={{
@@ -105,7 +103,7 @@ function ReferralTracking(props) {
                   "$",
                   Math.abs(Math.round(
                     position.map((p) => parseFloat(p.notional)).reduce((pre, cur) => pre + cur, 0) *
-                      100
+                    100
                   ) / 100),
                 ].join("")}
               </VuiTypography>

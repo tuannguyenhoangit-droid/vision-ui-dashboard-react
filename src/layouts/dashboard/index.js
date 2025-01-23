@@ -92,8 +92,6 @@ function Dashboard() {
           getBalance().then(setBalance);
           getIncomePnL().then(setIncomePnL);
           getAccountSubscriptionInfo().then((subscription) => {
-            console.log('subscription', subscription);
-
             dispatch(setUserSubscription(subscription.data))
           })
         });
@@ -186,7 +184,7 @@ function Dashboard() {
               <SatisfactionRate data={openOrders} />
             </Grid>
             <Grid item xs={12} lg={6} xl={6}>
-              <ReferralTracking position={position} balance={balance?.[0]?.balance} />
+              <ReferralTracking profit={balance?.[0]?.crossUnPnl} position={position} balance={balance?.[0]?.balance} />
             </Grid>
           </Grid>
         </VuiBox>

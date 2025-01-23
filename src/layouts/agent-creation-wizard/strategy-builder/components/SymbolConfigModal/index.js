@@ -366,7 +366,7 @@ export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
           })}
         >
           <Stepper
-            sx={({}) => ({
+            sx={({ }) => ({
               marginTop: 2,
               marginBottom: 4,
               marginLeft: 0,
@@ -483,6 +483,7 @@ export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
                 </GradientBorder>
               </VuiBox>
               <MiniStatisticsCard
+                note="Note: SA Bot might make many DCA until Max Budget"
                 title={{ text: "Per order (including leverage)", fontWeight: "regular" }}
                 count={["$", pricePerOrderLeverage].join("")}
                 percentage={{
@@ -639,13 +640,13 @@ export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
                     config.side === "BUY" ? "bottom" : "top",
                     config.buyRequireHistogram.length > 0
                       ? [
-                          "and",
-                          config.requireHistogramCondition === "AND"
-                            ? "All of Require frames"
-                            : "One of Require frame",
-                          config.requireHistogramCondition === "AND" ? "are in" : "is in",
-                          config.side === "BUY" ? "bottom" : "top",
-                        ].join(" ")
+                        "and",
+                        config.requireHistogramCondition === "AND"
+                          ? "All of Require frames"
+                          : "One of Require frame",
+                        config.requireHistogramCondition === "AND" ? "are in" : "is in",
+                        config.side === "BUY" ? "bottom" : "top",
+                      ].join(" ")
                       : "",
                     `then Bot will open a ${config.side} Limit Order at`,
                     config.side === "BUY" ? "bottom" : "top",
