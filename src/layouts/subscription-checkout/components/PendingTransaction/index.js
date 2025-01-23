@@ -7,28 +7,49 @@ import VuiBox from "components/VuiBox";
 import linearGradient from "assets/theme/functions/linearGradient";
 import colors from "assets/theme/base/colors";
 import VuiTypography from "components/VuiTypography";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { QRCodeSVG } from 'qrcode.react';
 import VuiButton from "components/VuiButton";
-import { ContentCopy, IceSkating } from "@mui/icons-material";
-import { IconButton } from "@mui/material";
-import { countDown } from "utils";
+import { ContentCopy } from "@mui/icons-material";
 import { useEffect, useState } from "react";
+import { countDownExpired } from "utils";
+import { cancelTransaction } from "../../../../services/api";
+import { cancelPendingTransaction } from "../../../../redux/futures/transaction";
+import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 
 
 function PendingTransaction() {
     const { gradients } = colors;
     const { bill } = gradients;
     const { pendingTransaction } = useSelector((e) => e.transaction);
+    const [expiredIn, setExpiredIn] = useState(countDownExpired(pendingTransaction?.expiredAt));
+    const [isExpired, setIsExpired] = useState(false);
 
-    const [expiredIn, setExpiredIn] = useState(countDown(pendingTransaction.expiredAt));
+    const dispatch = useDispatch();
+    const history = useHistory();
 
     useEffect(() => {
         const interval = setInterval(() => {
-            setExpiredIn(countDown(pendingTransaction.expiredAt));
+            setExpiredIn(countDownExpired(pendingTransaction?.expiredAt));
+            setIsExpired(pendingTransaction?.expiredAt <= Date.now());
         }, 1000);
         return () => clearInterval(interval);
     }, [expiredIn]);
+
+
+    const handleCancelTransaction = () => {
+        if (pendingTransaction?.id) {
+            cancelTransaction(pendingTransaction?.id).then(({ status }) => {
+                if (status !== -999) { // -999 is the status code for cancel transaction not found
+                    // cancel transaction success
+                    dispatch(cancelPendingTransaction(pendingTransaction?.id));
+                    history.push("/subscription");
+                }
+            });
+        }
+    }
+
+
 
 
     return <VuiBox>
@@ -45,7 +66,7 @@ function PendingTransaction() {
         >
 
             <VuiBox mt={2} mb={2} mx="auto" display="flex" flexDirection="column" alignItems="center">
-                <QRCodeSVG boostLevel marginSize={1} level="H" size={168} value={pendingTransaction.destinationAddress} />
+                <QRCodeSVG boostLevel marginSize={1} level="H" size={168} value={pendingTransaction?.destinationAddress} />
                 <VuiBox mt={2} mb={2} >
                     <VuiTypography variant="caption"
                         color="white"
@@ -69,7 +90,7 @@ function PendingTransaction() {
                         color="white"
                         fontWeight="medium"
                         textTransform="capitalize">
-                        {['$', pendingTransaction.amount.toFixed(1)].join('')}
+                        {['$', pendingTransaction?.amount?.toFixed(1)].join('')}
                     </VuiTypography>
                 </VuiBox>
 
@@ -84,7 +105,7 @@ function PendingTransaction() {
                         color="white"
                         fontWeight="medium"
                         textTransform="capitalize">
-                        {pendingTransaction.priceType}
+                        {pendingTransaction?.priceType}
                     </VuiTypography>
                 </VuiBox>
                 <VuiBox mt={1} display="flex" flexDirection="row" justifyContent="space-between" width="100%">
@@ -112,7 +133,7 @@ function PendingTransaction() {
                         color="white"
                         fontWeight="medium"
                         textTransform="capitalize">
-                        {pendingTransaction.network}
+                        {pendingTransaction?.network}
                     </VuiTypography>
                 </VuiBox>
 
@@ -128,7 +149,7 @@ function PendingTransaction() {
                             color="white"
                             fontWeight="medium"
                             textTransform="capitalize">
-                            {pendingTransaction.destinationAddress}
+                            {pendingTransaction?.destinationAddress}
                         </VuiTypography>
                         <ContentCopy style={{ marginLeft: 8 }} color="white" />
                     </VuiBox>
@@ -143,7 +164,7 @@ function PendingTransaction() {
                         Once you have transferred, click the button below to verify
                     </VuiTypography>
                 </VuiBox>
-                <VuiButton variant="gradient" color="info" fullWidth>
+                <VuiButton disabled={isExpired} variant="gradient" color="info" fullWidth>
                     Transfered, Verify Payment
                 </VuiButton>
 
@@ -153,13 +174,13 @@ function PendingTransaction() {
                         color="white"
                         fontWeight="normal"
                         textAlign="center">
-                        Expired in {expiredIn}
+                        {expiredIn}
                     </VuiTypography>
                 </VuiBox>
             </VuiBox>
         </VuiBox>
         <VuiBox display="flex" flexDirection="row" justifyContent="space-between" width="100%">
-            <VuiButton variant="text" color="error" fullWidth>
+            <VuiButton onClick={handleCancelTransaction} variant="text" color="error" fullWidth>
                 Cancel Payment
             </VuiButton>
         </VuiBox>

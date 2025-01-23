@@ -17,7 +17,7 @@ export const transactionSlice = createSlice({
             state.pendingTransaction = action.payload;
         },
 
-        cancelPendingTransaction: () => {
+        cancelPendingTransaction: (state) => {
             state.pendingTransaction = null;
         }
     },

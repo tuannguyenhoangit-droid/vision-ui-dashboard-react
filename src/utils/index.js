@@ -43,11 +43,11 @@ export default function useDebounce(effect, dependencies, delay) {
   }, [callback, delay]);
 }
 
-export const countDown = (expiredAt) => {
-  if (!expiredAt || expiredAt <= Date.now()) return "00:00";
+export const countDownExpired = (expiredAt) => {
+  if (!expiredAt || expiredAt <= Date.now()) return "Transaction is expired";
   const now = Date.now();
   const diff = expiredAt - now;
   const minutes = Math.floor(diff / 60000);
   const seconds = Math.floor((diff % 60000) / 1000);
-  return `${minutes}:${seconds}`;
+  return `Expired in ${minutes}:${seconds}`;
 };
