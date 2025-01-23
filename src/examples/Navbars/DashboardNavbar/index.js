@@ -174,58 +174,11 @@ function DashboardNavbar({ absolute, light, isMini }) {
           <VuiBox sx={(theme) => navbarRow(theme, { isMini })}>
             <VuiBox
               pr={1}
-              sx={({}) => ({
+              sx={({ }) => ({
                 backgroundColor: "info.main !important",
               })}
             >
-              <Card
-                sx={({ breakpoints }) => ({
-                  background: "#012654",
-                  [breakpoints.up("xl")]: {
-                    paddingLeft: 3,
-                    paddingRight: 3,
-                    paddingTop: 1.5,
-                    paddingBottom: 1.5,
-                  },
-                  [breakpoints.up("md")]: {
-                    paddingLeft: 3,
-                    paddingRight: 3,
-                    paddingTop: 1.5,
-                    paddingBottom: 1.5,
-                  },
-                  [breakpoints.up("xs")]: {
-                    paddingLeft: 2,
-                    paddingRight: 2,
-                    paddingTop: 1,
-                    paddingBottom: 1,
-                  },
-                })}
-              >
-                <VuiBox
-                  alignItems="center"
-                  display="flex"
-                  sx={{
-                    gap: 2,
-                  }}
-                >
-                  <VuiTypography
-                    variant="button"
-                    color={"white"}
-                    opacity={0.7}
-                    textTransform="capitalize"
-                    fontWeight="medium"
-                  >
-                    Futures
-                  </VuiTypography>
-                  <VuiSwitch
-                    color="success"
-                    checked={futureActive}
-                    onChange={(e, switched) => {
-                      handleChangeFutureActive(switched);
-                    }}
-                  />
-                </VuiBox>
-              </Card>
+
             </VuiBox>
             <VuiBox color={light ? "white" : "inherit"}>
               <Link to="/authentication/sign-in">

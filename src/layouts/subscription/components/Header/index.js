@@ -21,9 +21,7 @@ import AppBar from "@mui/material/AppBar";
 import Card from "@mui/material/Card";
 import Grid from "@mui/material/Grid";
 // Images
-import burceMars from "assets/images/avatar-simmmple.png";
-// Vision UI Dashboard React base styles
-import breakpoints from "assets/theme/base/breakpoints";
+
 import VuiAvatar from "components/VuiAvatar";
 // Vision UI Dashboard React components
 import VuiBox from "components/VuiBox";
@@ -31,33 +29,12 @@ import VuiTypography from "components/VuiTypography";
 // Vision UI Dashboard React icons
 // Vision UI Dashboard React example components
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
-import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { dayDifference } from "utils";
 
 function Header() {
   const user = useSelector((e) => e.user.user);
-  const [tabsOrientation, setTabsOrientation] = useState("horizontal");
 
-  useEffect(() => {
-    // A function that sets the orientation state of the tabs.
-    function handleTabsOrientation() {
-      return window.innerWidth < breakpoints.values.lg
-        ? setTabsOrientation("vertical")
-        : setTabsOrientation("horizontal");
-    }
-
-    /** 
-     The event listener that's calling the handleTabsOrientation function when resizing the window.
-    */
-    window.addEventListener("resize", handleTabsOrientation);
-
-    // Call the handleTabsOrientation function to set the state with the initial value.
-    handleTabsOrientation();
-
-    // Remove event listener on cleanup
-    return () => window.removeEventListener("resize", handleTabsOrientation);
-  }, [tabsOrientation]);
 
   return (
     <VuiBox position="relative">
@@ -100,7 +77,7 @@ function Header() {
             })}
           >
             <VuiAvatar
-              src={burceMars}
+              src={{ uri: user?.photoURL }}
               alt="profile-image"
               variant="rounded"
               size="xl"

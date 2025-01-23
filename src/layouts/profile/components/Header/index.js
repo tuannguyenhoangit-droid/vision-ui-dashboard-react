@@ -36,35 +36,11 @@ import { IoDocument } from "react-icons/io5";
 import { IoBuild } from "react-icons/io5";
 // Vision UI Dashboard React example components
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
-import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
 function Header() {
-  const user = useSelector((e) => e.user.user);
-  const [tabsOrientation, setTabsOrientation] = useState("horizontal");
-  const [tabValue, setTabValue] = useState(0);
-
-  useEffect(() => {
-    // A function that sets the orientation state of the tabs.
-    function handleTabsOrientation() {
-      return window.innerWidth < breakpoints.values.lg
-        ? setTabsOrientation("vertical")
-        : setTabsOrientation("horizontal");
-    }
-
-    /** 
-     The event listener that's calling the handleTabsOrientation function when resizing the window.
-    */
-    window.addEventListener("resize", handleTabsOrientation);
-
-    // Call the handleTabsOrientation function to set the state with the initial value.
-    handleTabsOrientation();
-
-    // Remove event listener on cleanup
-    return () => window.removeEventListener("resize", handleTabsOrientation);
-  }, [tabsOrientation]);
-
-  const handleSetTabValue = (event, newValue) => setTabValue(newValue);
+  const user = useSelector((e) => e.user);
+  console.log('user', user);
 
   return (
     <VuiBox position="relative">
@@ -107,7 +83,7 @@ function Header() {
             })}
           >
             <VuiAvatar
-              src={burceMars}
+              src={{ uri: user?.photoURL }}
               alt="profile-image"
               variant="rounded"
               size="xl"
@@ -137,18 +113,7 @@ function Header() {
             </VuiBox>
           </Grid>
           <Grid item xs={12} md={6} lg={6.5} xl={6} xxl={4} sx={{ ml: "auto" }}>
-            <AppBar position="static">
-              <Tabs
-                orientation={tabsOrientation}
-                value={tabValue}
-                onChange={handleSetTabValue}
-                sx={{ background: "transparent", display: "flex", justifyContent: "flex-end" }}
-              >
-                <Tab label="OVERVIEW" icon={<IoCube color="white" size="16px" />} />
-                <Tab label="TEAMS" icon={<IoDocument color="white" size="16px" />} />
-                <Tab label="PROJECTS" icon={<IoBuild color="white" size="16px" />} />
-              </Tabs>
-            </AppBar>
+
           </Grid>
         </Grid>
       </Card>
