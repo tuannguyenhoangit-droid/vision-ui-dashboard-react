@@ -4,13 +4,15 @@ import VuiBox from "components/VuiBox";
 import Grid from "@mui/material/Grid";
 import BestPerformanceVolumeList from "layouts/agent-creation-wizard/strategy-builder/components/BestPerformanceVolumeList";
 import { getBestPerformanceVolume } from "services/api";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Projects from "layouts/agent-creation-wizard/strategy-builder/components/Projects";
 import { SymbolConfigModal } from "./components/SymbolConfigModal";
 import VuiDialog from "components/VuiDialog";
 import { deleteSymbolConfig, getSymbolConfig } from "../../../services/api";
 import { setSymbolConfigData } from "../../../redux/futures/symbolConfigSlice";
 import { useDispatch } from "react-redux";
+
+
 function StrategyBuilder() {
   const [bestPerformanceVolume, setBestPerformanceVolume] = useState([]);
   const [symbolDeleteItem, setSymbolDeleteItem] = useState(null);
@@ -18,12 +20,16 @@ function StrategyBuilder() {
   const [isOpenSymbolConfigModal, openSymbolConfigModal] = useState(false);
   const dispatch = useDispatch();
 
+  useEffect(() => {
+    getSymbolConfig().then((data) => dispatch(setSymbolConfigData(data)));
+  }, []);
+
   const onFilterChangeBestPerformanceVolume = (frame, dayAgo) => {
     getBestPerformanceVolume(frame, dayAgo).then(setBestPerformanceVolume);
   };
 
   const confirmDeleteSymbol = (item) => {
-    deleteSymbolConfig(item.symbol).then((response) => {
+    deleteSymbolConfig(item.symbol).then(() => {
       getSymbolConfig().then((data) => dispatch(setSymbolConfigData(data)));
     });
   };
@@ -69,9 +75,8 @@ function StrategyBuilder() {
         onConfirm={confirmDeleteSymbol}
         cancelTitle="Cancel"
         confirmTitle="Confirm"
-        description={`Confirm to delete symbol config: ${
-          symbolDeleteItem?.symbol || ""
-        }.\nYou will handle exist symbol position!`}
+        description={`Confirm to delete symbol config: ${symbolDeleteItem?.symbol || ""
+          }.\nYou will handle exist symbol position!`}
         title="Delete symbol config"
         onClose={() => setSymbolDeleteItem(null)}
         openItem={symbolDeleteItem}

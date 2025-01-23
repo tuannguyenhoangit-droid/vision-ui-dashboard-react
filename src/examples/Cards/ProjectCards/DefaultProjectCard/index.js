@@ -22,14 +22,11 @@ import { Link } from "react-router-dom";
 // prop-types is a library for typechecking of props
 import PropTypes from "prop-types";
 
-// @mui material components
-import Tooltip from "@mui/material/Tooltip";
 
 // Vision UI Dashboard React components
 import VuiBox from "components/VuiBox";
 import VuiTypography from "components/VuiTypography";
 import VuiButton from "components/VuiButton";
-import VuiAvatar from "components/VuiAvatar";
 import { IoCheckmark } from "react-icons/io5";
 import colors from "assets/theme/base/colors";
 const { success } = colors;

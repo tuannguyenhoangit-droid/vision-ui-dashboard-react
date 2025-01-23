@@ -22,7 +22,12 @@
 import Card from "@mui/material/Card";
 import Grid from "@mui/material/Grid";
 // Images
-import profile1 from "assets/images/profile-1.png";
+
+import sub_beginer from "assets/images/sub_beginer.png";
+import sub_pro from "assets/images/sub_pro.png";
+import sub_expert from "assets/images/sub_expert.png";
+
+
 // Vision UI Dashboard React components
 import VuiBox from "components/VuiBox";
 import VuiTypography from "components/VuiTypography";
@@ -38,6 +43,12 @@ import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setPendingTransaction } from "../../redux/futures/transaction";
 import { checkoutSubscription, setSubscription } from "../../redux/futures/subscription";
+
+const SUB_IMAGES = {
+  "SUB_BEGINNER": sub_beginer,
+  "SUB_PRO": sub_pro,
+  "SUB_EXPERT": sub_expert,
+}
 
 function Subscription() {
   const history = useHistory();
@@ -106,6 +117,8 @@ function Subscription() {
               </VuiBox>
               <Grid container spacing={3}>
                 {subscription.data?.map((sub) => {
+                  console.log('SUB_IMAGES[sub.id]', SUB_IMAGES[sub.id], sub.id);
+
                   return (
                     <Grid key={sub.id} item xs={12} md={4} xl={4}>
                       <Card
@@ -119,7 +132,7 @@ function Subscription() {
                             history.push("/subscription/checkout");
                           }}
                           active={subscription.current === sub.id}
-                          image={profile1}
+                          image={SUB_IMAGES[sub.id]}
                           label={sub.description}
                           title={sub.name}
                           monthlyPrice={sub.prices.find((s) => s.type === tabValue && tabValue === "monthly")?.price}

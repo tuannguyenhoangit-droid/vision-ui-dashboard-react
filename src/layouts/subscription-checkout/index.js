@@ -300,7 +300,7 @@ function SubscriptionCheckout({ location }) {
 
                         </VuiBox>
                         <VuiBox ml={4} mr={4}>
-                            <VuiButton onClick={onCreateTransaction} color="info" fullWidth>Continue With Crypto</VuiButton>
+                            <VuiButton onClick={onCreateTransaction} color="info" variant="gradient" fullWidth>Continue With Crypto</VuiButton>
 
                             <VuiBox mt={3} textAlign="center">
                                 <Checkbox
