@@ -15,7 +15,7 @@ import VuiTypography from "components/VuiTypography";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 // Overview page components
 import { useEffect, useState } from "react";
-import { createTransaction, getPaymentConfigs, getPendingTransaction } from "../../services/api";
+import { createTransaction, getPaymentConfigs } from "../../services/api";
 import { useHistory } from "react-router-dom";
 
 import SettingsIcon from "@mui/icons-material/Settings";
@@ -167,12 +167,7 @@ function SubscriptionCheckout({ location }) {
     }, [pendingTransaction]);
 
     const onCreateTransaction = () => {
-        console.log('selectedPaymentConfig', selectedPaymentConfig);
-        console.log('priceType', priceType);
-        console.log('subscription', subscription);
-
         // validate params
-
         if (!subscription?.id || !selectedPaymentConfig?.network || !priceType?.type) {
             return dispatch(setMessage({
                 message: 'Invalid payment config',
@@ -184,8 +179,6 @@ function SubscriptionCheckout({ location }) {
         createTransaction(subscription.id, selectedPaymentConfig.network, priceType.type).then((response) => {
             dispatch(setPendingTransaction(response.data))
         });
-
-
     }
 
 

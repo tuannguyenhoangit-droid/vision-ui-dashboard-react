@@ -1,37 +1,11 @@
-/*!
-
-=========================================================
-
-=========================================================
-
-
-
-
-
-
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
-
-// prop-types is a library for typechecking of props
 import PropTypes from "prop-types";
 
-// @mui material components
-import Icon from "@mui/material/Icon";
 // Vision UI Dashboard React components
 import VuiBox from "components/VuiBox";
-import linearGradient from "assets/theme/functions/linearGradient";
 import colors from "assets/theme/base/colors";
 import { MenuItem, Select } from "@mui/material";
 
-function SelectNetwork({ paymentConfigs = [], noGutter, onChange, selectedItem }) {
-    const { gradients } = colors;
-    console.log('selectedItem', selectedItem);
-
-
+function SelectNetwork({ paymentConfigs = [], onChange, selectedItem }) {
     return (
         <VuiBox
             onClick={onChange}
