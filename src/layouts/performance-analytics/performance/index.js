@@ -13,7 +13,8 @@ import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import { getIncomePnL, getTradeList } from "../../../services/api";
 import { getAuth } from "firebase/auth";
 import { firebaseApp } from "../../../firebase";
-import OrdersOverview from "layouts/dashboard/components/OrderOverview";
+import OrdersOverview from "./components/OrderOverview";
+
 const auth = getAuth(firebaseApp);
 
 const startOrDay = new Date();

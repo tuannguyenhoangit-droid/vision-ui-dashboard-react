@@ -27,9 +27,8 @@ import VuiTypography from "components/VuiTypography";
 import TimelineItem from "examples/Timeline/TimelineItem";
 
 // Vision UI Dashboard theme imports
-import palette from "assets/theme/base/colors";
 import { useMemo } from "react";
-import { RiMoneyDollarCircleFill } from "react-icons/ri";
+import Transaction from "layouts/billing/components/Transaction";
 
 function OrdersOverview({ data = [] }) {
   const sumRealizedPnl = useMemo(() => {
@@ -51,12 +50,12 @@ function OrdersOverview({ data = [] }) {
       <VuiBox>
         {data.map((item) => {
           return (
-            <TimelineItem
-              key={item.id}
-              realizedPnl={Math.max(parseFloat(item.realizedPnl) - parseFloat(item.commission), 0)}
-              icon={<RiMoneyDollarCircleFill size="16px" color={palette.info.main} />}
-              title={[item.side, item.symbol].join(" ")}
-              dateTime={new Date(item.time).toLocaleString()}
+            <Transaction
+              color={parseFloat(item.realizedPnl) - parseFloat(item.commission) > 0 ? "success" : "error"}
+              icon={parseFloat(item.realizedPnl) - parseFloat(item.commission) > 0 ? "arrow_upward" : "arrow_downward"}
+              name={[item.side, item.symbol].join(" ")}
+              description={new Date(item.time).toLocaleString()}
+              value={`$${Math.max(parseFloat(item.realizedPnl) - parseFloat(item.commission), 0).toFixed(2)}`}
             />
           );
         })}

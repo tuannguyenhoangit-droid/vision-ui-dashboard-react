@@ -463,7 +463,7 @@ export const validateTransaction = async (transactionId, transactionHash) => {
   if (!token) return Promise.reject("Cannot get user token");
   return new Promise(async (resolve, reject) => {
     await axios
-      .post("http://localhost:3333/v1/transaction/validate", payload, {
+      .post("/v1/transaction/validate", payload, {
         headers: {
           "Content-Type": "application/json",
           Authorization: ["Bearer", token].join(" "),

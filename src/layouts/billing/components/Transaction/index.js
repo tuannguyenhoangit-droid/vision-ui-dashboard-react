@@ -29,7 +29,7 @@ import VuiButton from "components/VuiButton";
 
 function Transaction({ color, icon, name, description, value }) {
   return (
-    <VuiBox key={name} component="li" py={1} pr={2} mb={1}>
+    <VuiBox key={name} py={1} pr={2} mb={1}>
       <VuiBox display="flex" justifyContent="space-between" alignItems="center">
         <VuiBox display="flex" alignItems="center">
           <VuiBox mr={2}>
