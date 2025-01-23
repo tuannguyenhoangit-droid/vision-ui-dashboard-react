@@ -43,13 +43,16 @@ import { accountSignUp } from "../../../services/api";
 import { firebaseApp } from "../../../firebase";
 import { getAuth, sendEmailVerification, signInWithEmailAndPassword } from "firebase/auth";
 import { Checkbox } from "@mui/material";
+import { setMessage } from "../../../redux/futures/messageSlice";
+import { useDispatch } from "react-redux";
 
-function SignIn() {
+function SignUp() {
   const [data, setData] = useState({
     displayName: "",
     email: "",
     password: "",
   });
+  const dispatch = useDispatch();
 
   const [loading, setLoading] = useState(false);
 
@@ -69,15 +72,23 @@ function SignIn() {
         // Mã hóa dữ liệu
         const passwordEncrypted = encryptor.encrypt(data.password);
 
-        const result = await accountSignUp(data.displayName, data.email, passwordEncrypted);
+        const { status, message } = await accountSignUp(data.displayName, data.email, passwordEncrypted);
         const auth = getAuth(firebaseApp);
         const userCredential = await signInWithEmailAndPassword(auth, data.email, data.password);
         const user = userCredential.user;
 
-        // Send verification email
-        await sendEmailVerification(user, {
-          url: "https://sa-bot.web.app/dashboard",
-        });
+        if (status === 1) {
+          // Send verification email
+          await sendEmailVerification(user, {
+            url: "https://sa-bot.web.app/dashboard",
+          });
+        }
+
+
+        dispatch(setMessage({
+          message: message,
+          type: status === 1 ? "success" : "warning",
+        }));
         setLoading(false);
       } else {
         // TODO
@@ -97,6 +108,7 @@ function SignIn() {
       premotto="INSPIRED BY THE FUTURE:"
       motto="THE SA TRADING BOT DASHBOARD"
       cardContent
+      top={3}
     >
       <GradientBorder borderRadius={borders.borderRadius.form} minWidth="100%" maxWidth="100%">
         <VuiBox
@@ -244,4 +256,4 @@ function SignIn() {
   );
 }
 
-export default SignIn;
+export default SignUp;

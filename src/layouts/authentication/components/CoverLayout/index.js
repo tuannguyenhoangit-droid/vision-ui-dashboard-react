@@ -183,7 +183,7 @@ function CoverLayout({
           </VuiBox>
           <VuiBox
             px={3}
-            mb={isMobile ? "0px" : "50px"}
+            mb={isMobile ? 0 : 1}
             mx="auto"
             ml="auto !important"
             sx={({ breakpoints }) => ({
@@ -238,7 +238,7 @@ CoverLayout.defaultProps = {
   title: "",
   description: "",
   color: "info",
-  top: isMobile ? 6 : 20,
+  top: isMobile ? 6 : 12,
 };
 
 // Typechecking props for the CoverLayout
