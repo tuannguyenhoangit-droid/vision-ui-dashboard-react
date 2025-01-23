@@ -2,7 +2,7 @@
 
 import Card from "@mui/material/Card";
 import Grid from "@mui/material/Grid";
-import { Checkbox, Link, Step, StepLabel, Stepper } from "@mui/material";
+import { Checkbox, Link, Step, StepLabel, Stepper, Typography } from "@mui/material";
 import StepConnector, { stepConnectorClasses } from "@mui/material/StepConnector";
 import PropTypes from "prop-types";
 import { styled } from "@mui/material/styles";
@@ -96,7 +96,10 @@ const ColorlibStepIconRoot = styled("div")(({ theme }) => ({
     ],
 }));
 
-const steps = ["Subscription", "Payment", "Verify"];
+const steps = [
+    { label: "Subscription", optional: "Choose subscription plan" },
+    { label: "Payment", optional: "Choose payment method" },
+    { label: "Verify", optional: "Verify transaction" }];
 
 function ColorlibStepIcon(props) {
     const { active, completed, className } = props;
@@ -176,8 +179,15 @@ function SubscriptionCheckout({ location }) {
         }
 
         // create transaction
-        createTransaction(subscription.id, selectedPaymentConfig.network, priceType.type).then((response) => {
-            dispatch(setPendingTransaction(response.data))
+        createTransaction(subscription.id, selectedPaymentConfig.network, priceType.type).then(({ status, data, message }) => {
+            if (status !== -1) {
+                dispatch(setPendingTransaction(data))
+            } else {
+                dispatch(setMessage({
+                    message: message,
+                    type: 'warning'
+                }))
+            }
         });
     }
 
@@ -186,24 +196,38 @@ function SubscriptionCheckout({ location }) {
     return <DashboardLayout>
         <Card>
             <Grid container spacing={3} mb="30px" alignItems="center" alignSelf="center">
-                <Grid xs={12} md={12} xl={12} >
-                    <Stepper
-                        sx={({ }) => ({
-                            marginTop: 2,
-                            marginBottom: 4,
-                            marginLeft: 0,
-                            marginRight: 0,
-                        })}
-                        activeStep={currentStep}
-                        connector={<ColorlibConnector />}
-                        alternativeLabel
-                    >
-                        {steps.map((label) => (
-                            <Step key={label}>
-                                <StepLabel StepIconComponent={ColorlibStepIcon}>{label}</StepLabel>
-                            </Step>
-                        ))}
-                    </Stepper>
+                <Grid xs={12} md={12} xl={12} mb={3}>
+                    <VuiBox ml={8} mr={8}>
+                        <Stepper
+                            sx={({ }) => ({
+                                marginTop: 2,
+                                marginBottom: 4,
+                                marginLeft: 0,
+                                marginRight: 0,
+                            })}
+
+                            activeStep={currentStep}
+                            connector={<ColorlibConnector />}
+                        // alternativeLabel
+                        >
+                            {steps.map(({ label, optional }) => (
+                                <Step key={label}>
+                                    <StepLabel
+                                        optional={<Typography style={{
+                                            fontSize: 14,
+                                            fontWeight: 'normal',
+                                            color: '#999'
+                                        }} variant="h6"
+                                            color="text">
+                                            {optional}
+                                        </Typography>}
+                                        StepIconComponent={ColorlibStepIcon}>
+                                        {label}
+                                    </StepLabel>
+                                </Step>
+                            ))}
+                        </Stepper>
+                    </VuiBox>
                 </Grid>
 
                 {currentStep === 0 ? <Grid container xs={12} md={12} xl={12}>

@@ -20,7 +20,7 @@ function SelectNetwork({ paymentConfigs = [], onChange, selectedItem }) {
                     border: `1px solid #56577a`,
                     '& .MuiSelect-select': {
                         color: 'white !important',
-                        minHeight: 32,
+                        minHeight: 38,
                         width: '100%'
                     },
                 }}

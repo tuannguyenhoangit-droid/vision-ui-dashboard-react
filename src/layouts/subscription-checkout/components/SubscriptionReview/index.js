@@ -38,7 +38,7 @@ function SubscriptionReview({ selectedNetwork }) {
                 component="li"
                 display="flex"
                 justifyContent="space-between"
-                alignItems="flex-start"
+                alignItems="center"
                 sx={{ background: linearGradient(bill.main, bill.state, bill.deg), border: "1px solid #56577a" }}
                 borderRadius="lg"
                 p="16px"
@@ -48,6 +48,7 @@ function SubscriptionReview({ selectedNetwork }) {
                 <VuiTypography color="success" variant="h6">
                     {subscription?.name}
                 </VuiTypography>
+                <VuiTypography color="white" variant="caption">{subscription.description}</VuiTypography>
             </VuiBox>
 
             <VuiBox
