@@ -41,6 +41,7 @@ import { isMobile } from "react-device-detect";
 import { getSymbolConfig, quickChangeFrame } from "../../../../../services/api";
 import { setMessage } from "../../../../../redux/futures/messageSlice";
 import { setSymbolConfigData } from "../../../../../redux/futures/symbolConfigSlice";
+import { Chip } from "@mui/material";
 
 const SymbolConfigItem = ({ row, onEditItem = () => null, onDeleteItem = () => null }) => {
   const onEdit = () => onEditItem(row);
@@ -197,7 +198,7 @@ function Projects({
         {isMobile ? null : (
           <VuiBox mb="auto">
             <VuiTypography color="white" variant="lg" mb="6px" gutterBottom>
-              Strategies
+              Accumulation Strategies
             </VuiTypography>
             <VuiBox display="flex" alignItems="center" lineHeight={0}>
               <BsCheckCircleFill color="green" size="15px" />
@@ -209,30 +210,27 @@ function Projects({
         )}
         <VuiBox display="flex" alignItems="center" justifyContent="flex-end">
           <VuiBox display="flex" alignItems="center">
-            <VuiButton
+            <Chip
+              clickable
               onClick={() => handleQuickChangeFrame("3m", ["5m"])}
-              size="small"
-              color="dribbble"
-            >
-              3m-5m
-            </VuiButton>
+              color="warning"
+              label="3m-5m"
+            />
             <VuiBox ml={1}>
-              <VuiButton
+              <Chip
+                clickable
                 onClick={() => handleQuickChangeFrame("5m", ["15m"])}
-                size="small"
-                color="dribbble"
-              >
-                5m-15m
-              </VuiButton>
+                label="5m-15m"
+                color="warning"
+              />
             </VuiBox>
             <VuiBox ml={1}>
-              <VuiButton
+              <Chip
+                clickable
                 onClick={() => handleQuickChangeFrame("15m", ["30m"])}
-                size="small"
-                color="dribbble"
-              >
-                15m-30m
-              </VuiButton>
+                color="warning"
+                label="15m-30m"
+              />
             </VuiBox>
           </VuiBox>
           <VuiBox color="text" px={2}>
@@ -241,7 +239,7 @@ function Projects({
               fontSize="small"
               onClick={openMenu}
             >
-              more_vert
+              add
             </Icon>
           </VuiBox>
         </VuiBox>
@@ -277,7 +275,7 @@ function Projects({
           rows={renderRow}
         />
       </VuiBox>
-    </Card>
+    </Card >
   );
 }
 

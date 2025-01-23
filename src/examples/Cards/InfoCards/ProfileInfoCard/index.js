@@ -39,6 +39,7 @@ import { accountUpdateKeys } from "../../../../services/api";
 import { PUBLIC_KEY } from "../../../../utils/key";
 import { useDispatch, useSelector } from "react-redux";
 import { setMessage } from "../../../../redux/futures/messageSlice";
+import { Chip } from "@mui/material";
 function ProfileInfoCard({ title, description, info }) {
   const labels = [];
   const values = [];
@@ -191,6 +192,12 @@ function ProfileInfoCard({ title, description, info }) {
             </VuiBox>
           </VuiBox>
           {renderItems}
+          <VuiTypography variant="button" color="white" fontWeight="regular">
+            Require Whitelist IPs
+          </VuiTypography>
+          <VuiBox mb={2}>
+            <Chip label="152.42.167.202" color="warning" />
+          </VuiBox>
         </VuiBox>
         <VuiBox display="flex" mt={1} justifyContent="flex-end">
           {editKeys ? (
