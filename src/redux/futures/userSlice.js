@@ -17,7 +17,9 @@ export const userSlice = createSlice({
     },
 
     setUserSubscription: (state, action) => {
-      state.user.subscription = action.payload;
+      if (state.user) {
+        state.user.subscription = action.payload;
+      }
     }
   },
 });

@@ -25,40 +25,37 @@ import Icon from "@mui/material/Icon";
 import VuiBox from "components/VuiBox";
 import linearGradient from "assets/theme/functions/linearGradient";
 import colors from "assets/theme/base/colors";
-import { FormControl, MenuItem, Select } from "@mui/material";
+import { MenuItem, Select } from "@mui/material";
 
 function SelectNetwork({ paymentConfigs = [], noGutter, onChange, selectedItem }) {
     const { gradients } = colors;
-    const { bill } = gradients;
+    console.log('selectedItem', selectedItem);
+
 
     return (
         <VuiBox
             onClick={onChange}
-            component="li"
-            display="flex"
-            justifyContent="space-between"
-            alignItems="flex-start"
-            sx={{ background: linearGradient(bill.main, bill.state, bill.deg) }}
-            borderRadius="lg"
-            p="12px"
-            mb={noGutter ? "0px" : "24px"}
-            mt="24px"
         >
             <Select
-                variant="outlined"
                 value={selectedItem}
-                label="Select Network"
+                placeholder="Select Network"
+                defaultValue={selectedItem}
+
                 sx={{
-                    '&.MuiInputBase-root': {
-                        background: '',
-                        backgroundColor: ''
-                    }
+                    backgroundColor: `${colors.secondary.main} !important`,
+                    border: `1px solid #56577a`,
+                    '& .MuiSelect-select': {
+                        color: 'white !important',
+                        minHeight: 32,
+                        width: '100%'
+                    },
                 }}
+
                 onChange={() => { }}
             >
                 {paymentConfigs.map((config) => {
                     return (
-                        <MenuItem value={config.network}>{config.name}</MenuItem>
+                        <MenuItem key={config.network} value={config.network}>{config.name}</MenuItem>
                     )
                 })}
             </Select>

@@ -145,6 +145,7 @@ function SubscriptionCheckout({ location }) {
     const [selectedPaymentConfig, setSelectedPaymentConfig] = useState({});
     const [showVerifyTransactionHashModal, setShowVerifyTransactionHashModal] = useState(false);
 
+
     const history = useHistory();
 
     useEffect(() => {
@@ -250,7 +251,7 @@ function SubscriptionCheckout({ location }) {
                                     noGutter
                                 />
                                 <VuiBox mt={2} >
-                                    <SelectNetwork paymentConfigs={paymentConfig} onChange={() => { }} selectedItem={selectedPaymentConfig?.network} />
+                                    {selectedPaymentConfig?.network ? <SelectNetwork paymentConfigs={paymentConfig} onChange={() => { }} selectedItem={selectedPaymentConfig?.network} /> : null}
                                 </VuiBox>
                             </VuiBox>
                         </VuiBox>
