@@ -33,6 +33,7 @@ import { setMessage } from "../../redux/futures/messageSlice";
 import { checkoutPriceType } from "../../redux/futures/subscription";
 import { setPendingTransaction } from "../../redux/futures/transaction";
 import PendingTransaction from "./components/PendingTransaction";
+import VerifyTransactionHashModal from "./components/VerifyTransactionHashModal";
 
 const ColorlibConnector = styled(StepConnector)(({ theme }) => ({
     [`&.${stepConnectorClasses.alternativeLabel}`]: {
@@ -142,6 +143,7 @@ function SubscriptionCheckout({ location }) {
 
     const [paymentConfig, setPaymentConfig] = useState([]);
     const [selectedPaymentConfig, setSelectedPaymentConfig] = useState({});
+    const [showVerifyTransactionHashModal, setShowVerifyTransactionHashModal] = useState(false);
 
     const history = useHistory();
 
@@ -319,9 +321,11 @@ function SubscriptionCheckout({ location }) {
                 </Grid> : null}
                 {currentStep === 1 ? <Grid container xs={12} md={12} xl={12} justifyContent={"center"}>
                     <Grid xs={12} md={8} xl={6}>
-                        <PendingTransaction />
+                        <PendingTransaction onVerify={() => { setShowVerifyTransactionHashModal(true) }} />
                     </Grid>
                 </Grid> : null}
+
+                <VerifyTransactionHashModal open={showVerifyTransactionHashModal} onClose={() => { setShowVerifyTransactionHashModal(false) }} />
             </Grid>
         </Card>
     </DashboardLayout>

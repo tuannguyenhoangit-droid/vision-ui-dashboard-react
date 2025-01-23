@@ -342,7 +342,28 @@ export const getSubscription = async () => {
   });
 };
 
-// /v1/payment-config 
+// v1/account/subscription
+
+export const getAccountSubscriptionInfo = async () => {
+  const token = await auth.currentUser?.getIdToken?.();
+  if (!token) return Promise.reject("Cannot get user token");
+  return new Promise(async (resolve, reject) => {
+    await axios.get("/v1/account/subscription/info", {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: ["Bearer", token].join(" "),
+      },
+    })
+      .then((response) => {
+        resolve(response.data);
+      })
+      .catch((error) => {
+        console.log("error", error);
+      });
+  });
+};
+
+// /v1/payment-config
 
 export const getPaymentConfigs = async () => {
   const token = await auth.currentUser?.getIdToken?.();
@@ -442,7 +463,7 @@ export const validateTransaction = async (transactionId, transactionHash) => {
   if (!token) return Promise.reject("Cannot get user token");
   return new Promise(async (resolve, reject) => {
     await axios
-      .post("/v1/transaction/validate", payload, {
+      .post("http://localhost:3333/v1/transaction/validate", payload, {
         headers: {
           "Content-Type": "application/json",
           Authorization: ["Bearer", token].join(" "),

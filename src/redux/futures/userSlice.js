@@ -15,10 +15,14 @@ export const userSlice = createSlice({
       // immutable state based off those changes
       state.user = action.payload;
     },
+
+    setUserSubscription: (state, action) => {
+      state.user.subscription = action.payload;
+    }
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { setUser } = userSlice.actions;
+export const { setUser, setUserSubscription } = userSlice.actions;
 
 export default userSlice.reducer;

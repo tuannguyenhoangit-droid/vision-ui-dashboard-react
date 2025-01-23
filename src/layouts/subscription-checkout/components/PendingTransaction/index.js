@@ -18,7 +18,7 @@ import { cancelPendingTransaction } from "../../../../redux/futures/transaction"
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 
 
-function PendingTransaction() {
+function PendingTransaction({ onVerify = () => { } }) {
     const { gradients } = colors;
     const { bill } = gradients;
     const { pendingTransaction } = useSelector((e) => e.transaction);
@@ -48,8 +48,6 @@ function PendingTransaction() {
             });
         }
     }
-
-
 
 
     return <VuiBox>
@@ -164,7 +162,7 @@ function PendingTransaction() {
                         Once you have transferred, click the button below to verify
                     </VuiTypography>
                 </VuiBox>
-                <VuiButton disabled={isExpired} variant="gradient" color="info" fullWidth>
+                <VuiButton onClick={onVerify} disabled={isExpired} variant="gradient" color="info" fullWidth>
                     Transfered, Verify Payment
                 </VuiButton>
 

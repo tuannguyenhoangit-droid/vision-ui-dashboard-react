@@ -18,8 +18,6 @@
 
 // @mui material components
 import Grid from "@mui/material/Grid";
-import Icon from "@mui/material/Icon";
-import { Card } from "@mui/material";
 
 // Vision UI Dashboard React components
 import VuiBox from "components/VuiBox";
@@ -43,22 +41,22 @@ import { IoDocumentText } from "react-icons/io5";
 
 import { useEffect, useMemo, useState } from "react";
 import {
+  getAccountSubscriptionInfo,
   getBalance,
   getCurrentPositions,
   getIncomePnL,
   getOpenOrders,
-  getSymbolConfig,
   getTradeList,
 } from "../../services/api";
 import FuturePositionList from "./components/FuturePositionList";
 import { useDispatch } from "react-redux";
-import { setSymbolConfigData } from "../../redux/futures/symbolConfigSlice";
 
 import { getAuth } from "firebase/auth";
 import { firebaseApp } from "../../firebase";
 import { useHistory } from "react-router-dom/cjs/react-router-dom";
 
 import { RiMoneyDollarCircleFill } from "react-icons/ri";
+import { setUserSubscription } from "../../redux/futures/userSlice";
 
 const auth = getAuth(firebaseApp);
 
@@ -93,7 +91,11 @@ function Dashboard() {
           getTradeList().then(setTradeList);
           getBalance().then(setBalance);
           getIncomePnL().then(setIncomePnL);
-          getSymbolConfig().then((data) => dispatch(setSymbolConfigData(data)));
+          getAccountSubscriptionInfo().then((subscription) => {
+            console.log('subscription', subscription);
+
+            dispatch(setUserSubscription(subscription.data))
+          })
         });
       }
     }, 1000);
