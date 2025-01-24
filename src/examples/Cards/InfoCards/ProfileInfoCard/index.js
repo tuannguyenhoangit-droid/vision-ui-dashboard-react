@@ -129,7 +129,7 @@ function ProfileInfoCard({ title, description, info }) {
       </VuiBox>
       <VuiBox>
         <VuiBox mb={2} lineHeight={1}>
-          <VuiTypography variant="button" color="text" fontWeight="regular">
+          <VuiTypography variant="button" color="warning" fontWeight="regular">
             {description}
           </VuiTypography>
         </VuiBox>

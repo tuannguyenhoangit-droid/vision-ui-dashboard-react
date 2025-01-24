@@ -49,7 +49,7 @@ import {
   getTradeList,
 } from "../../services/api";
 import FuturePositionList from "./components/FuturePositionList";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import { getAuth } from "firebase/auth";
 import { firebaseApp } from "../../firebase";
@@ -57,6 +57,9 @@ import { useHistory } from "react-router-dom/cjs/react-router-dom";
 
 import { RiMoneyDollarCircleFill } from "react-icons/ri";
 import { setUserSubscription } from "../../redux/futures/userSlice";
+import Card from "@mui/material/Card";
+import VuiTypography from "components/VuiTypography";
+import VuiButton from "components/VuiButton";
 
 const auth = getAuth(firebaseApp);
 
@@ -67,8 +70,7 @@ startOrDay.setMinutes(0);
 startOrDay.setSeconds(0);
 
 function Dashboard() {
-  const { gradients } = colors;
-  const { cardContent } = gradients;
+  const user = useSelector((e) => e.user.user);
 
   // modal handler
 
@@ -121,6 +123,25 @@ function Dashboard() {
     <DashboardLayout>
       <DashboardNavbar />
       <VuiBox py={3}>
+        {user?.apiKeyHidden?.length === 0 ? <VuiBox mb={3}>
+          <Card>
+            <Grid container spacing={3}>
+              <Grid item xs={12} md={6} xl={6}>
+                <VuiTypography variant="h6" color="white">
+                  Setup your profile
+                </VuiTypography>
+                <VuiTypography variant="button" color="text">
+                  Complete setup your profile to start trading
+                </VuiTypography>
+              </Grid>
+              <Grid item xs={12} md={6} xl={6} display="flex" justifyContent="flex-end" alignItems="center">
+                <VuiButton onClick={() => history.push("/profile")} size="small" color="info" variant="gradient">
+                  Setup your profile
+                </VuiButton>
+              </Grid>
+            </Grid>
+          </Card>
+        </VuiBox> : null}
         <VuiBox mb={3}>
           <Grid container spacing={3}>
             <Grid item xs={12} md={6} xl={3}>
