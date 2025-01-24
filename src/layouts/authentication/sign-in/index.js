@@ -61,9 +61,7 @@ const auth = getAuth(firebaseApp);
 const provider = new GoogleAuthProvider();
 
 function SignIn() {
-  const [rememberMe, setRememberMe] = useState(true);
 
-  const handleSetRememberMe = () => setRememberMe(!rememberMe);
   const [data, setData] = useState({ email: "", password: "" });
 
   const dispatch = useDispatch();

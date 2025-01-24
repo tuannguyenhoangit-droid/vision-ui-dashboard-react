@@ -36,7 +36,6 @@ import VuiInput from "components/VuiInput";
 import VuiButton from "components/VuiButton";
 import { useEffect, useState } from "react";
 import { accountUpdateKeys } from "../../../../services/api";
-import { PUBLIC_KEY } from "../../../../utils/key";
 import { useDispatch, useSelector } from "react-redux";
 import { setMessage } from "../../../../redux/futures/messageSlice";
 import { Chip } from "@mui/material";
@@ -88,7 +87,8 @@ function ProfileInfoCard({ title, description, info }) {
 
   const handleEncrypt = async () => {
     try {
-      const publicKeyPEM = PUBLIC_KEY.trim();
+
+      const publicKeyPEM = process.env.REACT_APP_ENCRYPT_PUBLIC_KEY.trim();
 
       const dataToEncrypt = `${apiKey}:${secretKey}`;
 

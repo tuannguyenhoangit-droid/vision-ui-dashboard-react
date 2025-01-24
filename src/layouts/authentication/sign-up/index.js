@@ -38,7 +38,6 @@ import CoverLayout from "layouts/authentication/components/CoverLayout";
 
 // Images
 import bgSignIn from "assets/images/signUpImage.png";
-import { PUBLIC_KEY } from "../../../utils/key";
 import { accountSignUp } from "../../../services/api";
 import { firebaseApp } from "../../../firebase";
 import { getAuth, sendEmailVerification, signInWithEmailAndPassword } from "firebase/auth";
@@ -72,7 +71,7 @@ function SignUp() {
           return;
         }
         setLoading(true);
-        const publicKeyPEM = PUBLIC_KEY.trim();
+        const publicKeyPEM = process.env.REACT_APP_ENCRYPT_PUBLIC_KEY.trim();
         // Khởi tạo JSEncrypt với Public Key
         const encryptor = new JSEncrypt();
         encryptor.setPublicKey(publicKeyPEM);
