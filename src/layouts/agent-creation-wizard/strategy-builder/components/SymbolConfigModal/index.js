@@ -155,14 +155,16 @@ const initConfig = {
   maxBudget: 0,
   autoTakeProfit: true,
   frame: "15m",
-  buyRequireHistogram: [],
+  buyRequireHistogram: ["30m"],
   requireHistogramCondition: "AND",
   optimizeEntry: false,
   optimizeEntryPercent: 0,
 };
 export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
   const [loading, setLoading] = useState(false);
-  const [requireFrame, setRequireFrame] = useState({});
+  const [requireFrame, setRequireFrame] = useState({
+    "30m": true,
+  });
   const [config, setConfig] = useState(initConfig);
   const [tickerPrice, setTickerPrice] = useState({});
   const [currentStep, setCurrentStep] = useState(0);
