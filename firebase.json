@@ -6,7 +6,7 @@
       "**/.*",
       "**/node_modules/**"
     ],
-    "site": "beta-sa-bot",
+    "site": "sa-bot",
     "rewrites": [
       {
         "source": "**",
