@@ -36,6 +36,7 @@ import { dayDifference } from "utils";
 
 function Header() {
   const user = useSelector((e) => e.user.user);
+
   return (
     <VuiBox position="relative">
       <DashboardNavbar light />
@@ -118,6 +119,7 @@ function Header() {
                   <VuiTypography variant="lg" color="primary" fontWeight="bold">
                     {user?.subscription?.data?.name || ""}
                   </VuiTypography>
+                  <Chip style={{ marginLeft: 8 }} size="small" color={user?.subscription?.status === "active" ? "success" : "warning"} label={user?.subscription?.status || ""} />
                 </VuiBox>
                 <VuiBox>
                   <VuiTypography variant="button" color="white" fontWeight="bold">

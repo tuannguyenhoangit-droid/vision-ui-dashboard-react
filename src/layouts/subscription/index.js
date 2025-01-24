@@ -117,8 +117,6 @@ function Subscription() {
               </VuiBox>
               <Grid container spacing={3}>
                 {subscription.data?.map((sub) => {
-                  console.log('SUB_IMAGES[sub.id]', SUB_IMAGES[sub.id], sub.id);
-
                   return (
                     <Grid key={sub.id} item xs={12} md={4} xl={4}>
                       <Card
