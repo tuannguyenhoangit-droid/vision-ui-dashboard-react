@@ -1,7 +1,7 @@
 import { Alert, ButtonGroup, Checkbox, Dialog, Step, StepLabel, Stepper } from "@mui/material";
 import PropTypes from "prop-types";
 import { styled } from "@mui/material/styles";
-// Vision UI Dashboard React components
+
 import VuiBox from "components/VuiBox";
 import VuiTypography from "components/VuiTypography";
 import VuiInput from "components/VuiInput";
@@ -23,6 +23,7 @@ import GroupAddIcon from "@mui/icons-material/GroupAdd";
 import VideoLabelIcon from "@mui/icons-material/VideoLabel";
 import StepConnector, { stepConnectorClasses } from "@mui/material/StepConnector";
 import MiniStatisticsCard from "examples/Cards/StatisticsCards/MiniStatisticsCard";
+import { setMessage } from "../../../../../redux/futures/messageSlice";
 
 const ColorlibConnector = styled(StepConnector)(({ theme }) => ({
   [`&.${stepConnectorClasses.alternativeLabel}`]: {
@@ -308,14 +309,23 @@ export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
         setLoading(false);
         onClose();
 
-        const userSymbolConfig = await getSymbolConfig();
-        dispatch(setSymbolConfigData(userSymbolConfig));
         setConfig({
           ...initConfig,
         });
         setRequireFrame({});
         setCurrentStep(0);
         setTickerPrice({});
+
+        if (result.status === -1) {
+          return dispatch(setMessage({
+            message: result.message,
+            type: "warning"
+          }))
+        }
+
+        const userSymbolConfig = await getSymbolConfig();
+        dispatch(setSymbolConfigData(userSymbolConfig));
+
       } catch (e) {
         setLoading(false);
       }

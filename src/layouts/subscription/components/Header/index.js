@@ -16,6 +16,7 @@
 
 */
 
+import { Chip } from "@mui/material";
 import AppBar from "@mui/material/AppBar";
 // @mui material components
 import Card from "@mui/material/Card";
@@ -23,19 +24,18 @@ import Grid from "@mui/material/Grid";
 // Images
 
 import VuiAvatar from "components/VuiAvatar";
-// Vision UI Dashboard React components
+
 import VuiBox from "components/VuiBox";
 import VuiTypography from "components/VuiTypography";
-// Vision UI Dashboard React icons
-// Vision UI Dashboard React example components
+
+
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
+import { isMobile } from "react-device-detect";
 import { useSelector } from "react-redux";
 import { dayDifference } from "utils";
 
 function Header() {
   const user = useSelector((e) => e.user.user);
-
-
   return (
     <VuiBox position="relative">
       <DashboardNavbar light />
@@ -77,9 +77,9 @@ function Header() {
             })}
           >
             <VuiAvatar
-              src={{ uri: user?.photoURL }}
+              src={user?.photoURL}
               alt="profile-image"
-              variant="rounded"
+              variant="circle"
               size="xl"
               shadow="sm"
             />
@@ -106,27 +106,25 @@ function Header() {
               </VuiTypography>
             </VuiBox>
           </Grid>
-          <Grid item xs={12} md={6} lg={6.5} xl={6} xxl={4} sx={{ ml: "auto" }}>
+          <Grid item xs={12} md={6} lg={6.5} xl={6} xxl={4} sx={{ margin: "auto" }}>
             <AppBar position="static">
-              <VuiBox justifyContent="flex-end" display="flex" mr={4}>
+              <VuiBox justifyContent="flex-end" display="flex" alignItems={isMobile ? "center" : "flex-end"} flexDirection="column">
                 <VuiBox>
-                  <VuiBox>
-                    <VuiTypography variant="xxs" color="white" fontWeight="bold">
-                      Subscription
-                    </VuiTypography>
-                  </VuiBox>
-                  <VuiBox>
-                    <VuiTypography variant="lg" color="primary" fontWeight="bold">
-                      {user?.subscription?.data?.name || ""}
-                    </VuiTypography>
-                  </VuiBox>
-                  <VuiBox>
-                    <VuiTypography variant="button" color="white" fontWeight="bold">
-                      {["Expired in", dayDifference(user?.subscription?.endAt || 0), "day(s)"].join(
-                        " "
-                      )}
-                    </VuiTypography>
-                  </VuiBox>
+                  <VuiTypography variant="xxs" color="white" fontWeight="bold">
+                    Subscription
+                  </VuiTypography>
+                </VuiBox>
+                <VuiBox>
+                  <VuiTypography variant="lg" color="primary" fontWeight="bold">
+                    {user?.subscription?.data?.name || ""}
+                  </VuiTypography>
+                </VuiBox>
+                <VuiBox>
+                  <VuiTypography variant="button" color="white" fontWeight="bold">
+                    {["Expired in", dayDifference(user?.subscription?.endAt || 0), "day(s)"].join(
+                      " "
+                    )}
+                  </VuiTypography>
                 </VuiBox>
               </VuiBox>
             </AppBar>

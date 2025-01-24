@@ -24,7 +24,7 @@ import Icon from "@mui/material/Icon";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 
-// Vision UI Dashboard React components
+
 import VuiBox from "components/VuiBox";
 import VuiTypography from "components/VuiTypography";
 import VuiProgress from "components/VuiProgress";

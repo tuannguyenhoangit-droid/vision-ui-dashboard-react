@@ -20,10 +20,10 @@
 // @mui icons
 import Grid from "@mui/material/Grid";
 
-// Vision UI Dashboard React components
+
 import VuiBox from "components/VuiBox";
 import ProfileInfoCard from "examples/Cards/InfoCards/ProfileInfoCard";
-// Vision UI Dashboard React example components
+
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 // Overview page components
 import Header from "layouts/subscription/components/Header";

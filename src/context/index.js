@@ -32,7 +32,6 @@ const VisionUI = createContext();
 // Setting custom name for the context which is visible on react dev tools
 VisionUI.displayName = "VisionUIContext";
 
-// Vision UI Dashboard React reducer
 function reducer(state, action) {
   switch (action.type) {
     case "MINI_SIDENAV": {
@@ -65,7 +64,7 @@ function reducer(state, action) {
   }
 }
 
-// Vision UI Dashboard React context provider
+
 function VisionUIControllerProvider({ children }) {
   const initialState = {
     miniSidenav: false,
@@ -83,7 +82,6 @@ function VisionUIControllerProvider({ children }) {
   return <VisionUI.Provider value={[controller, dispatch]}>{children}</VisionUI.Provider>;
 }
 
-// Vision UI Dashboard React custom hook for using context
 function useVisionUIController() {
   const context = useContext(VisionUI);
 

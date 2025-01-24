@@ -8,10 +8,10 @@ import PropTypes from "prop-types";
 import { styled } from "@mui/material/styles";
 // Images
 import profile1 from "assets/images/profile-1.png";
-// Vision UI Dashboard React components
+
 import VuiBox from "components/VuiBox";
 import VuiTypography from "components/VuiTypography";
-// Vision UI Dashboard React example components
+
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 // Overview page components
 import { useEffect, useState } from "react";

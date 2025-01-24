@@ -22,14 +22,14 @@ import Card from "@mui/material/Card";
 import Grid from "@mui/material/Grid";
 // Images
 import burceMars from "assets/images/avatar-simmmple.png";
-// Vision UI Dashboard React base styles
+
 import breakpoints from "assets/theme/base/breakpoints";
 import VuiAvatar from "components/VuiAvatar";
-// Vision UI Dashboard React components
+
 import VuiBox from "components/VuiBox";
 import VuiTypography from "components/VuiTypography";
-// Vision UI Dashboard React icons
-// Vision UI Dashboard React example components
+
+
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";

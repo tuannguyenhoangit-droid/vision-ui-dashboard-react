@@ -25,7 +25,7 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { BsCheckCircleFill, BsPencilSquare } from "react-icons/bs";
 
-// Vision UI Dashboard React components
+
 import VuiBox from "components/VuiBox";
 import VuiTypography from "components/VuiTypography";
 
@@ -125,12 +125,10 @@ function Projects({
   onDeleteItem = () => null,
 }) {
   const symbolConfig = useSelector((e) => e.symbolConfig.data);
-  const [menu, setMenu] = useState(null);
   const dispatch = useDispatch();
 
-  const openMenu = ({ currentTarget }) => setMenu(currentTarget);
+
   const closeMenu = (action) => {
-    setMenu(null);
     onMenuClick?.(action);
   };
 
@@ -169,24 +167,6 @@ function Projects({
     return symbolConfig.map((row) => SymbolConfigItem({ row, onEditItem, onDeleteItem }));
   }, [symbolConfig]);
 
-  const renderMenu = (
-    <Menu
-      id="simple-menu"
-      anchorEl={menu}
-      anchorOrigin={{
-        vertical: "top",
-        horizontal: "left",
-      }}
-      transformOrigin={{
-        vertical: "top",
-        horizontal: "right",
-      }}
-      open={Boolean(menu)}
-      onClose={closeMenu}
-    >
-      <MenuItem onClick={() => closeMenu("add")}>Add Strategy</MenuItem>
-    </Menu>
-  );
 
   return (
     <Card
@@ -238,21 +218,20 @@ function Projects({
               <Icon
                 sx={{ cursor: "pointer", fontWeight: "bold" }}
                 fontSize="small"
-                onClick={openMenu}
+                onClick={() => closeMenu("add")}
               >
                 add
               </Icon>
             </VuiBox>
           ) : (
             <VuiBox ml={1} display="flex" alignItems="center" flexDirection="row">
-              <VuiButton size="small" variant="gradient" onClick={openMenu} color="info" >
+              <VuiButton size="small" variant="gradient" onClick={() => closeMenu("add")} color="info" >
                 Add Strategy
               </VuiButton>
             </VuiBox>
           )}
 
         </VuiBox>
-        {renderMenu}
       </VuiBox>
       <VuiBox
         sx={{

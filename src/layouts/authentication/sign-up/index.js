@@ -21,7 +21,7 @@ import JSEncrypt from "jsencrypt";
 // react-router-dom components
 import { Link } from "react-router-dom";
 
-// Vision UI Dashboard React components
+
 import VuiBox from "components/VuiBox";
 import VuiTypography from "components/VuiTypography";
 import VuiInput from "components/VuiInput";

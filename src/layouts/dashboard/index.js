@@ -19,10 +19,10 @@
 // @mui material components
 import Grid from "@mui/material/Grid";
 
-// Vision UI Dashboard React components
+
 import VuiBox from "components/VuiBox";
 
-// Vision UI Dashboard React example components
+
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import MiniStatisticsCard from "examples/Cards/StatisticsCards/MiniStatisticsCard";

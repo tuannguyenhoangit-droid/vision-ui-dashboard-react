@@ -1,5 +1,5 @@
 
-// Vision UI Dashboard React components
+
 import VuiBox from "components/VuiBox";
 import linearGradient from "assets/theme/functions/linearGradient";
 import colors from "assets/theme/base/colors";

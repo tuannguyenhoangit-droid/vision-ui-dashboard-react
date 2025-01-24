@@ -22,11 +22,11 @@ import JSEncrypt from "jsencrypt";
 // @mui material components
 import Card from "@mui/material/Card";
 
-// Vision UI Dashboard React components
+
 import VuiBox from "components/VuiBox";
 import VuiTypography from "components/VuiTypography";
 
-// Vision UI Dashboard React base styles
+
 
 import GradientBorder from "examples/GradientBorder";
 import borders from "assets/theme/base/borders";
@@ -213,7 +213,7 @@ function ProfileInfoCard({ title, description, info }) {
             </VuiBox>
           ) : null}
           {!editKeys ? (
-            <VuiButton onClick={() => setEditKeys(true)} color="info">
+            <VuiButton onClick={() => setEditKeys(true)} color="info" variant="gradient">
               CHANGE KEYS
             </VuiButton>
           ) : null}

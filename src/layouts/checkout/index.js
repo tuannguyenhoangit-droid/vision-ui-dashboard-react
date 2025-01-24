@@ -24,11 +24,11 @@ import Grid from "@mui/material/Grid";
 
 // Images
 import profile1 from "assets/images/profile-1.png";
-// Vision UI Dashboard React components
+
 import VuiBox from "components/VuiBox";
 import VuiTypography from "components/VuiTypography";
 import DefaultProjectCard from "examples/Cards/ProjectCards/DefaultProjectCard";
-// Vision UI Dashboard React example components
+
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 // Overview page components
 import Header from "layouts/subscription/components/Header";

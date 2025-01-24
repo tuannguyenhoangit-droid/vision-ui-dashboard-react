@@ -1,21 +1,3 @@
-/*!
-
-=========================================================
-
-=========================================================
-
-
-
-
-
-
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
-
 import React from "react";
 import { Card, Stack, Grid } from "@mui/material";
 import VuiBox from "components/VuiBox";
@@ -24,14 +6,10 @@ import WhiteLightning from "assets/images/shapes/white-lightning.svg";
 import linearGradient from "assets/theme/functions/linearGradient";
 import colors from "assets/theme/base/colors";
 import carProfile from "assets/images/shapes/car-profile.svg";
-import { useSelector } from "react-redux";
+
 const CarInformations = () => {
   const { gradients, info } = colors;
   const { cardContent } = gradients;
-
-  const { user } = useSelector((state) => state.user);
-  const { subscription = {} } = user || {};
-  console.log('subscription', subscription);
 
   return (
     <Card

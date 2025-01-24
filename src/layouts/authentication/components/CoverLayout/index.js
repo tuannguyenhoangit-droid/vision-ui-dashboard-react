@@ -1,18 +1,18 @@
 import PropTypes from "prop-types";
 
-// Vision UI Dashboard React components
+
 import VuiBox from "components/VuiBox";
 import VuiTypography from "components/VuiTypography";
-// Vision UI Dashboard React example components
+
 import PageLayout from "examples/LayoutContainers/PageLayout";
 
 // Authentication layout components
 import Footer from "layouts/authentication/components/Footer";
 
-// Vision UI Dashboard React theme functions
+
 import colors from "assets/theme/base/colors";
 import { isMobile } from "react-device-detect";
-// Vision UI Dashboard React theme functions
+
 import tripleLinearGradient from "assets/theme/functions/tripleLinearGradient";
 import { useDispatch, useSelector } from "react-redux";
 import { setMessage } from "../../../../redux/futures/messageSlice";

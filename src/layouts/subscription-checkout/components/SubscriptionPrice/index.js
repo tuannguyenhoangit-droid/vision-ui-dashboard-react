@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 
-// Vision UI Dashboard React components
+
 import VuiBox from "components/VuiBox";
 import VuiTypography from "components/VuiTypography";
 import linearGradient from "assets/theme/functions/linearGradient";

@@ -16,10 +16,10 @@
 
 */
 
-// Vision UI Dashboard React components
+
 import VuiBox from "components/VuiBox";
 
-// Vision UI Dashboard React context
+
 
 function GradientBorder(props) {
   const { backgroundImage, children, borderRadius, width, minWidth, ...rest } = props;

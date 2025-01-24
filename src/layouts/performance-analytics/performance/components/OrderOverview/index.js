@@ -19,11 +19,11 @@
 // @mui material components
 import Card from "@mui/material/Card";
 
-// Vision UI Dashboard React components
+
 import VuiBox from "components/VuiBox";
 import VuiTypography from "components/VuiTypography";
 
-// Vision UI Dashboard React example components
+
 import TimelineItem from "examples/Timeline/TimelineItem";
 
 // Vision UI Dashboard theme imports

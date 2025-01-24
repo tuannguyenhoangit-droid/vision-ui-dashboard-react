@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 
-// Vision UI Dashboard React components
+
 import VuiBox from "components/VuiBox";
 import colors from "assets/theme/base/colors";
 import { MenuItem, Select } from "@mui/material";

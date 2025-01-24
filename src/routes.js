@@ -38,7 +38,6 @@
   10. The `component` key is used to store the component of its route.
 */
 
-// Vision UI Dashboard React layouts
 import Dashboard from "layouts/dashboard";
 import Tables from "layouts/tables";
 import Billing from "layouts/billing";
@@ -46,7 +45,7 @@ import Profile from "layouts/profile";
 import SignIn from "layouts/authentication/sign-in";
 import SignUp from "layouts/authentication/sign-up";
 
-// Vision UI Dashboard React icons
+
 import { IoDocument, IoRocketSharp } from "react-icons/io5";
 import { IoIosDocument } from "react-icons/io";
 import { BsCreditCardFill, BsFillPersonFill } from "react-icons/bs";

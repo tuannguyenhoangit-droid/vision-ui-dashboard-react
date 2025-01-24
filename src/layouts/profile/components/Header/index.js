@@ -1,46 +1,17 @@
-/*!
-
-=========================================================
-
-=========================================================
-
-
-
-
-
-
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
-
-import AppBar from "@mui/material/AppBar";
 // @mui material components
 import Card from "@mui/material/Card";
 import Grid from "@mui/material/Grid";
-import Tab from "@mui/material/Tab";
-import Tabs from "@mui/material/Tabs";
-// Images
-import burceMars from "assets/images/avatar-simmmple.png";
-// Vision UI Dashboard React base styles
-import breakpoints from "assets/theme/base/breakpoints";
 import VuiAvatar from "components/VuiAvatar";
-// Vision UI Dashboard React components
+
 import VuiBox from "components/VuiBox";
 import VuiTypography from "components/VuiTypography";
-// Vision UI Dashboard React icons
-import { IoCube } from "react-icons/io5";
-import { IoDocument } from "react-icons/io5";
-import { IoBuild } from "react-icons/io5";
-// Vision UI Dashboard React example components
+
+
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import { useSelector } from "react-redux";
 
 function Header() {
   const user = useSelector((e) => e.user);
-  console.log('user', user);
 
   return (
     <VuiBox position="relative">

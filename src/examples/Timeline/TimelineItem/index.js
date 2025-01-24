@@ -19,7 +19,7 @@
 // prop-types is a library for typechecking of props
 import PropTypes from "prop-types";
 
-// Vision UI Dashboard React components
+
 import VuiBox from "components/VuiBox";
 import VuiTypography from "components/VuiTypography";
 import VuiBadge from "components/VuiBadge";
