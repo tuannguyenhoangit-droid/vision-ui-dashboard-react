@@ -196,7 +196,7 @@ function ProfileInfoCard({ title, description, info }) {
             Require Whitelist IPs
           </VuiTypography>
           <VuiBox mb={2}>
-            <Chip label="152.42.167.202" color="warning" />
+            <Chip label="68.183.189.44" color="warning" />
           </VuiBox>
         </VuiBox>
         <VuiBox display="flex" mt={1} justifyContent="flex-end">
