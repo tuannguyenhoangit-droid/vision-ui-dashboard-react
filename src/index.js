@@ -29,6 +29,10 @@ import { VisionUIControllerProvider } from "context";
 const rootElement = document.getElementById("root");
 const root = createRoot(rootElement);
 
+if (process.env.REACT_APP_ENV === "production") {
+  console.log = () => { };
+}
+
 root.render(
   <BrowserRouter>
     <VisionUIControllerProvider>
