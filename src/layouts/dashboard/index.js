@@ -131,7 +131,7 @@ function Dashboard() {
                   Setup your profile
                 </VuiTypography>
                 <VuiTypography variant="button" color="text">
-                  Complete setup your profile to start trading
+                  Complete setup your Binance API Key to start trading
                 </VuiTypography>
               </Grid>
               <Grid item xs={12} md={6} xl={6} display="flex" justifyContent="flex-end" alignItems="center">
