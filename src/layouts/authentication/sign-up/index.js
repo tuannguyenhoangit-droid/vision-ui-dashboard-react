@@ -87,7 +87,7 @@ function SignUp() {
         if (status === 1) {
           // Send verification email
           await sendEmailVerification(user, {
-            url: "https://sa-bot.web.app/dashboard",
+            url: "https://beta-sa.okbot.org/dashboard",
           });
         }
 
