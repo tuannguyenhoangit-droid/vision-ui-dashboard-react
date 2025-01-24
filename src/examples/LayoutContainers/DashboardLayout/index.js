@@ -17,6 +17,7 @@ import VuiTypography from "components/VuiTypography";
 import { setMessage } from "../../../redux/futures/messageSlice";
 import { Alert } from "@mui/material";
 import VuiAlert from "components/VuiAlert";
+import Footer from "examples/Footer";
 
 function DashboardLayout({ children }) {
   const [controller, dispatch] = useVisionUIController();
@@ -44,6 +45,7 @@ function DashboardLayout({ children }) {
       })}
     >
       {children}
+      <Footer />
       <VuiAlert />
     </VuiBox>
   );

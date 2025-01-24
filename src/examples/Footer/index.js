@@ -17,7 +17,10 @@
 */
 
 
+import { Telegram } from "@mui/icons-material";
+import { Link } from "@mui/material";
 import VuiBox from "components/VuiBox";
+import VuiButton from "components/VuiButton";
 import VuiTypography from "components/VuiTypography";
 
 function Footer() {
@@ -51,8 +54,21 @@ function Footer() {
           for automatic trading
         </VuiTypography>
       </VuiBox>
-      {/* <VuiBox item xs={10}>
-        <VuiBox display="flex" justifyContent="center" flexWrap="wrap" mb={3}>
+      <VuiBox item xs={10}>
+        <VuiBox mr={1.5}>
+          <VuiButton
+            component={Link}
+            href="https://t.me/sabot_official"
+            variant="text"
+            target="_blank"
+            rel="noreferrer"
+            color="white"
+          >
+            <Telegram style={{ width: 24, height: 24 }} />
+            &nbsp; Telegram
+          </VuiButton>
+        </VuiBox>
+        {/*<VuiBox display="flex" justifyContent="center" flexWrap="wrap" mb={3}>
           <VuiBox mr={{ xs: "20px", lg: "46px" }}>
             <VuiTypography
               component="a"
@@ -83,8 +99,8 @@ function Footer() {
               License
             </VuiTypography>
           </VuiBox>
-        </VuiBox>
-      </VuiBox> */}
+        </VuiBox> */}
+      </VuiBox>
     </VuiBox>
   );
 }

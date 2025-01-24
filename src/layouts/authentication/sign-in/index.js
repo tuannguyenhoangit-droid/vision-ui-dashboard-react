@@ -260,12 +260,12 @@ function SignIn() {
             {" and "}
             <VuiTypography
               component={Link}
-              to="/disclaimer"
+              to="/privacy-policy"
               variant="button"
               color="white"
               fontWeight="medium"
             >
-              Disclaimer
+              Privacy Policy
             </VuiTypography>
           </VuiTypography>
         </VuiBox>

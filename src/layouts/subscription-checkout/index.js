@@ -323,7 +323,7 @@ function SubscriptionCheckout({ location }) {
                                     {" and "}
                                     <VuiTypography
                                         component={Link}
-                                        to="/disclaimer"
+                                        to="/privacy-policy"
                                         variant="button"
                                         color="white"
                                         fontWeight="medium"

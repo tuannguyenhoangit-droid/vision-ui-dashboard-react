@@ -154,7 +154,7 @@ const initConfig = {
   buyAmount: 0,
   maxBudget: 0,
   autoTakeProfit: true,
-  frame: "3m",
+  frame: "15m",
   buyRequireHistogram: [],
   requireHistogramCondition: "AND",
   optimizeEntry: false,

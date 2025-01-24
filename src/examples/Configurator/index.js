@@ -216,7 +216,7 @@ function Configurator() {
 
         <Divider light />
 
-        {/* <VuiBox mt={3} mb={2}>
+        <VuiBox mt={3} mb={2}>
           <VuiBox mb={2}>
             <VuiButton
               component={Link}
@@ -241,8 +241,8 @@ function Configurator() {
           >
             VIEW DOCUMENTATION
           </VuiButton>
-        </VuiBox> */}
-        {/* <VuiBox display="flex" justifyContent="center">
+        </VuiBox>
+        <VuiBox display="flex" justifyContent="center">
           <GitHubButton
             href="https://github.com/creativetimofficial/vision-ui-dashboard-react"
             data-icon="octicon-star"
@@ -284,7 +284,7 @@ function Configurator() {
               &nbsp; Share
             </VuiButton>
           </VuiBox>
-        </VuiBox> */}
+        </VuiBox>
       </VuiBox>
     </ConfiguratorRoot>
   );

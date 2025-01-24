@@ -39,8 +39,6 @@
 */
 
 import Dashboard from "layouts/dashboard";
-import Tables from "layouts/tables";
-import Billing from "layouts/billing";
 import Profile from "layouts/profile";
 import SignIn from "layouts/authentication/sign-in";
 import SignUp from "layouts/authentication/sign-up";
@@ -48,7 +46,7 @@ import SignUp from "layouts/authentication/sign-up";
 
 import { IoDocument, IoRocketSharp } from "react-icons/io5";
 import { IoIosDocument } from "react-icons/io";
-import { BsCreditCardFill, BsFillPersonFill } from "react-icons/bs";
+import { BsFillPersonFill } from "react-icons/bs";
 import { IoHome } from "react-icons/io5";
 import VerifyEmail from "layouts/authentication/verifyEmail";
 import Disclaimer from "layouts/authentication/disclaimer";
@@ -57,6 +55,7 @@ import Subscription from "layouts/subscription";
 import StrategyBuilder from "layouts/agent-creation-wizard/strategy-builder";
 import Performance from "layouts/performance-analytics/performance";
 import SubscriptionCheckout from "layouts/subscription-checkout";
+import SignOut from "layouts/authentication/sign-out";
 
 const routes = [
   {
@@ -163,9 +162,9 @@ const routes = [
     type: "collapse",
     name: "Sign Out",
     key: "sign-up",
-    route: "/authentication/sign-in",
+    route: "/authentication/sign-out",
     icon: <IoRocketSharp size="15px" color="inherit" />,
-    component: SignIn,
+    component: SignOut,
     noCollapse: true,
   },
   {
@@ -177,9 +176,9 @@ const routes = [
     noCollapse: true,
   },
   {
-    name: "Disclaimer",
-    key: "disclaimer",
-    route: "/disclaimer",
+    name: "Privacy Policy",
+    key: "privacy-policy",
+    route: "/privacy-policy",
     icon: <IoDocument size="15px" color="inherit" />,
     component: Disclaimer,
     noCollapse: true,

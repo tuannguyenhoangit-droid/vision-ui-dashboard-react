@@ -70,7 +70,6 @@ function StrategyBuilder() {
           />
         </Grid>
       </Grid>
-      {/* <Footer /> */}
       <SymbolConfigModal
         item={symbolEditItem}
         onClose={() => {

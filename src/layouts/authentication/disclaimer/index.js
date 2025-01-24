@@ -36,7 +36,7 @@ function Disclaimer() {
 
   return (
     <CoverLayout
-      title="SA Trading Bot Disclaimer"
+      title="SA Trading Bot Privacy Policy"
       color="white"
       description={
         "Please ensure that you have read the disclaimer before siging up to our platform"
