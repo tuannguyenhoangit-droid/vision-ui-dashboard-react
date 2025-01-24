@@ -15,8 +15,7 @@ import { isMobile } from "react-device-detect";
 
 import tripleLinearGradient from "assets/theme/functions/tripleLinearGradient";
 import { useDispatch, useSelector } from "react-redux";
-import { setMessage } from "../../../../redux/futures/messageSlice";
-import { Alert } from "@mui/material";
+import VuiAlert from "components/VuiAlert";
 
 function CoverLayout({
   color,
@@ -193,23 +192,7 @@ function CoverLayout({
           <Footer />
         </VuiBox>
       </VuiBox>
-      {errorMessage.message ? (
-        <Alert
-          variant="outlined"
-          severity={errorMessage.type || "success"}
-          style={{
-            position: "fixed",
-            top: 12,
-            right: 12,
-          }}
-          dismissible
-          onClose={() => dispatch(setMessage(""))}
-        >
-          <VuiTypography color="white" variant="button">
-            {errorMessage.message}
-          </VuiTypography>
-        </Alert>
-      ) : null}
+      <VuiAlert />
     </PageLayout>
   );
 }

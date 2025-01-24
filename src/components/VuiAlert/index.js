@@ -1,76 +1,46 @@
-/*!
+import { useEffect } from "react";
 
-=========================================================
-
-=========================================================
-
-
-
-
-
-
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
-
-import { useEffect, useState } from "react";
-
-// prop-types is a library for typechecking of props
+import { useDispatch, useSelector } from "react-redux";
+import { setMessage } from "../../redux/futures/messageSlice";
+import VuiTypography from "components/VuiTypography";
+import { Alert } from "@mui/material";
 import PropTypes from "prop-types";
 
-// @mui material components
-import Fade from "@mui/material/Fade";
-
-
-import VuiBox from "components/VuiBox";
-
-// Custom styles for the VuiAlert
-import VuiAlertRoot from "components/VuiAlert/VuiAlertRoot";
-import VuiAlertCloseIcon from "components/VuiAlert/VuiAlertCloseIcon";
-
-function VuiAlert({ color, dismissible, children, onClose, ...rest }) {
-  const [alertStatus, setAlertStatus] = useState("mount");
-
-  const handleAlertStatus = () => {
-    setAlertStatus("fadeOut");
-    onClose?.();
-  };
+function VuiAlert() {
+  const dispatch = useDispatch();
+  const errorMessage = useSelector((e) => e.message);
 
   useEffect(() => {
-    const timeout = setTimeout(() => {
-      handleAlertStatus();
-    }, 2000);
-    return () => clearTimeout(timeout);
-  }, []);
+    if (errorMessage.message) {
+      setTimeout(() => {
+        dispatch(setMessage({ message: "", type: "" }));
+      }, 3000);
+    }
+  }, [errorMessage.message]);
 
   // The base template for the alert
-  const alertTemplate = (mount = true) => (
-    <Fade in={mount} timeout={300}>
-      <VuiAlertRoot ownerState={{ color }} {...rest}>
-        <VuiBox display="flex" alignItems="center" color="white">
-          {children}
-        </VuiBox>
-        {dismissible ? (
-          <VuiAlertCloseIcon color="white" onClick={mount ? handleAlertStatus : null}>
-            &times;
-          </VuiAlertCloseIcon>
-        ) : null}
-      </VuiAlertRoot>
-    </Fade>
+  const alertTemplate = () => (
+    <Alert
+      variant="outlined"
+      severity={errorMessage.type || "success"}
+      style={{
+        position: "fixed",
+        top: 12,
+        right: 12,
+        backgroundColor: "white",
+        alignItems: "center",
+      }}
+      dismissible
+      onClose={() => dispatch(setMessage(""))}
+    >
+      <VuiTypography color={errorMessage.type || "success"} variant="button">
+        {errorMessage.message}
+      </VuiTypography>
+    </Alert>
   );
 
-  switch (true) {
-    case alertStatus === "mount":
-      return alertTemplate();
-    case alertStatus === "fadeOut":
-      setTimeout(() => setAlertStatus("unmount"), 400);
-      return alertTemplate(false);
-    default:
-      alertTemplate();
-      break;
+  if (errorMessage.message) {
+    return alertTemplate();
   }
 
   return null;
