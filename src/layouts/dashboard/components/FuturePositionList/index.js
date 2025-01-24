@@ -160,12 +160,12 @@ function FuturePositionList(props) {
             </VuiTypography>
           </VuiBox>
         </VuiBox>
-        <VuiBox color="text" px={2}>
+        {/* <VuiBox color="text" px={2}>
           <Icon sx={{ cursor: "pointer", fontWeight: "bold" }} fontSize="small" onClick={openMenu}>
             more_vert
           </Icon>
         </VuiBox>
-        {renderMenu}
+        {renderMenu} */}
       </VuiBox>
       <VuiBox
         sx={{

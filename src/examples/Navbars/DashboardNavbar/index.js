@@ -178,10 +178,14 @@ function DashboardNavbar({ absolute, light, isMini }) {
                 backgroundColor: "info.main !important",
               })}
             >
-
+              {isMobile && (
+                <VuiTypography color="white" variant="lg" mb="6px" gutterBottom>
+                  SA Bot
+                </VuiTypography>
+              )}
             </VuiBox>
             <VuiBox color={light ? "white" : "inherit"}>
-              <Link to="/authentication/sign-in">
+              <Link to="/profile">
                 <IconButton sx={navbarIconButton} size="small">
                   <Icon
                     sx={({ palette: { dark, white } }) => ({
