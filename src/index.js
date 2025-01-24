@@ -16,6 +16,10 @@
 
 */
 
+if (process.env.REACT_APP_ENV === "production") {
+  console.log = () => { };
+}
+
 import React from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
@@ -28,10 +32,6 @@ import { VisionUIControllerProvider } from "context";
 
 const rootElement = document.getElementById("root");
 const root = createRoot(rootElement);
-
-if (process.env.REACT_APP_ENV === "production") {
-  console.log = () => { };
-}
 
 root.render(
   <BrowserRouter>
