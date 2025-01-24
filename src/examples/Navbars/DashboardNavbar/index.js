@@ -64,11 +64,13 @@ import { isMobile } from "react-device-detect";
 import { Card } from "@mui/material";
 import VuiSwitch from "components/VuiSwitch";
 import { changeFutureActive } from "../../../services/api";
+import { Telegram } from "@mui/icons-material";
+import colors from "assets/theme/base/colors";
 
 function DashboardNavbar({ absolute, light, isMini }) {
   const [navbarType, setNavbarType] = useState();
   const [controller, dispatch] = useVisionUIController();
-  const { miniSidenav, transparentNavbar, fixedNavbar, openConfigurator } = controller;
+  const { miniSidenav, transparentNavbar, fixedNavbar } = controller;
   const [openMenu, setOpenMenu] = useState(false);
   const route = useLocation().pathname.split("/").slice(1);
   const user = useSelector((state) => state.user);
@@ -101,7 +103,7 @@ function DashboardNavbar({ absolute, light, isMini }) {
   }, [dispatch, fixedNavbar]);
 
   const handleMiniSidenav = () => setMiniSidenav(dispatch, !miniSidenav);
-  const handleConfiguratorOpen = () => setOpenConfigurator(dispatch, !openConfigurator);
+  const handleOpenTelegram = () => window.open("https://t.me/sabot_official", "_blank");
   const handleOpenMenu = (event) => setOpenMenu(event.currentTarget);
   const handleCloseMenu = () => setOpenMenu(false);
 
@@ -213,14 +215,22 @@ function DashboardNavbar({ absolute, light, isMini }) {
               >
                 <Icon className={"text-white"}>{miniSidenav ? "menu_open" : "menu"}</Icon>
               </IconButton>
-              {/* <IconButton
+              <IconButton
                 size="small"
                 color="inherit"
                 sx={navbarIconButton}
-                onClick={handleConfiguratorOpen}
+                onClick={handleOpenTelegram}
               >
-                <Icon>settings</Icon>
-              </IconButton> */}
+                <Telegram style={{ width: 24, height: 24, color: "#25a3e1" }} />
+                {isMobile ? null : (
+                  <VuiTypography
+                    variant="button"
+                    fontWeight="medium"
+                  >
+                    Telegram
+                  </VuiTypography>
+                )}
+              </IconButton>
               <IconButton
                 size="small"
                 color="inherit"
