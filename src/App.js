@@ -53,7 +53,7 @@ import { setUser } from "./redux/futures/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { userSignIn } from "services/api";
 
-const NO_AUTH_PATHS = ["/disclaimer", "/authentication/email-verify", "/terms-and-conditions"];
+const NO_AUTH_PATHS = ["/privacy-policy", "/authentication/verify-email", "/terms-and-conditions"];
 
 export default function App() {
   const [controller, dispatch] = useVisionUIController();
