@@ -10,29 +10,6 @@ import borders from "assets/theme/base/borders";
 import VuiTypography from "components/VuiTypography";
 
 function Disclaimer() {
-  const [message, setMessage] = useState("Verifying...");
-
-  useEffect(() => {
-    const verifyEmail = async () => {
-      const params = new URLSearchParams(window.location.search);
-      const mode = params.get("mode");
-      const oobCode = params.get("oobCode");
-
-      if (mode === "verifyEmail" && oobCode) {
-        try {
-          const auth = getAuth(firebaseApp);
-          await applyActionCode(auth, oobCode); // Verify the oobCode
-          setMessage("Email verified successfully! You can now log in.");
-        } catch (error) {
-          console.error("Error verifying email:", error.message);
-          setMessage("Invalid or expired verification link.");
-        }
-      } else {
-        setMessage("Invalid request.");
-      }
-    };
-    verifyEmail();
-  }, []);
 
   return (
     <CoverLayout

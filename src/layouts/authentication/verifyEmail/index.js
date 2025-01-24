@@ -61,7 +61,7 @@ function VerifyEmail() {
       >
         {message}
       </Alert>
-      {!success && <VuiBox mt={3} textAlign="center">
+      {success && <VuiBox mt={3} textAlign="center">
         <VuiButton circular variant="gradient" onClick={() => history.push("/authentication/sign-in")} color="info" fullWidth>
           SIGN IN NOW
         </VuiButton>
