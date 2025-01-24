@@ -18,10 +18,14 @@ import { setUserSubscription } from "../../../../redux/futures/userSlice";
 function VerifyTransactionHashModal({ open, onClose }) {
     const [transactionHash, setTransactionHash] = useState("");
     const { pendingTransaction } = useSelector((e) => e.transaction);
+    const [emptyTransactionHash, setEmptyTransactionHash] = useState(false);
     const dispatch = useDispatch();
     const history = useHistory();
 
     const onChangeTransactionHash = (e) => {
+        if (emptyTransactionHash) {
+            setEmptyTransactionHash(false);
+        }
         setTransactionHash(e.nativeEvent.target.value);
     }
 
@@ -34,6 +38,7 @@ function VerifyTransactionHashModal({ open, onClose }) {
                         message: message,
                         type: 'error'
                     }))
+                    onClose();
                 } else {
                     dispatch(setMessage({
                         message: message,
@@ -43,14 +48,21 @@ function VerifyTransactionHashModal({ open, onClose }) {
                     getAccountSubscriptionInfo().then((subscription) => {
                         dispatch(setUserSubscription(subscription.data))
                     })
+
+                    onClose();
                     setTimeout(() => {
-                        onClose();
                         history.push('/dashboard');
                     }, 1500);
                 }
             }).catch((err) => {
-                console.log(err);
+                onClose();
+                dispatch(setMessage({
+                    message: err.message,
+                    type: 'error'
+                }))
             });
+        } else {
+            setEmptyTransactionHash(true);
         }
     }
 
@@ -112,6 +124,7 @@ function VerifyTransactionHashModal({ open, onClose }) {
                                     fontSize: size.sm,
                                 })}
                             />
+                            {emptyTransactionHash && <VuiTypography variant="caption" color="error">Please enter the transaction hash</VuiTypography>}
                         </GradientBorder>
                     </VuiBox>
 
