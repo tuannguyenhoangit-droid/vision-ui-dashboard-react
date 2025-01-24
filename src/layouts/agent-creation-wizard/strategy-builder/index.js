@@ -22,11 +22,9 @@ function StrategyBuilder() {
 
   useEffect(() => {
     getSymbolConfig().then((data) => dispatch(setSymbolConfigData(data)));
+    getBestPerformanceVolume().then((data) => setBestPerformanceVolume(data));
   }, []);
 
-  const onFilterChangeBestPerformanceVolume = (frame, dayAgo) => {
-    getBestPerformanceVolume(frame, dayAgo).then(setBestPerformanceVolume);
-  };
 
   const confirmDeleteSymbol = (item) => {
     deleteSymbolConfig(item.symbol).then(() => {
@@ -39,10 +37,20 @@ function StrategyBuilder() {
       <DashboardNavbar />
       <VuiBox mb={3}>
         <Grid container spacing="18px">
-          <Grid item xs={12} lg={12} xl={12}>
+          <Grid item xs={12} lg={6} xl={6}>
             <BestPerformanceVolumeList
-              onFilterChange={onFilterChangeBestPerformanceVolume}
-              data={bestPerformanceVolume}
+              title="Top Inflow"
+              description="has best inflow"
+              // onFilterChange={onFilterChangeBestPerformanceVolume}
+              data={bestPerformanceVolume.data}
+            />
+          </Grid>
+          <Grid item xs={12} lg={6} xl={6}>
+            <BestPerformanceVolumeList
+              title="Top Outflow"
+              description="has best outflow"
+              // onFilterChange={onFilterChangeBestPerformanceVolume}
+              data={bestPerformanceVolume.dataOutFlow}
             />
           </Grid>
         </Grid>

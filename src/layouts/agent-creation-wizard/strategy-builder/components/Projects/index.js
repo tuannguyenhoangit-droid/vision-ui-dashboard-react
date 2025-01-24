@@ -233,15 +233,24 @@ function Projects({
               />
             </VuiBox>
           </VuiBox>
-          <VuiBox color="text" px={2}>
-            <Icon
-              sx={{ cursor: "pointer", fontWeight: "bold" }}
-              fontSize="small"
-              onClick={openMenu}
-            >
-              add
-            </Icon>
-          </VuiBox>
+          {isMobile ? (
+            <VuiBox px={2}>
+              <Icon
+                sx={{ cursor: "pointer", fontWeight: "bold" }}
+                fontSize="small"
+                onClick={openMenu}
+              >
+                add
+              </Icon>
+            </VuiBox>
+          ) : (
+            <VuiBox ml={1} display="flex" alignItems="center" flexDirection="row">
+              <VuiButton size="small" variant="gradient" onClick={openMenu} color="info" >
+                Add Strategy
+              </VuiButton>
+            </VuiBox>
+          )}
+
         </VuiBox>
         {renderMenu}
       </VuiBox>

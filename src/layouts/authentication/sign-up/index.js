@@ -64,7 +64,6 @@ function SignUp() {
   const onSubmit = async () => {
     try {
       if (data.displayName && data.email && data.password) {
-        console.log(data.email);
         if (!validateEmail(data.email)) {
           dispatch(setMessage({
             message: "Invalid email format",

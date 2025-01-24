@@ -31,8 +31,11 @@ import VuiProgress from "components/VuiProgress";
 
 // Vision UI Dashboard Materail-UI example components
 import Table from "examples/Tables/Table";
+import { BsRocketFill } from "react-icons/bs";
+import VuiButton from "components/VuiButton";
 
-const BestPerformanceVolumeItem = ({ row }) => {
+const BestPerformanceVolumeItem = ({ row, onItemClick = () => null }) => {
+  const handleOnClick = () => onItemClick(row)
   return {
     symbol: (
       <VuiBox display="flex" alignItems="center">
@@ -65,14 +68,22 @@ const BestPerformanceVolumeItem = ({ row }) => {
         />
       </VuiBox>
     ),
+    action: (
+      <VuiBox display="flex" alignItems="center">
+        <VuiButton size="small" onClick={handleOnClick} color="info" variant="gradient">
+          <BsRocketFill style={{ marginRight: 4 }} />
+          Strategy
+        </VuiButton>
+      </VuiBox>
+    ),
   };
 };
 
 function BestPerformanceVolumeList(props) {
-  // const { columns, rows } = data();
+
   const [frameMenuOpen, setFrameMenuOpen] = useState(null);
   const [dayAgoMenuOpen, setDayAgoMenuOpen] = useState(null);
-  const { data = [], onFilterChange = () => null } = props;
+  const { title, description, data = [], onFilterChange = () => null } = props;
   const [frame, setFrame] = useState("HOUR_4");
   const [dayAgo, setDayAgo] = useState("5");
 
@@ -97,7 +108,10 @@ function BestPerformanceVolumeList(props) {
   }, [frame, dayAgo]);
 
   const renderRow = () => {
-    return data.map((row) => BestPerformanceVolumeItem({ row }));
+    const onItemClick = (item) => {
+      console.log("item", item);
+    };
+    return data.map((row) => BestPerformanceVolumeItem({ row, onItemClick }));
   };
 
   const renderMenuFrame = (
@@ -160,17 +174,17 @@ function BestPerformanceVolumeList(props) {
       <VuiBox display="flex" justifyContent="space-between" alignItems="center" mb="32px">
         <VuiBox mb="auto">
           <VuiTypography color="white" variant="lg" mb="6px" gutterBottom>
-            Best Inflow
+            {title}
           </VuiTypography>
           <VuiBox display="flex" alignItems="center" lineHeight={0}>
             {/* <BsCheckCircleFill color="green" size="15px" /> */}
             <VuiTypography variant="button" fontWeight="regular" color="text">
-              &nbsp;<strong>Top token</strong> has best inflow
+              &nbsp;<strong>Top token</strong> {description}
             </VuiTypography>
           </VuiBox>
         </VuiBox>
         <VuiBox display="flex" justifyContent="space-between" mb="auto">
-          <Stack direction="row" spacing={{ sm: "10px", xl: "4px", xxl: "10px" }}>
+          {/* <Stack direction="row" spacing={{ sm: "10px", xl: "4px", xxl: "10px" }}>
             <VuiBox
               onClick={openFrameMenu}
               bgColor="info"
@@ -185,7 +199,7 @@ function BestPerformanceVolumeList(props) {
               {frame}
             </VuiTypography>
           </Stack>
-          {renderMenuFrame}
+          
           <Stack direction="row" spacing={{ sm: "10px", xl: "4px", xxl: "10px" }} ml="16px">
             <VuiBox
               onClick={openDayAgoMenu}
@@ -200,9 +214,12 @@ function BestPerformanceVolumeList(props) {
             <VuiTypography color="text" variant="button" fontWeight="medium">
               {[dayAgo, "Days"].join(" ")}
             </VuiTypography>
-          </Stack>
+          </Stack> */}
 
-          {renderMenuDayRange}
+          {/* {renderMenuDayRange} */}
+          <VuiTypography color="text" variant="button" fontWeight="medium">
+            Data record by 5 days
+          </VuiTypography>
         </VuiBox>
       </VuiBox>
       <VuiBox
@@ -224,6 +241,7 @@ function BestPerformanceVolumeList(props) {
             { name: "symbol", align: "left" },
             { name: "totalNetInflow", align: "left" },
             { name: "diff", align: "left" },
+            { name: "action", align: "left" },
           ]}
           rows={renderRow()}
         />

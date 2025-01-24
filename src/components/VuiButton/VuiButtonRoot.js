@@ -59,7 +59,10 @@ export default styled(Button)(({ theme, ownerState }) => {
       focusedColorValue = white.main;
     }
 
+    const paddingValue = size === "small" ? "10px 8px !important" : "10px 12px !important";
+
     return {
+      padding: paddingValue,
       background: backgroundValue,
       color: colorValue,
 
@@ -98,8 +101,10 @@ export default styled(Button)(({ theme, ownerState }) => {
     if (color === "white") {
       borderColorValue = rgba(white.main, 0.75);
     }
+    const paddingValue = size === "small" ? "10px 8px !important" : "10px 12px !important";
 
     return {
+      padding: paddingValue,
       background: backgroundValue,
       color: colorValue,
       borderColor: borderColorValue,
@@ -148,7 +153,10 @@ export default styled(Button)(({ theme, ownerState }) => {
       colorValue = white.main;
     }
 
+    const paddingValue = size === "small" ? "8px 12px !important" : "10px 16px !important";
+
     return {
+      padding: paddingValue,
       background: backgroundValue,
       color: colorValue,
 
