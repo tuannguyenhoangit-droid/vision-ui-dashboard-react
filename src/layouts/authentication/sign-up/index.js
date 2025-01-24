@@ -45,6 +45,7 @@ import { getAuth, sendEmailVerification, signInWithEmailAndPassword } from "fire
 import { Checkbox } from "@mui/material";
 import { setMessage } from "../../../redux/futures/messageSlice";
 import { useDispatch } from "react-redux";
+import { validateEmail } from "../../../utils";
 
 function SignUp() {
   const [data, setData] = useState({
@@ -63,6 +64,14 @@ function SignUp() {
   const onSubmit = async () => {
     try {
       if (data.displayName && data.email && data.password) {
+        console.log(data.email);
+        if (!validateEmail(data.email)) {
+          dispatch(setMessage({
+            message: "Invalid email format",
+            type: "warning",
+          }));
+          return;
+        }
         setLoading(true);
         const publicKeyPEM = PUBLIC_KEY.trim();
         // Khởi tạo JSEncrypt với Public Key
@@ -93,6 +102,11 @@ function SignUp() {
       } else {
         // TODO
         console.log("Params missing");
+        dispatch(setMessage({
+          message: "Please fill all fields",
+          type: "warning",
+        }));
+        return;
       }
     } catch (e) {
       console.log("sign up submit", e);
@@ -105,7 +119,7 @@ function SignUp() {
       color="white"
       description="Complete below form to be user of SA Trading Bot Platform"
       image={bgSignIn}
-      premotto="INSPIRED BY THE FUTURE:"
+      premotto="AGENT AI FOR TRADING"
       motto="THE SA TRADING BOT DASHBOARD"
       cardContent
       top={3}
@@ -202,7 +216,7 @@ function SignUp() {
           </VuiBox>
 
           <VuiBox mt={4} mb={1}>
-            <VuiButton onClick={onSubmit} color="info" fullWidth>
+            <VuiButton circular variant="gradient" onClick={onSubmit} color="info" fullWidth>
               SIGN UP
             </VuiButton>
           </VuiBox>

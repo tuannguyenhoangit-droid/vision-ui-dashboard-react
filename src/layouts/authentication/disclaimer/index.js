@@ -42,7 +42,7 @@ function Disclaimer() {
         "Please ensure that you have read the disclaimer before siging up to our platform"
       }
       image={bgSignIn}
-      premotto="INSPIRED BY THE FUTURE:"
+      premotto="AGENT AI FOR TRADING"
       motto="THE SA TRADING BOT DASHBOARD"
       cardContent
     >

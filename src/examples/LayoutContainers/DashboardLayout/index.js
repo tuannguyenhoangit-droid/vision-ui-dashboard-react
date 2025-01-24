@@ -1,20 +1,3 @@
-/*!
-
-=========================================================
-
-=========================================================
-
-
-
-
-
-
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
 
 import { useEffect } from "react";
 
@@ -31,16 +14,14 @@ import VuiBox from "components/VuiBox";
 import { useVisionUIController, setLayout } from "context";
 import { useDispatch, useSelector } from "react-redux";
 import VuiTypography from "components/VuiTypography";
-import VuiAlert from "components/VuiAlert";
 import { setMessage } from "../../../redux/futures/messageSlice";
-import zIndex from "@mui/material/styles/zIndex";
+import { Alert } from "@mui/material";
 
 function DashboardLayout({ children }) {
   const [controller, dispatch] = useVisionUIController();
   const { miniSidenav } = controller;
   const { pathname } = useLocation();
   const errorMessage = useSelector((e) => e.message);
-  const reduxDispatch = useDispatch();
 
   useEffect(() => {
     setLayout(dispatch, "dashboard");
@@ -63,21 +44,21 @@ function DashboardLayout({ children }) {
     >
       {children}
       {errorMessage.message ? (
-        <VuiAlert
-          color={errorMessage.type || "success"}
+        <Alert
+          variant="outlined"
+          severity={errorMessage.type || "success"}
           style={{
-            position: "absolute",
-            top: 100,
-            right: 24,
-            zIndex: 999,
+            position: "fixed",
+            top: 12,
+            right: 12,
           }}
           dismissible
-          onClose={() => reduxDispatch(setMessage(""))}
+          onClose={() => dispatch(setMessage(""))}
         >
           <VuiTypography color="white" variant="button">
             {errorMessage.message}
           </VuiTypography>
-        </VuiAlert>
+        </Alert>
       ) : null}
     </VuiBox>
   );

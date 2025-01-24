@@ -42,7 +42,7 @@ function TermAndCondition() {
         "By sign up account to SA Trading Bot Plaftrom, you agree with our Terms and Conditions"
       }
       image={bgSignIn}
-      premotto="INSPIRED BY THE FUTURE:"
+      premotto="AGENT AI FOR TRADING"
       motto="THE SA TRADING BOT DASHBOARD"
       cardContent
     >

@@ -1,28 +1,8 @@
-/*!
-
-=========================================================
-
-=========================================================
-
-
-
-
-
-
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
-
-// prop-types is a library for typechecking of props
 import PropTypes from "prop-types";
 
 // Vision UI Dashboard React components
 import VuiBox from "components/VuiBox";
 import VuiTypography from "components/VuiTypography";
-import VuiAlert from "components/VuiAlert";
 // Vision UI Dashboard React example components
 import PageLayout from "examples/LayoutContainers/PageLayout";
 
@@ -36,6 +16,7 @@ import { isMobile } from "react-device-detect";
 import tripleLinearGradient from "assets/theme/functions/tripleLinearGradient";
 import { useDispatch, useSelector } from "react-redux";
 import { setMessage } from "../../../../redux/futures/messageSlice";
+import { Alert } from "@mui/material";
 
 function CoverLayout({
   color,
@@ -213,10 +194,11 @@ function CoverLayout({
         </VuiBox>
       </VuiBox>
       {errorMessage.message ? (
-        <VuiAlert
-          color={errorMessage.type || "success"}
+        <Alert
+          variant="outlined"
+          severity={errorMessage.type || "success"}
           style={{
-            position: "absolute",
+            position: "fixed",
             top: 12,
             right: 12,
           }}
@@ -226,7 +208,7 @@ function CoverLayout({
           <VuiTypography color="white" variant="button">
             {errorMessage.message}
           </VuiTypography>
-        </VuiAlert>
+        </Alert>
       ) : null}
     </PageLayout>
   );

@@ -1,16 +1,18 @@
-import VuiBox from "components/VuiBox";
 import { firebaseApp } from "../../../firebase";
 import { getAuth, applyActionCode } from "firebase/auth";
 import { useEffect, useState } from "react";
 import CoverLayout from "layouts/authentication/components/CoverLayout";
-import GradientBorder from "examples/GradientBorder";
 import bgSignIn from "assets/images/signUpImage.png";
-
-import borders from "assets/theme/base/borders";
-import VuiTypography from "components/VuiTypography";
+import { Alert } from "@mui/material";
+import VuiButton from "components/VuiButton";
+import VuiBox from "components/VuiBox";
+import { useHistory } from "react-router-dom/cjs/react-router-dom";
 
 function VerifyEmail() {
   const [message, setMessage] = useState("Verifying...");
+  const [success, setSuccess] = useState(false);
+
+  const history = useHistory();
 
   useEffect(() => {
     const verifyEmail = async () => {
@@ -23,12 +25,14 @@ function VerifyEmail() {
           const auth = getAuth(firebaseApp);
           await applyActionCode(auth, oobCode); // Verify the oobCode
           setMessage("Email verified successfully! You can now log in.");
+          setSuccess(true);
         } catch (error) {
-          console.error("Error verifying email:", error.message);
           setMessage("Invalid or expired verification link.");
+          setSuccess(false);
         }
       } else {
         setMessage("Invalid request.");
+        setSuccess(false);
       }
     };
     verifyEmail();
@@ -40,23 +44,28 @@ function VerifyEmail() {
       color="white"
       description={"The email need to be verified before access SA Trading Bot"}
       image={bgSignIn}
-      premotto="INSPIRED BY THE FUTURE:"
+      premotto="AGENT AI FOR TRADING"
       motto="THE SA TRADING BOT DASHBOARD"
       cardContent
     >
-      <GradientBorder borderRadius={borders.borderRadius.form} minWidth="100%" maxWidth="100%">
-        <VuiBox
-          component="form"
-          role="form"
-          borderRadius="inherit"
-          p="45px"
-          sx={({ palette: { secondary } }) => ({
-            backgroundColor: secondary.focus,
-          })}
-        >
-          <VuiTypography>{message}</VuiTypography>
-        </VuiBox>
-      </GradientBorder>
+      <Alert
+        sx={{
+          borderColor: success ? "#0075ff" : "#f6ad55",
+          borderRadius: 4,
+          fontSize: 14,
+          fontWeight: "medium",
+          alignItems: "center",
+        }}
+        variant="outlined"
+        severity={success ? "success" : "warning"}
+      >
+        {message}
+      </Alert>
+      {!success && <VuiBox mt={3} textAlign="center">
+        <VuiButton circular variant="gradient" onClick={() => history.push("/authentication/sign-in")} color="info" fullWidth>
+          SIGN IN NOW
+        </VuiButton>
+      </VuiBox>}
     </CoverLayout>
   );
 }

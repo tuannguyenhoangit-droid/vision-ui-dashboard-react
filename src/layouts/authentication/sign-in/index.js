@@ -149,7 +149,7 @@ function SignIn() {
       title="Nice to see you!"
       color="white"
       description="Enter your email and password to sign in"
-      premotto="INSPIRED BY THE FUTURE:"
+      premotto="AGENT AI FOR TRADING"
       motto="THE SA TRADING BOT DASHBOARD"
       image={bgSignIn}
       cardContent
@@ -209,7 +209,7 @@ function SignIn() {
         </VuiBox>
 
         <VuiBox mt={4} mb={1} alignItems="center">
-          <VuiButton circular onClick={handleSignInWithPassword} color="info" fullWidth>
+          <VuiButton variant="gradient" circular onClick={handleSignInWithPassword} color="info" fullWidth>
             Sign In with Account
           </VuiButton>
           <VuiBox display="flex" alignItems="center" justifyContent="center" mt={2} mb={2}>
