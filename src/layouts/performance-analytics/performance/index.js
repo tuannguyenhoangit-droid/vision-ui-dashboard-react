@@ -40,8 +40,6 @@ function Performance() {
     }, 1000);
   }, [history.location.pathname]);
 
-  console.log(incomePnL);
-
   const incomeBarChart = useMemo(() => {
     const chart = {
       option: {

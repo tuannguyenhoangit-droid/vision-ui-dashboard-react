@@ -23,22 +23,9 @@ import Card from "@mui/material/Card";
 import VuiBox from "components/VuiBox";
 import VuiTypography from "components/VuiTypography";
 
-
-import TimelineItem from "examples/Timeline/TimelineItem";
-
-// Vision UI Dashboard theme imports
-import { useMemo } from "react";
 import Transaction from "layouts/billing/components/Transaction";
 
 function OrdersOverview({ data = [] }) {
-  const sumRealizedPnl = useMemo(() => {
-    return (
-      Math.round(
-        data.map(({ realizedPnl }) => parseFloat(realizedPnl)).reduce((pre, cur) => pre + cur, 0) *
-        100
-      ) / 100
-    );
-  }, [data]);
 
   return (
     <Card className="h-100">
@@ -48,9 +35,10 @@ function OrdersOverview({ data = [] }) {
         </VuiTypography>
       </VuiBox>
       <VuiBox>
-        {data.map((item) => {
+        {data.map((item, index) => {
           return (
             <Transaction
+              key={index.toString()}
               color={parseFloat(item.realizedPnl) - parseFloat(item.commission) > 0 ? "success" : "error"}
               icon={parseFloat(item.realizedPnl) - parseFloat(item.commission) > 0 ? "arrow_upward" : "arrow_downward"}
               name={[item.side, item.symbol].join(" ")}

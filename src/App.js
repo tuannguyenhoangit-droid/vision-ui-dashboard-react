@@ -57,14 +57,13 @@ const NO_AUTH_PATHS = ["/privacy-policy", "/authentication/verify-email", "/term
 
 export default function App() {
   const [controller, dispatch] = useVisionUIController();
-  const { miniSidenav, direction, layout, openConfigurator, sidenavColor } = controller;
+  const { miniSidenav, direction, layout, sidenavColor } = controller;
   const [onMouseEnter, setOnMouseEnter] = useState(false);
-  const [rtlCache, setRtlCache] = useState(null);
   const { pathname } = useLocation();
   const history = useHistory();
 
   const dispatchRedux = useDispatch();
-  const user = useSelector((state) => state.user);
+
 
   useEffect(() => {
     const auth = getAuth(firebaseApp);
@@ -105,15 +104,6 @@ export default function App() {
     return () => unsubscribe?.();
   }, [history]);
 
-  // Cache for the rtl
-  useMemo(() => {
-    const cacheRtl = createCache({
-      key: "rtl",
-      stylisPlugins: [rtlPlugin],
-    });
-
-    setRtlCache(cacheRtl);
-  }, []);
 
   // Open sidenav when mouse enter on mini sidenav
   const handleOnMouseEnter = () => {
@@ -130,9 +120,6 @@ export default function App() {
       setOnMouseEnter(false);
     }
   };
-
-  // Change the openConfigurator state
-  const handleConfiguratorOpen = () => setOpenConfigurator(dispatch, !openConfigurator);
 
   // Setting the dir attribute for the body element
   useEffect(() => {
@@ -158,34 +145,11 @@ export default function App() {
       return null;
     });
 
-  const configsButton = (
-    <VuiBox
-      display="flex"
-      justifyContent="center"
-      alignItems="center"
-      width="3.5rem"
-      height="3.5rem"
-      bgColor="info"
-      shadow="sm"
-      borderRadius="50%"
-      position="fixed"
-      right="2rem"
-      bottom="2rem"
-      zIndex={99}
-      color="white"
-      sx={{ cursor: "pointer" }}
-      onClick={handleConfiguratorOpen}
-    >
-      <Icon fontSize="default" color="inherit">
-        settings
-      </Icon>
-    </VuiBox>
-  );
 
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      {layout === "dashboard" && (
+      {layout === "dashboard" && !NO_AUTH_PATHS.includes(history.location.pathname) && (
         <>
           <Sidenav
             color={sidenavColor}
