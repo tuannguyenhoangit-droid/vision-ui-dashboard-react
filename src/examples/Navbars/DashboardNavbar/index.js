@@ -227,7 +227,7 @@ function DashboardNavbar({ absolute, light, isMini }) {
                     variant="button"
                     fontWeight="medium"
                   >
-                    Telegram
+                    Support
                   </VuiTypography>
                 )}
               </IconButton>

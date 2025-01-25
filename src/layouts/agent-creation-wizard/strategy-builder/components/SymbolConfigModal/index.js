@@ -120,32 +120,44 @@ ColorlibStepIcon.propTypes = {
   icon: PropTypes.node,
 };
 
-const SUPPORT_CHART_FRAME = ["3m", "5m", "15m", "30m"];
+const SUPPORT_CHART_FRAME = ["3m", "5m", "15m", "30m", "1h"];
+
+const SUPPORT_CHART_FRAME_WEIGHT = {
+  "3m": 0,
+  "5m": 1,
+  "15m": 2,
+  "30m": 3,
+  "1h": 4,
+};
 
 const BUY_REQUIRE_CHART_FRAME = [
-  { id: "5m", label: "5m", pro: false },
-  { id: "15m", label: "15m", pro: false },
+  { id: "5m", label: "5m", pro: false, weight: 1 },
+  { id: "15m", label: "15m", pro: false, weight: 2 },
   {
     id: "30m",
     label: "30m",
     pro: false,
+    weight: 3,
   },
 ];
 const BUY_REQUIRE_CHART_FRAME_P2 = [
   {
     id: "1h",
     label: "1h",
-    pro: true,
+    pro: false,
+    weight: 4,
   },
   {
     id: "2h",
     label: "2h",
-    pro: true,
+    pro: false,
+    weight: 5,
   },
   {
     id: "4h",
     label: "4h",
-    pro: true,
+    pro: false,
+    weight: 6,
   },
 ];
 const initConfig = {
@@ -220,6 +232,9 @@ export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
   const buyRequireChartFrameCheckbox = useMemo(() => {
     const renderFrames = (it) => {
       const currentChecked = requireFrame[it.id] || false;
+      const currentWeight = it.weight || 0;
+      const minWeight = SUPPORT_CHART_FRAME_WEIGHT[config.frame] || 0;
+
       return (
         <VuiBox
           id={it.id}
@@ -231,8 +246,8 @@ export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
           }}
         >
           <Checkbox
-            sx={{ "& .MuiSvgIcon-root": { fontSize: 28, fill: it.pro ? "gray" : "#d6e6e6" } }}
-            disabled={it.pro || !["AND", "OR"].includes(config.requireHistogramCondition)}
+            sx={{ "& .MuiSvgIcon-root": { fontSize: 28, fill: currentWeight <= minWeight ? "gray" : "#d6e6e6" } }}
+            disabled={currentWeight <= minWeight}
             color="success"
             defaultChecked={currentChecked}
             checked={currentChecked}
@@ -496,7 +511,7 @@ export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
               </VuiBox>
               <MiniStatisticsCard
                 note="Note: SA Bot might make many DCA until Max Budget"
-                title={{ text: "Per order (including leverage)", fontWeight: "regular" }}
+                title={{ text: "Budget per order (including leverage)", fontWeight: "regular" }}
                 count={["$", pricePerOrderLeverage].join("")}
                 percentage={{
                   color: "success",
@@ -530,7 +545,7 @@ export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
               </VuiBox>
               <VuiBox display="flex" mt={1}>
                 <VuiTypography component="label" variant="button" color="text" fontWeight="light">
-                  Maximum DCA budget for the symbol (including leverage)
+                  Including leverage, maximum DCA budget for the symbol
                 </VuiTypography>
               </VuiBox>
 

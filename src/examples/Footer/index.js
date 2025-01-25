@@ -65,7 +65,7 @@ function Footer() {
             color="white"
           >
             <Telegram style={{ width: 24, height: 24 }} />
-            &nbsp; Telegram
+            &nbsp; Support
           </VuiButton>
         </VuiBox>
         {/*<VuiBox display="flex" justifyContent="center" flexWrap="wrap" mb={3}>
