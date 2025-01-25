@@ -269,6 +269,11 @@ export default {
       main: "#141727",
       state: "#3a416f",
     },
+
+    vimeo: {
+      main: "#1ab7ea",
+      state: "#13a3d2",
+    },
   },
 
   socialMediaColors: {

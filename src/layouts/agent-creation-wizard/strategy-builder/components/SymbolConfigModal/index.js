@@ -196,13 +196,16 @@ export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
 
   useEffect(() => {
     if (item) {
+      // remove symbol contains USDT
+      const itemWithInit = { ...initConfig, ...item, symbol: item.symbol.replace("USDT", "") };
+
       const requireFrame = {};
-      item.buyRequireHistogram.forEach((frame) => {
+      itemWithInit.buyRequireHistogram.forEach((frame) => {
         requireFrame[frame] = true;
       });
 
       setRequireFrame({ ...requireFrame });
-      setConfig(item);
+      setConfig(itemWithInit);
     }
     return () => {
       setConfig({
@@ -294,7 +297,7 @@ export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
             const marketLotSize = tickerPrice?.exchangeInfo?.filters.find(
               (ft) => ft.filterType === "MARKET_LOT_SIZE"
             );
-            if (item === null) {
+            if (item?.createdAt === undefined) {
               // case new config then set amount default from exchange data
               onChange("buyAmount", parseFloat(marketLotSize.minQty));
             }

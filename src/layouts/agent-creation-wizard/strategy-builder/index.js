@@ -39,6 +39,9 @@ function StrategyBuilder() {
         <Grid container spacing="18px">
           <Grid item xs={12} lg={6} xl={6}>
             <BestPerformanceVolumeList
+              onItemClick={(item) => {
+                setSymbolEditItem(item);
+              }}
               title="Top Inflow"
               description="has best inflow"
               // onFilterChange={onFilterChangeBestPerformanceVolume}
@@ -47,6 +50,9 @@ function StrategyBuilder() {
           </Grid>
           <Grid item xs={12} lg={6} xl={6}>
             <BestPerformanceVolumeList
+              onItemClick={(item) => {
+                setSymbolEditItem(item);
+              }}
               title="Top Outflow"
               description="has best outflow"
               // onFilterChange={onFilterChangeBestPerformanceVolume}

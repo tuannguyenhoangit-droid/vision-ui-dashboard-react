@@ -70,7 +70,7 @@ const BestPerformanceVolumeItem = ({ row, onItemClick = () => null }) => {
     ),
     action: (
       <VuiBox display="flex" alignItems="center">
-        <VuiButton size="small" onClick={handleOnClick} color="info" variant="gradient">
+        <VuiButton size="small" onClick={handleOnClick} color="vimeo" variant="gradient">
           <BsRocketFill style={{ marginRight: 4 }} />
           Strategy
         </VuiButton>
@@ -83,11 +83,10 @@ function BestPerformanceVolumeList(props) {
 
   const [frameMenuOpen, setFrameMenuOpen] = useState(null);
   const [dayAgoMenuOpen, setDayAgoMenuOpen] = useState(null);
-  const { title, description, data = [], onFilterChange = () => null } = props;
+  const { title, description, data = [], onFilterChange = () => null, onItemClick = () => null } = props;
   const [frame, setFrame] = useState("HOUR_4");
   const [dayAgo, setDayAgo] = useState("5");
 
-  const openFrameMenu = ({ currentTarget }) => setFrameMenuOpen(currentTarget);
   const closeFrameMenu = (ref) => {
     setFrameMenuOpen(null);
     setFrame(ref.nativeEvent.target.id);
@@ -108,9 +107,6 @@ function BestPerformanceVolumeList(props) {
   }, [frame, dayAgo]);
 
   const renderRow = () => {
-    const onItemClick = (item) => {
-      console.log("item", item);
-    };
     return data.map((row) => BestPerformanceVolumeItem({ row, onItemClick }));
   };
 
