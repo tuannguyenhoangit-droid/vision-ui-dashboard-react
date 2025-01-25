@@ -351,6 +351,11 @@ export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
     }
   };
 
+
+  const pricePerOrderLeverage =
+    Math.round((tickerPrice?.data?.price || 0) * config.buyAmount * 100) / 100;
+  const pricePerOrder = Math.round((pricePerOrderLeverage / 20) * 100) / 100;
+
   const buttonStepSymbolDisabled = useMemo(() => {
     // loading
     if (loading) return true;
@@ -370,14 +375,15 @@ export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
     ) {
       return true;
     }
+
+    // max budget should be greater than price per order (including leverage)
+    if (config.maxBudget.toString().length === 0 || parseInt(config.maxBudget) < pricePerOrderLeverage) {
+      return true;
+    }
     return false;
   }, [loading, tickerPrice, config]);
 
   const steps = ["Symbol", "Strategy", "Optimize"];
-
-  const pricePerOrderLeverage =
-    Math.round((tickerPrice?.data?.price || 0) * config.buyAmount * 100) / 100;
-  const pricePerOrder = Math.round((pricePerOrderLeverage / 20) * 100) / 100;
 
   return (
     <Dialog onClose={onClose} open={open} maxWidth>
@@ -544,8 +550,10 @@ export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
                 </GradientBorder>
               </VuiBox>
               <VuiBox display="flex" mt={1}>
-                <VuiTypography component="label" variant="button" color="text" fontWeight="light">
-                  Including leverage, maximum DCA budget for the symbol
+                <VuiTypography variant="button" color={config.maxBudget < pricePerOrderLeverage ? "warning" : "text"} fontWeight="light">
+                  {config.maxBudget < pricePerOrderLeverage
+                    ? ["Max Budget should be greater than Budget per order ", "$", pricePerOrderLeverage].join("")
+                    : "Including leverage, maximum DCA budget for the symbol"}
                 </VuiTypography>
               </VuiBox>
 
