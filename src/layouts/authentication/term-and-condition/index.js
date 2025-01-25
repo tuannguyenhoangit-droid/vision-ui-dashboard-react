@@ -28,9 +28,9 @@ function TermAndCondition() {
         </VuiTypography>
         <VuiBox>
           <VuiTypography component="label" variant="button" color="white" fontWeight="light">
-            Welcome to [Platform Name]. By using this platform, you agree to comply with these
-            Terms and Conditions. Please read them carefully before signing up or using any of
-            our services.
+            Welcome to SA Bot Trading Platform. By using this platform, you agree to comply with
+            these Terms and Conditions. Please read them carefully before signing up or using any
+            of our services.
           </VuiTypography>
         </VuiBox>
       </VuiBox>
@@ -215,7 +215,7 @@ function TermAndCondition() {
         </VuiTypography>
         <VuiBox>
           <VuiTypography component="label" variant="button" color="white" fontWeight="light">
-            For any questions or concerns, please contact us at [support email/phone number].
+            For any questions or concerns, please contact us at tuannguyenhoangit@gmail.com.
           </VuiTypography>
         </VuiBox>
       </VuiBox>
