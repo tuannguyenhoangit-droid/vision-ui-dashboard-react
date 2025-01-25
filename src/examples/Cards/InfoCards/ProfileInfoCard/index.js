@@ -129,8 +129,8 @@ function ProfileInfoCard({ title, description, info }) {
       </VuiBox>
       <VuiBox>
         <VuiBox mb={2} lineHeight={1}>
-          <VuiTypography variant="button" color="warning" fontWeight="regular">
-            {description}
+          <VuiTypography variant="button" color="warning">
+            Your API Key is secured by end-to-end encryption
           </VuiTypography>
         </VuiBox>
 
@@ -192,14 +192,20 @@ function ProfileInfoCard({ title, description, info }) {
             </VuiBox>
           </VuiBox>
           {renderItems}
+          <VuiBox>
+            <VuiTypography variant="button" color="error">
+              {description}
+            </VuiTypography>
+          </VuiBox>
           <VuiTypography variant="button" color="white" fontWeight="regular">
             Require Whitelist IPs
           </VuiTypography>
-          <VuiBox mb={2}>
+          <VuiBox>
             <Chip label="68.183.189.44" color="warning" />
           </VuiBox>
         </VuiBox>
-        <VuiBox display="flex" mt={1} justifyContent="flex-end">
+
+        <VuiBox mt={2} display="flex" justifyContent="flex-end">
           {editKeys ? (
             <VuiBox display="flex">
               <VuiButton onClick={() => setEditKeys(false)} color="dark">

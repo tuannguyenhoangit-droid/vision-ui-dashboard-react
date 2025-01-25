@@ -73,7 +73,7 @@ function Overview() {
 
             <ProfileInfoCard
               title="Binance API Key (Required)"
-              description="Please note that we dont ask user to grant withdraw permission"
+              description="Do not grant Withdraw Permission"
               info={{
                 Permisions: "Allow Read, Allow Future Order",
               }}
