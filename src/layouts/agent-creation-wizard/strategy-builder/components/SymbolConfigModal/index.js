@@ -342,6 +342,11 @@ export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
             message: result.message,
             type: "warning"
           }))
+        } else {
+          dispatch(setMessage({
+            message: "Create symbol config success",
+            type: "success"
+          }))
         }
 
         const userSymbolConfig = await getSymbolConfig();

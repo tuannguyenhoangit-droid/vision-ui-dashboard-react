@@ -29,6 +29,7 @@ function VuiAlert() {
         right: 12,
         backgroundColor: "white",
         alignItems: "center",
+        zIndex: 10000,
       }}
       dismissible
       onClose={() => dispatch(setMessage(""))}
