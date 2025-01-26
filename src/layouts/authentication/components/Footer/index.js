@@ -58,9 +58,9 @@ function Footer() {
               color="text"
               mr="2px"
             >
-              SA Trading Bot{" "}
+              SA Bot{" "}
             </VuiTypography>
-            for automatic trading
+            Trading Platform
           </VuiTypography>
         </Grid>
         {/* <Grid item xs={10}>

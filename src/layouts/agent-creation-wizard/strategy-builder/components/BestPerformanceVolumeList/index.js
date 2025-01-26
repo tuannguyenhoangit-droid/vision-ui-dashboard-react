@@ -33,8 +33,9 @@ import VuiProgress from "components/VuiProgress";
 import Table from "examples/Tables/Table";
 import { BsRocketFill } from "react-icons/bs";
 import VuiButton from "components/VuiButton";
+import { useSelector } from "react-redux";
 
-const BestPerformanceVolumeItem = ({ row, onItemClick = () => null }) => {
+const BestPerformanceVolumeItem = ({ row, onItemClick = () => null, currentPosition = undefined }) => {
   const handleOnClick = () => onItemClick(row)
   return {
     symbol: (
@@ -42,7 +43,7 @@ const BestPerformanceVolumeItem = ({ row, onItemClick = () => null }) => {
         {/* <AdobeXD size="20px" /> */}
         <VuiTypography
           // pl="16px"
-          color="white"
+          color={currentPosition ? parseFloat(currentPosition?.unRealizedProfit) > 0 ? "success" : "error" : "white"}
           variant="button"
           fontWeight="medium"
         >
@@ -80,86 +81,16 @@ const BestPerformanceVolumeItem = ({ row, onItemClick = () => null }) => {
 };
 
 function BestPerformanceVolumeList(props) {
+  const { title, description, data = [], onItemClick = () => null } = props;
 
-  const [frameMenuOpen, setFrameMenuOpen] = useState(null);
-  const [dayAgoMenuOpen, setDayAgoMenuOpen] = useState(null);
-  const { title, description, data = [], onFilterChange = () => null, onItemClick = () => null } = props;
-  const [frame, setFrame] = useState("HOUR_4");
-  const [dayAgo, setDayAgo] = useState("5");
-
-  const closeFrameMenu = (ref) => {
-    setFrameMenuOpen(null);
-    setFrame(ref.nativeEvent.target.id);
-  };
-
-  const openDayAgoMenu = ({ currentTarget }) => setDayAgoMenuOpen(currentTarget);
-  const closeDayAgoMenu = (ref) => {
-    setDayAgoMenuOpen(null);
-    setDayAgo(ref.nativeEvent.target.id);
-  };
-
-  useEffect(() => {
-    onFilterChange(frame, dayAgo);
-  }, []);
-
-  useEffect(() => {
-    onFilterChange(frame, dayAgo);
-  }, [frame, dayAgo]);
+  const position = useSelector((e) => e.positions.data);
 
   const renderRow = () => {
-    return data.map((row) => BestPerformanceVolumeItem({ row, onItemClick }));
+    return data.map((row) => {
+      const currentPosition = position.find(e => e.symbol.includes(row.symbol));
+      return BestPerformanceVolumeItem({ row, onItemClick, currentPosition })
+    });
   };
-
-  const renderMenuFrame = (
-    <Menu
-      id="simple-menu"
-      anchorEl={frameMenuOpen}
-      anchorOrigin={{
-        vertical: "top",
-        horizontal: "left",
-      }}
-      transformOrigin={{
-        vertical: "top",
-        horizontal: "right",
-      }}
-      open={Boolean(frameMenuOpen)}
-      onClose={closeFrameMenu}
-    >
-      <MenuItem id="HOUR_4" onClick={closeFrameMenu}>
-        HOUR_4
-      </MenuItem>
-      <MenuItem id="DAY_1" onClick={closeFrameMenu}>
-        DAY_1
-      </MenuItem>
-    </Menu>
-  );
-
-  const renderMenuDayRange = (
-    <Menu
-      id="simple-menu"
-      anchorEl={dayAgoMenuOpen}
-      anchorOrigin={{
-        vertical: "top",
-        horizontal: "left",
-      }}
-      transformOrigin={{
-        vertical: "top",
-        horizontal: "right",
-      }}
-      open={Boolean(dayAgoMenuOpen)}
-      onClose={closeDayAgoMenu}
-    >
-      <MenuItem id="3" onClick={closeDayAgoMenu}>
-        3 Days Ago
-      </MenuItem>
-      <MenuItem id="5" onClick={closeDayAgoMenu}>
-        5 Days Ago
-      </MenuItem>
-      <MenuItem id="7" onClick={closeDayAgoMenu}>
-        7 Days Ago
-      </MenuItem>
-    </Menu>
-  );
 
   return (
     <Card

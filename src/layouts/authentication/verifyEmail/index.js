@@ -42,10 +42,10 @@ function VerifyEmail() {
     <CoverLayout
       title="Verify Email"
       color="white"
-      description={"The email need to be verified before access SA Trading Bot"}
+      description={"The email need to be verified before access SA Bot Trading Platform"}
       image={bgSignIn}
       premotto="AGENT AI FOR TRADING"
-      motto="THE SA TRADING BOT DASHBOARD"
+      motto="THE SA BOT TRADING PLATFORM"
       cardContent
     >
       <Alert

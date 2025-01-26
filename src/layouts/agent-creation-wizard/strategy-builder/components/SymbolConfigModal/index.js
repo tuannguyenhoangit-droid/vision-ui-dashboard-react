@@ -24,6 +24,7 @@ import VideoLabelIcon from "@mui/icons-material/VideoLabel";
 import StepConnector, { stepConnectorClasses } from "@mui/material/StepConnector";
 import MiniStatisticsCard from "examples/Cards/StatisticsCards/MiniStatisticsCard";
 import { setMessage } from "../../../../../redux/futures/messageSlice";
+import { Bolt, SettingsSuggest, SmartToy } from "@mui/icons-material";
 
 const ColorlibConnector = styled(StepConnector)(({ theme }) => ({
   [`&.${stepConnectorClasses.alternativeLabel}`]: {
@@ -90,9 +91,9 @@ function ColorlibStepIcon(props) {
   const { active, completed, className } = props;
 
   const icons = {
-    1: <SettingsIcon />,
-    2: <GroupAddIcon />,
-    3: <VideoLabelIcon />,
+    1: <Bolt />,
+    2: <SmartToy />,
+    3: <SettingsSuggest />,
   };
 
   return (

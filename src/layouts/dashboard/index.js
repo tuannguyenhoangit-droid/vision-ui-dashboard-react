@@ -58,6 +58,7 @@ import { setUserSubscription } from "../../redux/futures/userSlice";
 import Card from "@mui/material/Card";
 import VuiTypography from "components/VuiTypography";
 import VuiButton from "components/VuiButton";
+import { setPositions } from "../../redux/futures/positions";
 
 const auth = getAuth(firebaseApp);
 
@@ -69,11 +70,11 @@ startOrDay.setSeconds(0);
 
 function Dashboard() {
   const user = useSelector((e) => e.user.user);
+  const position = useSelector((e) => e.positions.data);
 
   // modal handler
 
   const [openOrders, setOpenOrders] = useState([]);
-  const [position, setPosition] = useState([]);
   const [tradeList, setTradeList] = useState([]);
   const [balance, setBalance] = useState([]);
   const [incomePnL, setIncomePnL] = useState({});
@@ -86,7 +87,8 @@ function Dashboard() {
     setTimeout(() => {
       if (history.location.pathname == "/dashboard") {
         auth.currentUser?.getIdToken?.().then((token) => {
-          getCurrentPositions().then(setPosition);
+          console.log("dashboard", token);
+          getCurrentPositions().then(position => dispatch(setPositions(position)));
           getOpenOrders().then(setOpenOrders);
           getTradeList().then(setTradeList);
           getBalance().then(setBalance);

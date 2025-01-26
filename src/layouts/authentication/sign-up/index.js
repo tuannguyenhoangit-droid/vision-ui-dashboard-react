@@ -115,10 +115,10 @@ function SignUp() {
     <CoverLayout
       title="Welcome!"
       color="white"
-      description="Complete below form to be user of SA Trading Bot Platform"
+      description="Complete below form to be user of SA Bot Trading Platform"
       image={bgSignIn}
       premotto="AGENT AI FOR TRADING"
-      motto="THE SA TRADING BOT DASHBOARD"
+      motto="THE SA BOT TRADING PLATFORM"
       cardContent
       top={3}
     >
@@ -226,7 +226,7 @@ function SignUp() {
               checked={true}
             />
             <VuiTypography variant="button" color="text" fontWeight="regular">
-              By signing-up to SA Trading Bot platform, I agree with the{" "}
+              By signing-up to SA Bot Trading Platform, I agree with the{" "}
               <VuiTypography
                 component={Link}
                 to="/terms-and-conditions"

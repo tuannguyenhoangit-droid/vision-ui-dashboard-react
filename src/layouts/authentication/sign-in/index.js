@@ -148,7 +148,7 @@ function SignIn() {
       color="white"
       description="Enter your email and password to sign in"
       premotto="AGENT AI FOR TRADING"
-      motto="THE SA TRADING BOT DASHBOARD"
+      motto="THE SA BOT TRADING PLATFORM"
       image={bgSignIn}
       cardContent
     >
@@ -247,7 +247,7 @@ function SignIn() {
             checked={true}
           />
           <VuiTypography variant="button" color="text" fontWeight="regular">
-            By signing-in to SA Trading Bot platform, I agree with the{" "}
+            By signing-in to SA Bot Trading Platform, I agree with the{" "}
             <VuiTypography
               component={Link}
               to="/terms-and-conditions"

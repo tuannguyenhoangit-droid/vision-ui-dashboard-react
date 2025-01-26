@@ -43,7 +43,7 @@ import { setMessage } from "../../../../../redux/futures/messageSlice";
 import { setSymbolConfigData } from "../../../../../redux/futures/symbolConfigSlice";
 import { Chip } from "@mui/material";
 
-const SymbolConfigItem = ({ row, onEditItem = () => null, onDeleteItem = () => null }) => {
+const SymbolConfigItem = ({ row, onEditItem = () => null, onDeleteItem = () => null, currentPosition = undefined }) => {
   const onEdit = () => onEditItem(row);
   const onDelete = () => onDeleteItem(row);
   return {
@@ -52,7 +52,7 @@ const SymbolConfigItem = ({ row, onEditItem = () => null, onDeleteItem = () => n
         {/* <AdobeXD size="20px" /> */}
         <VuiTypography
           // pl="16px"
-          color="white"
+          color={currentPosition ? parseFloat(currentPosition?.unRealizedProfit) > 0 ? "success" : "error" : "white"}
           variant="button"
           fontWeight="medium"
         >
@@ -125,6 +125,7 @@ function Projects({
   onDeleteItem = () => null,
 }) {
   const symbolConfig = useSelector((e) => e.symbolConfig.data);
+  const position = useSelector((e) => e.positions.data);
   const dispatch = useDispatch();
 
 
@@ -164,7 +165,10 @@ function Projects({
   };
 
   const renderRow = useMemo(() => {
-    return symbolConfig.map((row) => SymbolConfigItem({ row, onEditItem, onDeleteItem }));
+    return symbolConfig.map((row) => {
+      const currentPosition = position.find(e => e.symbol.includes(row.symbol));
+      return SymbolConfigItem({ row, onEditItem, onDeleteItem, currentPosition });
+    });
   }, [symbolConfig]);
 
 
@@ -183,7 +187,7 @@ function Projects({
             <VuiBox display="flex" alignItems="center" lineHeight={0}>
               <BsCheckCircleFill color="green" size="15px" />
               <VuiTypography variant="button" fontWeight="regular" color="text" ml="5px">
-                Active strategies
+                {["Active strategies", `(${symbolConfig.length})`].join(" ")}
               </VuiTypography>
             </VuiBox>
           </VuiBox>

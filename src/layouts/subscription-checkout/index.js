@@ -34,6 +34,7 @@ import { checkoutPriceType } from "../../redux/futures/subscription";
 import { setPendingTransaction } from "../../redux/futures/transaction";
 import PendingTransaction from "./components/PendingTransaction";
 import VerifyTransactionHashModal from "./components/VerifyTransactionHashModal";
+import { AssignmentTurnedIn, Payment, ShoppingBag } from "@mui/icons-material";
 
 const ColorlibConnector = styled(StepConnector)(({ theme }) => ({
     [`&.${stepConnectorClasses.alternativeLabel}`]: {
@@ -105,9 +106,9 @@ function ColorlibStepIcon(props) {
     const { active, completed, className } = props;
 
     const icons = {
-        1: <SettingsIcon />,
-        2: <GroupAddIcon />,
-        3: <VideoLabelIcon />,
+        1: <ShoppingBag />,
+        2: <Payment />,
+        3: <AssignmentTurnedIn />,
     };
 
     return (
@@ -331,7 +332,7 @@ function SubscriptionCheckout({ location }) {
                                         Privacy Policy
                                     </VuiTypography>
                                     {" "}
-                                    of SA Trading Bot platform.
+                                    of SA Bot Trading Platform.
                                 </VuiTypography>
                             </VuiBox>
                         </VuiBox>

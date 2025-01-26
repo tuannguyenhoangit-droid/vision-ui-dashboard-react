@@ -33,9 +33,9 @@ function Footer() {
             color="white"
             mr="2px"
           >
-            SA Trading Bot
+            SA Bot
           </VuiTypography>
-          for automatic trading
+          Trading Platform
         </VuiTypography>
       </VuiBox>
       <VuiBox item xs={6} md={6} xl={6}>
