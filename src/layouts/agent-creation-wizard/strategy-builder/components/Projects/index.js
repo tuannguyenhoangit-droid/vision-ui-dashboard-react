@@ -1,35 +1,10 @@
-/*!
-
-=========================================================
-
-=========================================================
-
-
-
-
-
-
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
-
-import { useMemo, useState } from "react";
-
-// @mui material components
+import { useMemo } from "react";
 import Card from "@mui/material/Card";
 import Icon from "@mui/material/Icon";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
 import { BsCheckCircleFill, BsPencilSquare } from "react-icons/bs";
-
-
 import VuiBox from "components/VuiBox";
 import VuiTypography from "components/VuiTypography";
 
-// Vision UI Dashboard Materail-UI example components
 import Table from "examples/Tables/Table";
 import { useDispatch, useSelector } from "react-redux";
 import VuiSwitch from "components/VuiSwitch";
@@ -42,6 +17,7 @@ import { getSymbolConfig, quickChangeFrame } from "../../../../../services/api";
 import { setMessage } from "../../../../../redux/futures/messageSlice";
 import { setSymbolConfigData } from "../../../../../redux/futures/symbolConfigSlice";
 import { Chip } from "@mui/material";
+import { AddCircle } from "@mui/icons-material";
 
 const SymbolConfigItem = ({ row, onEditItem = () => null, onDeleteItem = () => null, currentPosition = undefined }) => {
   const onEdit = () => onEditItem(row);
@@ -85,7 +61,7 @@ const SymbolConfigItem = ({ row, onEditItem = () => null, onDeleteItem = () => n
       </VuiTypography>
     ),
     "require frames": (
-      <VuiBox width="8rem" textAlign="left">
+      <VuiBox textAlign="left">
         {row?.buyRequireHistogram?.map?.((frame) => (
           <VuiTypography variant="button" color="white" fontWeight="bold">
             {frame}
@@ -174,25 +150,45 @@ function Projects({
 
   return (
     <Card
-      sx={{
-        height: "100% !important",
-      }}
+      sx={({ breakpoints }) => ({
+        [breakpoints.up("sm")]: {
+          height: "100% !important",
+          padding: 1
+        },
+        [breakpoints.up("md")]: {
+          height: "100% !important",
+        },
+        [breakpoints.up("xl")]: {
+          height: "100% !important",
+        },
+      })}
     >
-      <VuiBox display="flex" justifyContent="space-between" alignItems="center" mb="32px">
-        {isMobile ? null : (
-          <VuiBox mb="auto">
-            <VuiTypography color="white" variant="lg" mb="6px" gutterBottom>
-              Accumulation Strategies
-            </VuiTypography>
-            <VuiBox display="flex" alignItems="center" lineHeight={0}>
-              <BsCheckCircleFill color="green" size="15px" />
-              <VuiTypography variant="button" fontWeight="regular" color="text" ml="5px">
-                {["Active strategies", `(${symbolConfig.length})`].join(" ")}
+      <VuiBox mb={2}>
+        <VuiBox display="flex" alignItems="center" justifyContent="space-between" mb={2}>
+          {!isMobile ? null : (
+            <VuiBox mb="auto">
+              <VuiTypography color="white" variant="lg" mb="6px" gutterBottom>
+                Strategies
               </VuiTypography>
+              <VuiBox display="flex" alignItems="center" lineHeight={0}>
+                <BsCheckCircleFill color="green" size="15px" />
+                <VuiTypography variant="button" fontWeight="regular" color="text" ml="5px">
+                  {["Active strategies", `(${symbolConfig.length})`].join(" ")}
+                </VuiTypography>
+              </VuiBox>
             </VuiBox>
+          )}
+          <VuiBox ml={1} display="flex" alignItems="center" flexDirection="row">
+            <VuiButton size="small" variant="gradient" onClick={() => closeMenu("add")} color="info" >
+              <AddCircle style={{ marginRight: 4 }} />
+              Custom Strategy
+            </VuiButton>
           </VuiBox>
-        )}
-        <VuiBox display="flex" alignItems="center" justifyContent="flex-end">
+        </VuiBox>
+        <VuiBox display="flex" alignItems="center" justifyContent="space-between">
+          <VuiTypography variant="button" color="white" fontWeight="bold">
+            Trading Frame
+          </VuiTypography>
           <VuiBox display="flex" alignItems="center">
             <Chip
               clickable
@@ -217,23 +213,7 @@ function Projects({
               />
             </VuiBox>
           </VuiBox>
-          {isMobile ? (
-            <VuiBox px={2}>
-              <Icon
-                sx={{ cursor: "pointer", fontWeight: "bold" }}
-                fontSize="small"
-                onClick={() => closeMenu("add")}
-              >
-                add
-              </Icon>
-            </VuiBox>
-          ) : (
-            <VuiBox ml={1} display="flex" alignItems="center" flexDirection="row">
-              <VuiButton size="small" variant="gradient" onClick={() => closeMenu("add")} color="info" >
-                Add Strategy
-              </VuiButton>
-            </VuiBox>
-          )}
+
 
         </VuiBox>
       </VuiBox>

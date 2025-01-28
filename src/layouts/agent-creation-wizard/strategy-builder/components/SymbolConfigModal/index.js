@@ -25,6 +25,7 @@ import StepConnector, { stepConnectorClasses } from "@mui/material/StepConnector
 import MiniStatisticsCard from "examples/Cards/StatisticsCards/MiniStatisticsCard";
 import { setMessage } from "../../../../../redux/futures/messageSlice";
 import { Bolt, SettingsSuggest, SmartToy } from "@mui/icons-material";
+import { isMobile } from "react-device-detect";
 
 const ColorlibConnector = styled(StepConnector)(({ theme }) => ({
   [`&.${stepConnectorClasses.alternativeLabel}`]: {
@@ -402,7 +403,7 @@ export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
           role="form"
           borderRadius="inherit"
           p="24px"
-          width="420px"
+          width={isMobile ? "100%" : "420px"}
           sx={({ palette: { secondary } }) => ({
             backgroundColor: secondary.focus,
           })}

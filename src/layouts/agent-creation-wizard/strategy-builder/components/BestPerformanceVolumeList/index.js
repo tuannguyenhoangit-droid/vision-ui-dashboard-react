@@ -1,39 +1,12 @@
-/*!
-
-=========================================================
-
-=========================================================
-
-
-
-
-
-
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
-
-import { useEffect, useState } from "react";
-
-// @mui material components
-import { IoCalendar, IoTime, IoWallet } from "react-icons/io5";
-import Icon from "@mui/material/Icon";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
-import { Card, Stack } from "@mui/material";
-
+import { Card } from "@mui/material";
 import VuiBox from "components/VuiBox";
 import VuiTypography from "components/VuiTypography";
 import VuiProgress from "components/VuiProgress";
-
-// Vision UI Dashboard Materail-UI example components
 import Table from "examples/Tables/Table";
-import { BsRocketFill } from "react-icons/bs";
 import VuiButton from "components/VuiButton";
 import { useSelector } from "react-redux";
+import { isMobile } from "react-device-detect";
+import { AddCircle } from "@mui/icons-material";
 
 const BestPerformanceVolumeItem = ({ row, onItemClick = () => null, currentPosition = undefined }) => {
   const handleOnClick = () => onItemClick(row)
@@ -51,28 +24,28 @@ const BestPerformanceVolumeItem = ({ row, onItemClick = () => null, currentPosit
         </VuiTypography>
       </VuiBox>
     ),
-    totalNetInflow: (
+    netInflow: (
       <VuiTypography variant="button" color="white" fontWeight="bold">
         {Math.round(row.totalNetInflow)}
       </VuiTypography>
     ),
     diff: (
-      <VuiBox width="8rem" textAlign="left">
+      <VuiBox width="3rem" textAlign="left">
         <VuiTypography color="white" variant="button" fontWeight="bold">
           {[Math.round(row.diff), "%"].join("")}
         </VuiTypography>
-        <VuiProgress
+        {!isMobile ? <VuiProgress
           value={Math.round(row.diff)}
           color="info"
           label={false}
           sx={{ background: "#2D2E5F" }}
-        />
+        /> : null}
       </VuiBox>
     ),
     action: (
       <VuiBox display="flex" alignItems="center">
         <VuiButton size="small" onClick={handleOnClick} color="vimeo" variant="gradient">
-          <BsRocketFill style={{ marginRight: 4 }} />
+          <AddCircle style={{ marginRight: 4 }} />
           Strategy
         </VuiButton>
       </VuiBox>
@@ -94,9 +67,18 @@ function BestPerformanceVolumeList(props) {
 
   return (
     <Card
-      sx={{
-        height: "100% !important",
-      }}
+      sx={({ breakpoints }) => ({
+        [breakpoints.up("sm")]: {
+          height: "100% !important",
+          padding: 1
+        },
+        [breakpoints.up("md")]: {
+          height: "100% !important",
+        },
+        [breakpoints.up("xl")]: {
+          height: "100% !important",
+        },
+      })}
     >
       <VuiBox display="flex" justifyContent="space-between" alignItems="center" mb="32px">
         <VuiBox mb="auto">
@@ -166,7 +148,7 @@ function BestPerformanceVolumeList(props) {
         <Table
           columns={[
             { name: "symbol", align: "left" },
-            { name: "totalNetInflow", align: "left" },
+            { name: "netInflow", align: "left" },
             { name: "diff", align: "left" },
             { name: "action", align: "left" },
           ]}
