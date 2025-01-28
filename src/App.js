@@ -1,56 +1,18 @@
-/*!
 
-=========================================================
-
-=========================================================
-
-
-
-
-
-
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the software.
-
-*/
-
-import { useState, useEffect, useMemo } from "react";
-
+import { useState, useEffect } from "react";
 // react-router components
 import { Route, Switch, Redirect, useLocation, useHistory } from "react-router-dom";
-
 // @mui material components
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
-import Icon from "@mui/material/Icon";
-
-
-import VuiBox from "components/VuiBox";
-
-
 import Sidenav from "examples/Sidenav";
-import Configurator from "examples/Configurator";
-
-
 import theme from "assets/theme";
-import themeRTL from "assets/theme/theme-rtl";
-
-// RTL plugins
-import rtlPlugin from "stylis-plugin-rtl";
-import { CacheProvider } from "@emotion/react";
-import createCache from "@emotion/cache";
-
-
 import routes from "routes";
-
-
-import { useVisionUIController, setMiniSidenav, setOpenConfigurator } from "context";
+import { useVisionUIController, setMiniSidenav } from "context";
 import { getAuth } from "firebase/auth";
 import { firebaseApp } from "./firebase";
 import { setUser } from "./redux/futures/userSlice";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { userSignIn } from "services/api";
 
 const NO_AUTH_PATHS = ["/privacy-policy", "/authentication/verify-email", "/terms-and-conditions"];

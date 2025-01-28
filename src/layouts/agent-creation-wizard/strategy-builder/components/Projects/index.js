@@ -151,6 +151,10 @@ function Projects({
   return (
     <Card
       sx={({ breakpoints }) => ({
+        [breakpoints.down("sm")]: {
+          height: "100% !important",
+          padding: 1
+        },
         [breakpoints.up("sm")]: {
           height: "100% !important",
           padding: 1
@@ -165,23 +169,21 @@ function Projects({
     >
       <VuiBox mb={2}>
         <VuiBox display="flex" alignItems="center" justifyContent="space-between" mb={2}>
-          {!isMobile ? null : (
-            <VuiBox mb="auto">
-              <VuiTypography color="white" variant="lg" mb="6px" gutterBottom>
-                Strategies
+          <VuiBox mb="auto">
+            <VuiTypography color="white" variant="lg" mb="6px" gutterBottom>
+              Strategies
+            </VuiTypography>
+            <VuiBox display="flex" alignItems="center" lineHeight={0}>
+              <BsCheckCircleFill color="green" size="15px" />
+              <VuiTypography variant="button" fontWeight="regular" color="text" ml="5px">
+                {["Active strategies", `(${symbolConfig.length})`].join(" ")}
               </VuiTypography>
-              <VuiBox display="flex" alignItems="center" lineHeight={0}>
-                <BsCheckCircleFill color="green" size="15px" />
-                <VuiTypography variant="button" fontWeight="regular" color="text" ml="5px">
-                  {["Active strategies", `(${symbolConfig.length})`].join(" ")}
-                </VuiTypography>
-              </VuiBox>
             </VuiBox>
-          )}
+          </VuiBox>
           <VuiBox ml={1} display="flex" alignItems="center" flexDirection="row">
             <VuiButton size="small" variant="gradient" onClick={() => closeMenu("add")} color="info" >
               <AddCircle style={{ marginRight: 4 }} />
-              Custom Strategy
+              Strategy
             </VuiButton>
           </VuiBox>
         </VuiBox>
@@ -195,6 +197,7 @@ function Projects({
               onClick={() => handleQuickChangeFrame("3m", ["5m"])}
               color="warning"
               label="3m-5m"
+              size={isMobile ? "small" : "medium"}
             />
             <VuiBox ml={1}>
               <Chip
@@ -202,6 +205,7 @@ function Projects({
                 onClick={() => handleQuickChangeFrame("5m", ["15m"])}
                 label="5m-15m"
                 color="warning"
+                size={isMobile ? "small" : "medium"}
               />
             </VuiBox>
             <VuiBox ml={1}>
@@ -210,6 +214,7 @@ function Projects({
                 onClick={() => handleQuickChangeFrame("15m", ["30m"])}
                 color="warning"
                 label="15m-30m"
+                size={isMobile ? "small" : "medium"}
               />
             </VuiBox>
           </VuiBox>

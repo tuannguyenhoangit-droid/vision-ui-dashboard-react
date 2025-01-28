@@ -48,13 +48,20 @@ function Header() {
       >
         <Grid
           container
-          alignItems="center"
-          justifyContent="center"
           sx={({ breakpoints }) => ({
-            [breakpoints.up("xs")]: {
+            [breakpoints.down("xs")]: {
               gap: "16px",
+              justifyContent: "center",
+              alignItems: "center",
+              display: "flex",
             },
             [breakpoints.up("xs")]: {
+              gap: "16px",
+              justifyContent: "center",
+              alignItems: "center",
+              display: "flex",
+            },
+            [breakpoints.up("md")]: {
               gap: "0px",
             },
             [breakpoints.up("xl")]: {
@@ -69,11 +76,22 @@ function Header() {
             lg={1.5}
             xl={1.2}
             xxl={0.8}
-            display="flex"
+            flexDirection="column"
             sx={({ breakpoints }) => ({
-              [breakpoints.only("sm")]: {
+              [breakpoints.down("xs")]: {
+                display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
+              },
+              [breakpoints.up("xs")]: {
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              },
+              [breakpoints.up("md")]: {
+                display: "flex",
+                justifyContent: "flex-start",
+                alignItems: "flex-start",
               },
             })}
           >
@@ -90,13 +108,25 @@ function Header() {
               height="100%"
               mt={0.5}
               lineHeight={1}
-              display="flex"
               flexDirection="column"
               sx={({ breakpoints }) => ({
-                [breakpoints.only("sm")]: {
+                [breakpoints.down("xs")]: {
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+
+                },
+                [breakpoints.up("xs")]: {
+                  display: "flex",
                   justifyContent: "center",
                   alignItems: "center",
                 },
+                [breakpoints.up("md")]: {
+                  display: "flex",
+                  justifyContent: "flex-start",
+                  alignItems: "flex-start"
+                },
+
               })}
             >
               <VuiTypography variant="lg" color="white" fontWeight="bold">
@@ -108,28 +138,63 @@ function Header() {
             </VuiBox>
           </Grid>
           <Grid item xs={12} md={6} lg={6.5} xl={6} xxl={4} sx={{ margin: "auto" }}>
-            <AppBar position="static">
-              <VuiBox justifyContent="flex-end" display="flex" alignItems={isMobile ? "center" : "flex-end"} flexDirection="column">
-                <VuiBox>
-                  <VuiTypography variant="xxs" color="white" fontWeight="bold">
-                    Subscription
-                  </VuiTypography>
-                </VuiBox>
-                <VuiBox>
-                  <VuiTypography variant="lg" color="primary" fontWeight="bold">
-                    {user?.subscription?.data?.name || ""}
-                  </VuiTypography>
-                  <Chip style={{ marginLeft: 8 }} size="small" color={user?.subscription?.status === "active" ? "success" : "warning"} label={user?.subscription?.status || ""} />
-                </VuiBox>
-                <VuiBox>
-                  <VuiTypography variant="button" color="white" fontWeight="bold">
-                    {["Expired in", dayDifference(user?.subscription?.endAt || 0), "day(s)"].join(
-                      " "
-                    )}
-                  </VuiTypography>
-                </VuiBox>
+
+            <VuiBox flexDirection="column" sx={({ breakpoints }) => ({
+              [breakpoints.down("xs")]: {
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+
+              },
+              [breakpoints.up("xs")]: {
+                justifyContent: "center",
+                alignItems: "center",
+                display: "flex",
+              },
+              [breakpoints.up("md")]: {
+                display: "flex",
+                justifyContent: "flex-end",
+                alignItems: "flex-end",
+              },
+            })}
+            >
+              <VuiBox>
+                <VuiTypography variant="xxs" color="white" fontWeight="bold">
+                  Subscription
+                </VuiTypography>
               </VuiBox>
-            </AppBar>
+              <VuiBox flexDirection="column" sx={({ breakpoints }) => ({
+                [breakpoints.down("xs")]: {
+                  justifyContent: "center",
+                  alignItems: "center",
+                  display: "flex",
+
+                },
+                [breakpoints.up("xs")]: {
+                  justifyContent: "center",
+                  alignItems: "center",
+                  display: "flex",
+                },
+                [breakpoints.up("md")]: {
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  alignItems: "flex-end",
+                },
+              })}>
+                <VuiTypography variant="lg" color="primary" fontWeight="bold">
+                  {user?.subscription?.data?.name || ""}
+                </VuiTypography>
+                <Chip style={{ marginLeft: 8 }} size="small" color={user?.subscription?.status === "active" ? "success" : "warning"} label={user?.subscription?.status || ""} />
+              </VuiBox>
+              <VuiBox>
+                <VuiTypography variant="button" color="white" fontWeight="bold">
+                  {["Expired in", dayDifference(user?.subscription?.endAt || 0), "day(s)"].join(
+                    " "
+                  )}
+                </VuiTypography>
+              </VuiBox>
+            </VuiBox>
+
           </Grid>
         </Grid>
       </Card>

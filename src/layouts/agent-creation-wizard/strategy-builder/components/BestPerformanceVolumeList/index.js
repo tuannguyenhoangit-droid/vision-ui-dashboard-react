@@ -68,6 +68,10 @@ function BestPerformanceVolumeList(props) {
   return (
     <Card
       sx={({ breakpoints }) => ({
+        [breakpoints.down("sm")]: {
+          height: "100% !important",
+          padding: 1
+        },
         [breakpoints.up("sm")]: {
           height: "100% !important",
           padding: 1

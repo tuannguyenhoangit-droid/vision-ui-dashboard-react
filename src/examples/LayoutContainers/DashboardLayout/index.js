@@ -5,6 +5,7 @@ import VuiBox from "components/VuiBox";
 import { useVisionUIController, setLayout } from "context";
 import VuiAlert from "components/VuiAlert";
 import Footer from "examples/Footer";
+import { isMobile } from "react-device-detect";
 
 function DashboardLayout({ children }) {
   const [controller, dispatch] = useVisionUIController();
@@ -18,7 +19,7 @@ function DashboardLayout({ children }) {
   return (
     <VuiBox
       sx={({ breakpoints, transitions, functions: { pxToRem } }) => ({
-        p: 3,
+        p: isMobile ? 1.5 : 3,
         position: "relative",
 
         [breakpoints.up("xl")]: {

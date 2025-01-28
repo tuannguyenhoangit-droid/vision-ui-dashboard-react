@@ -31,6 +31,9 @@ import VuiProgress from "components/VuiProgress";
 
 // Vision UI Dashboard Materail-UI example components
 import Table from "examples/Tables/Table";
+import { AddCircle } from "@mui/icons-material";
+import VuiButton from "components/VuiButton";
+import { useHistory } from "react-router-dom/cjs/react-router-dom";
 
 const FuturePositionItem = ({ row }) => {
   return {
@@ -111,8 +114,7 @@ const FuturePositionItem = ({ row }) => {
 function FuturePositionList(props) {
   const [menu, setMenu] = useState(null);
   const { data = [] } = props;
-
-  const openMenu = ({ currentTarget }) => setMenu(currentTarget);
+  const history = useHistory();
   const closeMenu = () => setMenu(null);
 
   const renderRow = () => {
@@ -160,12 +162,12 @@ function FuturePositionList(props) {
             </VuiTypography>
           </VuiBox>
         </VuiBox>
-        {/* <VuiBox color="text" px={2}>
-          <Icon sx={{ cursor: "pointer", fontWeight: "bold" }} fontSize="small" onClick={openMenu}>
-            more_vert
-          </Icon>
+        <VuiBox ml={1} display="flex" alignItems="center" flexDirection="row">
+          <VuiButton size="small" variant="gradient" onClick={() => history.push('/strategy-builder')} color="info" >
+            <AddCircle style={{ marginRight: 4 }} />
+            Strategy
+          </VuiButton>
         </VuiBox>
-        {renderMenu} */}
       </VuiBox>
       <VuiBox
         sx={{

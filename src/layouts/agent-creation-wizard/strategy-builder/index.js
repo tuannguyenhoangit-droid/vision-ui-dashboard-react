@@ -90,7 +90,7 @@ function StrategyBuilder() {
         confirmTitle="Confirm"
         description={`Confirm to delete symbol config: ${symbolDeleteItem?.symbol || ""
           }.\nYou will handle exist symbol position!`}
-        title="Delete symbol config"
+        title="Delete strategy config"
         onClose={() => setSymbolDeleteItem(null)}
         openItem={symbolDeleteItem}
       />

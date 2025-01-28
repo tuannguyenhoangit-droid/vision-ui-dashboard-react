@@ -48,6 +48,7 @@ function Overview() {
           <Grid
             item
             xs={12}
+            md={6}
             xl={3}
             xxl={3}
             sx={({ breakpoints }) => ({
@@ -62,6 +63,7 @@ function Overview() {
           <Grid
             item
             xs={12}
+            md={6}
             xl={4}
             xxl={4}
             sx={({ breakpoints }) => ({
@@ -82,6 +84,7 @@ function Overview() {
           <Grid
             item
             xs={12}
+            md={12}
             xl={5}
             xxl={5}
             sx={({ breakpoints }) => ({

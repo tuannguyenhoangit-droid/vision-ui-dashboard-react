@@ -43,6 +43,7 @@ import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setPendingTransaction } from "../../redux/futures/transaction";
 import { checkoutSubscription, setSubscription } from "../../redux/futures/subscription";
+import { isMobile } from "react-device-detect";
 
 const SUB_IMAGES = {
   "SUB_BEGINNER": sub_beginer,
@@ -85,12 +86,19 @@ function Subscription() {
         <Header />
       </VuiBox>
 
-      <Grid container spacing={3} mb="30px" alignItems="center" alignSelf="center">
+      <Grid container spacing={3} mb={2} alignItems="center" alignSelf="center">
         <Grid item alignContent="center" alignItems="center">
-          <Card>
+          <Card sx={({ breakpoints }) => ({
+            padding: isMobile ? 1 : 2
+          })}>
             <VuiBox display="flex" flexDirection="column" height="100%">
-              <VuiBox display="flex" justifyContent="space-between">
-                <VuiBox display="flex" flexDirection="column" mb="24px">
+              <VuiBox sx={({ breakpoints }) => ({
+                [breakpoints.up("md")]: {
+                  display: "flex",
+                  justifyContent: "space-between",
+                },
+              })}>
+                <VuiBox display="flex" flexDirection="column" mb={2}>
                   <VuiTypography color="white" variant="lg" fontWeight="bold" mb="6px">
                     Good Pricing, Great Profit
                   </VuiTypography>
@@ -100,15 +108,30 @@ function Subscription() {
                 </VuiBox>
                 <VuiBox>
                   <Tabs
+                    centered={isMobile ? true : false}
                     orientation={"horizontal"}
                     value={tabValue}
                     onChange={handleSetTabValue}
-                    sx={{
+                    sx={({ breakpoints }) => ({
                       background: "transparent",
-                      display: "flex",
-                      justifyContent: "flex-end",
                       maxHeight: 100,
-                    }}
+                      display: "flex",
+                      flexDirection: "row",
+                      [breakpoints.down("sm")]: {
+                        justifyContent: "center",
+                        alignItems: "center",
+                        mb: 2
+                      },
+                      [breakpoints.up("sm")]: {
+                        justifyContent: "center",
+                        alignItems: "center",
+                        mb: 2,
+                      },
+                      [breakpoints.up("md")]: {
+                        justifyContent: "flex-end",
+                        alignItems: "flex-end",
+                      },
+                    })}
                   >
                     <Tab value="monthly" label="Monthly Price" />
                     <Tab value="quarterly" label="Quarterly price" />
@@ -121,6 +144,7 @@ function Subscription() {
                     <Grid key={sub.id} item xs={12} md={4} xl={4}>
                       <Card
                         sx={{
+                          padding: isMobile ? 1 : 2,
                           background: subscription.current === sub.id ? "#00669c" : null,
                         }}
                       >

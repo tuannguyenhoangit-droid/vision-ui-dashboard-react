@@ -58,6 +58,7 @@ function DefaultProjectCard({
         src={image}
         mb="8px"
         borderRadius="15px"
+        maxWidth="100%"
         sx={({ breakpoints }) => ({
           [breakpoints.up("xl")]: {
             height: "200px",
