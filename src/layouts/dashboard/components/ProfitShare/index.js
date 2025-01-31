@@ -23,7 +23,7 @@ export function ProfitShare({ open, onClose = () => null, data = null }) {
         const container = document.getElementById("profit-share-dialog");
         if (!container) return;
         html2canvas(container, {
-            scale: 25, // Set scale to 25x for full HD resolution (1920x1080)
+            scale: 1, // Set scale to 25x for full HD resolution (1920x1080)
             useCORS: true // Enable CORS to allow screenshot of external images
         }).then(canvas => {
             canvas.toBlob(blob => {
