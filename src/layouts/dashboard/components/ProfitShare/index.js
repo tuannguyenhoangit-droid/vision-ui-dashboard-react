@@ -1,4 +1,4 @@
-import { Dialog } from "@mui/material";
+import { Card, Dialog } from "@mui/material";
 import GradientBorder from "examples/GradientBorder";
 import VuiBox from "components/VuiBox";
 import { isMobile } from "react-device-detect";
@@ -40,8 +40,8 @@ export function ProfitShare({ open, onClose = () => null, data = null }) {
 
             }
         }} >
-            <GradientBorder borderRadius={"6"} fullWidth="100%">
-                <VuiBox
+            <GradientBorder borderRadius={20} fullWidth="100%">
+                <Card
                     id="profit-share-dialog"
                     component="form"
                     role="form"
@@ -50,6 +50,7 @@ export function ProfitShare({ open, onClose = () => null, data = null }) {
                     width={isMobile ? "100%" : "420px"}
                     sx={({ palette: { secondary } }) => ({
                         backgroundColor: secondary.focus,
+                        width: isMobile ? "100%" : "420px"
                     })}
                 >
                     <VuiTypography variant="caption" color="white">
@@ -101,7 +102,7 @@ export function ProfitShare({ open, onClose = () => null, data = null }) {
                         </VuiBox>
                     </VuiBox>
 
-                </VuiBox>
+                </Card>
             </GradientBorder>
             <VuiBox display="flex" mt={4} gap="16px" justifyContent="flex-end">
                 {/* <FacebookShareButton url="https://beta-sa.okbot.org">
