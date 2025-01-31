@@ -59,6 +59,7 @@ import Card from "@mui/material/Card";
 import VuiTypography from "components/VuiTypography";
 import VuiButton from "components/VuiButton";
 import { setPositions } from "../../redux/futures/positions";
+import { ProfitShare } from "./components/ProfitShare";
 
 const auth = getAuth(firebaseApp);
 
@@ -78,7 +79,7 @@ function Dashboard() {
   const [tradeList, setTradeList] = useState([]);
   const [balance, setBalance] = useState([]);
   const [incomePnL, setIncomePnL] = useState({});
-
+  const [profitShareData, setProfitShareData] = useState(null);
   const history = useHistory();
 
   const dispatch = useDispatch();
@@ -233,11 +234,12 @@ function Dashboard() {
                   </VuiBox>
                 </VuiBox>
               </Card> */}
-              <FuturePositionList data={position} />
+              <FuturePositionList data={position} onShareProfit={setProfitShareData} />
             </Grid>
           </Grid>
         </VuiBox>
       </VuiBox>
+      <ProfitShare open={profitShareData !== null} onClose={() => setProfitShareData(null)} data={profitShareData} />
     </DashboardLayout>
   );
 }
