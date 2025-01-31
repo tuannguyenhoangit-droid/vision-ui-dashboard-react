@@ -40,7 +40,7 @@ export function ProfitShare({ open, onClose = () => null, data = null }) {
 
             }
         }} >
-            <GradientBorder borderRadius={20} fullWidth="100%">
+            <GradientBorder borderRadius={0} fullWidth="100%">
                 <Card
                     id="profit-share-dialog"
                     component="form"
@@ -50,7 +50,8 @@ export function ProfitShare({ open, onClose = () => null, data = null }) {
                     width={isMobile ? "100%" : "420px"}
                     sx={({ palette: { secondary } }) => ({
                         backgroundColor: secondary.focus,
-                        width: isMobile ? "100%" : "420px"
+                        width: isMobile ? "100%" : "420px",
+                        borderRadius: 0,
                     })}
                 >
                     <VuiTypography variant="caption" color="white">
