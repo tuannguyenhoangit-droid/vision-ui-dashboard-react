@@ -205,7 +205,7 @@ export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
   const [rsiStrategy, setRsiStrategy] = useState({});
   const [config, setConfig] = useState(initConfig);
   const [tickerPrice, setTickerPrice] = useState({});
-  const [currentStep, setCurrentStep] = useState(1);
+  const [currentStep, setCurrentStep] = useState(0);
 
   const dispatch = useDispatch();
 
