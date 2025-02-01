@@ -398,7 +398,7 @@ export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
           </VuiBox>
           <Slider
             style={{ width: isMobile ? 120 : 170 }}
-            color="text"
+            color="warning"
             size="small"
             min={1}
             max={100}
