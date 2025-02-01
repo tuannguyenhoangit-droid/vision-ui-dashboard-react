@@ -463,7 +463,9 @@ export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
           config.buyRequireHistogram,
           config.autoTakeProfit,
           config.optimizeEntry,
-          parseFloat(config.optimizeEntryPercent)
+          parseFloat(config.optimizeEntryPercent),
+          config.enableRSIStrategy,
+          config.rsiRequireValues
         );
 
         setLoading(false);
