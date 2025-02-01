@@ -207,7 +207,9 @@ export const createSymbolConfig = async (
   buyRequireHistogram = [],
   autoTakeProfit,
   optimizeEntry,
-  optimizeEntryPercent
+  optimizeEntryPercent,
+  enableRSIStrategy,
+  rsiRequireValues = []
 ) => {
   const token = await auth.currentUser?.getIdToken?.();
   const payload = {
@@ -221,6 +223,8 @@ export const createSymbolConfig = async (
     optimizeEntry,
     buyRequireHistogram,
     optimizeEntryPercent,
+    enableRSIStrategy,
+    rsiRequireValues,
   };
   return new Promise(async (resolve, reject) => {
     await axios
@@ -349,12 +353,13 @@ export const getAccountSubscriptionInfo = async () => {
   const token = await auth.currentUser?.getIdToken?.();
   if (!token) return Promise.reject("Cannot get user token");
   return new Promise(async (resolve, reject) => {
-    await axios.get("/v1/account/subscription/info", {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: ["Bearer", token].join(" "),
-      },
-    })
+    await axios
+      .get("/v1/account/subscription/info", {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: ["Bearer", token].join(" "),
+        },
+      })
       .then((response) => {
         resolve(response.data);
       })
@@ -370,12 +375,13 @@ export const getPaymentConfigs = async () => {
   const token = await auth.currentUser?.getIdToken?.();
   if (!token) return Promise.reject("Cannot get user token");
   return new Promise(async (resolve, reject) => {
-    await axios.get("/v1/payment-configs", {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: ["Bearer", token].join(" "),
-      },
-    })
+    await axios
+      .get("/v1/payment-configs", {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: ["Bearer", token].join(" "),
+        },
+      })
       .then((response) => {
         resolve(response.data);
       })
@@ -412,7 +418,9 @@ export const changeFutureActive = async (futureActive) => {
 
 export const createTransaction = async (subscriptionId, network, priceType) => {
   const payload = {
-    subscriptionId, network, priceType,
+    subscriptionId,
+    network,
+    priceType,
   };
   const token = await auth.currentUser?.getIdToken?.();
   if (!token) return Promise.reject("Cannot get user token");
@@ -431,7 +439,7 @@ export const createTransaction = async (subscriptionId, network, priceType) => {
         console.log("error", error);
       });
   });
-}
+};
 
 // getPendingTransaction: curl -X GET http://localhost:3000/v1/transaction -H "Authorization: Bearer <token>"
 
@@ -439,12 +447,13 @@ export const getPendingTransaction = async () => {
   const token = await auth.currentUser?.getIdToken?.();
   if (!token) return Promise.reject("Cannot get user token");
   return new Promise(async (resolve, reject) => {
-    await axios.get("/v1/transaction", {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: ["Bearer", token].join(" "),
-      },
-    })
+    await axios
+      .get("/v1/transaction", {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: ["Bearer", token].join(" "),
+        },
+      })
       .then((response) => {
         resolve(response.data);
       })
@@ -452,13 +461,14 @@ export const getPendingTransaction = async () => {
         console.log("error", error);
       });
   });
-}
+};
 
 // validateTransaction: curl -X POST http://localhost:3000/v1/transaction/validate -H "Authorization: Bearer <token>" -d "{\"transactionId\":\"<transactionId>\",\"transactionHash\":\"<transactionHash>\"}"
 
 export const validateTransaction = async (transactionId, transactionHash) => {
   const payload = {
-    transactionId, transactionHash
+    transactionId,
+    transactionHash,
   };
   const token = await auth.currentUser?.getIdToken?.();
   if (!token) return Promise.reject("Cannot get user token");
@@ -477,7 +487,7 @@ export const validateTransaction = async (transactionId, transactionHash) => {
         console.log("error", error);
       });
   });
-}
+};
 
 // cancelTransaction: curl -X POST http://localhost:3000/v1/transaction/cancel -H "Authorization: Bearer <token>" -d "{\"transactionId\":\"<transactionId>\"}"
 
@@ -502,4 +512,4 @@ export const cancelTransaction = async (transactionId) => {
         console.log("error", error);
       });
   });
-}
+};

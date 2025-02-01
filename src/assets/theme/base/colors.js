@@ -37,7 +37,7 @@ export default {
   },
 
   transparent: {
-    main: "transparent",
+    main: "rgba(0,0,0,0)",
   },
 
   white: {
@@ -124,6 +124,10 @@ export default {
   },
 
   light: {
+    main: "#e9ecef",
+    focus: "#ebeff4",
+  },
+  lighten: {
     main: "#e9ecef",
     focus: "#ebeff4",
   },

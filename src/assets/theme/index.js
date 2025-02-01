@@ -19,14 +19,12 @@
 // @mui material components
 import { createTheme } from "@mui/material/styles";
 
-
 import colors from "assets/theme/base/colors";
 import breakpoints from "assets/theme/base/breakpoints";
 import typography from "assets/theme/base/typography";
 import boxShadows from "assets/theme/base/boxShadows";
 import borders from "assets/theme/base/borders";
 import globals from "assets/theme/base/globals";
-
 
 import boxShadow from "assets/theme/functions/boxShadow";
 import hexToRgb from "assets/theme/functions/hexToRgb";
@@ -120,7 +118,7 @@ export default createTheme({
     MuiTableCell: { ...tableCell },
     MuiLinearProgress: { ...linearProgress },
     MuiBreadcrumbs: { ...breadcrumbs },
-    MuiSlider: { ...slider },
+    // MuiSlider: { ...slider },
     MuiAvatar: { ...avatar },
     MuiTooltip: { ...tooltip },
     MuiAppBar: { ...appBar },

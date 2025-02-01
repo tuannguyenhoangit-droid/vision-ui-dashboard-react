@@ -1,4 +1,13 @@
-import { Alert, ButtonGroup, Checkbox, Dialog, Step, StepLabel, Stepper } from "@mui/material";
+import {
+  Alert,
+  ButtonGroup,
+  Checkbox,
+  Dialog,
+  Slider,
+  Step,
+  StepLabel,
+  Stepper,
+} from "@mui/material";
 import PropTypes from "prop-types";
 import { styled } from "@mui/material/styles";
 
@@ -94,7 +103,8 @@ function ColorlibStepIcon(props) {
   const icons = {
     1: <Bolt />,
     2: <SmartToy />,
-    3: <SettingsSuggest />,
+    3: <SmartToy />,
+    4: <SettingsSuggest />,
   };
 
   return (
@@ -131,6 +141,17 @@ const SUPPORT_CHART_FRAME_WEIGHT = {
   "30m": 3,
   "1h": 4,
 };
+
+const RSI_STRATEGY_OPTIONS = [
+  // 1h -> 1w
+  { id: "2h", label: "Frame 2h", weight: 2 },
+  { id: "4h", label: "Frame 4h", weight: 3 },
+  { id: "6h", label: "Frame 6h", weight: 4 },
+  { id: "12h", label: "Frame 12h", weight: 6 },
+  { id: "1d", label: "Frame 1d", weight: 7 },
+  { id: "3d", label: "Frame 3d", weight: 8 },
+  { id: "1w", label: "Frame 1w", weight: 9 },
+];
 
 const BUY_REQUIRE_CHART_FRAME = [
   { id: "5m", label: "5m", pro: false, weight: 1 },
@@ -173,18 +194,22 @@ const initConfig = {
   requireHistogramCondition: "AND",
   optimizeEntry: false,
   optimizeEntryPercent: 0,
+  enableRSIStrategy: false,
+  rsiRequireValues: [],
 };
 export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
   const [loading, setLoading] = useState(false);
   const [requireFrame, setRequireFrame] = useState({
     "30m": true,
   });
+  const [rsiStrategy, setRsiStrategy] = useState({});
   const [config, setConfig] = useState(initConfig);
   const [tickerPrice, setTickerPrice] = useState({});
-  const [currentStep, setCurrentStep] = useState(0);
+  const [currentStep, setCurrentStep] = useState(1);
 
   const dispatch = useDispatch();
 
+  // when requireFrame change, update buyRequireHistogram
   useEffect(() => {
     const frames = Object.keys(requireFrame)
       .map((frame) => {
@@ -196,17 +221,41 @@ export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
     onChange("buyRequireHistogram", frames);
   }, [requireFrame]);
 
+  // when rsiStrategy change, update rsiRequireValues
+  useEffect(() => {
+    const rsiValues = Object.keys(rsiStrategy).map((frame) => {
+      if (frame && rsiStrategy[frame]) {
+        return {
+          frame,
+          value: rsiStrategy[frame],
+        };
+      }
+    });
+    onChange("rsiRequireValues", rsiValues);
+  }, [rsiStrategy]);
+
+  // init config from item
   useEffect(() => {
     if (item) {
       // remove symbol contains USDT
       const itemWithInit = { ...initConfig, ...item, symbol: item.symbol.replace("USDT", "") };
 
       const requireFrame = {};
-      itemWithInit.buyRequireHistogram.forEach((frame) => {
-        requireFrame[frame] = true;
-      });
+      if (itemWithInit.buyRequireHistogram.length > 0) {
+        itemWithInit.buyRequireHistogram.forEach((frame) => {
+          requireFrame[frame] = true;
+        });
+        setRequireFrame({ ...requireFrame });
+      }
 
-      setRequireFrame({ ...requireFrame });
+      const rsiStrategy = {};
+      if (itemWithInit.rsiRequireValues?.length > 0) {
+        itemWithInit.rsiRequireValues?.forEach((rsiValue) => {
+          rsiStrategy[rsiValue.frame] = rsiValue.value;
+        });
+        setRsiStrategy({ ...rsiStrategy });
+      }
+
       setConfig(itemWithInit);
     }
     return () => {
@@ -214,6 +263,7 @@ export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
         ...initConfig,
       });
       setRequireFrame({});
+      setRsiStrategy({});
       setCurrentStep(0);
       setTickerPrice({});
     };
@@ -234,6 +284,7 @@ export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
     });
   }, [config]);
 
+  // render buy require chart frame checkbox
   const buyRequireChartFrameCheckbox = useMemo(() => {
     const renderFrames = (it) => {
       const currentChecked = requireFrame[it.id] || false;
@@ -251,7 +302,12 @@ export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
           }}
         >
           <Checkbox
-            sx={{ "& .MuiSvgIcon-root": { fontSize: 28, fill: currentWeight <= minWeight ? "gray" : "#d6e6e6" } }}
+            sx={{
+              "& .MuiSvgIcon-root": {
+                fontSize: 28,
+                fill: currentWeight <= minWeight ? "gray" : "#d6e6e6",
+              },
+            }}
             disabled={currentWeight <= minWeight}
             color="success"
             defaultChecked={currentChecked}
@@ -277,12 +333,94 @@ export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
     };
 
     return (
-      <VuiBox display="flex" justifyContent="flex-start">
-        <VuiBox width="35%">{BUY_REQUIRE_CHART_FRAME.map((it) => renderFrames(it))}</VuiBox>
+      <VuiBox display="flex" flexDirection="row" gap="16px">
+        <VuiBox>{BUY_REQUIRE_CHART_FRAME.map((it) => renderFrames(it))}</VuiBox>
         <VuiBox>{BUY_REQUIRE_CHART_FRAME_P2.map((it) => renderFrames(it))}</VuiBox>
       </VuiBox>
     );
   }, [requireFrame, config]);
+
+  // render rsi strategy checkbox
+  const buyRSIStrategyCheckbox = useMemo(() => {
+    const renderFrames = (it) => {
+      const currentChecked = rsiStrategy[it.id] || 0;
+
+      return (
+        <VuiBox
+          id={it.id}
+          mt={1}
+          display="flex"
+          flexDirection="row"
+          justifyContent="space-between"
+          alignItems="center"
+          sx={{
+            width: "100%",
+          }}
+        >
+          <VuiBox display="flex" flexDirection="row">
+            <Checkbox
+              sx={{
+                "& .MuiSvgIcon-root": {
+                  fontSize: 28,
+                  fill: "#d6e6e6",
+                },
+              }}
+              color="success"
+              defaultChecked={currentChecked}
+              checked={currentChecked}
+              onChange={(e, checked) =>
+                setRsiStrategy({
+                  ...rsiStrategy,
+                  [it.id]: checked ? (config.side === "BUY" ? 30 : 70) : 0,
+                })
+              }
+            />
+            <VuiTypography
+              ml={1}
+              variant="caption"
+              color="white"
+              fontWeight="normal"
+              sx={{ cursor: "pointer", userSelect: "none" }}
+            >
+              {it.label}
+            </VuiTypography>
+            {rsiStrategy[it.id] ? (
+              <VuiTypography
+                ml={1}
+                variant="caption"
+                color={config.side === "BUY" ? "success" : "error"}
+                fontWeight="normal"
+                sx={{ cursor: "pointer", userSelect: "none" }}
+              >
+                {["RSI", config.side === "BUY" ? "<" : ">", rsiStrategy[it.id] || 0].join(" ")}
+              </VuiTypography>
+            ) : null}
+          </VuiBox>
+          <Slider
+            style={{ width: isMobile ? 120 : 170 }}
+            color="text"
+            size="small"
+            min={1}
+            max={100}
+            value={rsiStrategy[it.id] || 0}
+            onChange={(e, value) => {
+              setRsiStrategy({
+                ...rsiStrategy,
+                [it.id]: value,
+              });
+            }}
+            disabled={currentChecked === 0}
+            defaultValue={config.side === "BUY" ? 30 : 70}
+            valueLabelDisplay="auto"
+          />
+        </VuiBox>
+      );
+    };
+
+    return (
+      <VuiBox sx={{ width: "100%" }}>{RSI_STRATEGY_OPTIONS.map((it) => renderFrames(it))}</VuiBox>
+    );
+  }, [rsiStrategy, config]);
 
   const onChange = (key, value) => {
     if (key === "symbol") setTickerPrice({});
@@ -339,20 +477,23 @@ export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
         setTickerPrice({});
 
         if (result.status === -1) {
-          return dispatch(setMessage({
-            message: result.message,
-            type: "warning"
-          }))
+          return dispatch(
+            setMessage({
+              message: result.message,
+              type: "warning",
+            })
+          );
         } else {
-          dispatch(setMessage({
-            message: "Create symbol config success",
-            type: "success"
-          }))
+          dispatch(
+            setMessage({
+              message: "Create symbol config success",
+              type: "success",
+            })
+          );
         }
 
         const userSymbolConfig = await getSymbolConfig();
         dispatch(setSymbolConfigData(userSymbolConfig));
-
       } catch (e) {
         setLoading(false);
       }
@@ -360,7 +501,6 @@ export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
       console.log("Params missing");
     }
   };
-
 
   const pricePerOrderLeverage =
     Math.round((tickerPrice?.data?.price || 0) * config.buyAmount * 100) / 100;
@@ -387,13 +527,16 @@ export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
     }
 
     // max budget should be greater than price per order (including leverage)
-    if (config.maxBudget.toString().length === 0 || parseInt(config.maxBudget) < pricePerOrderLeverage) {
+    if (
+      config.maxBudget.toString().length === 0 ||
+      parseInt(config.maxBudget) < pricePerOrderLeverage
+    ) {
       return true;
     }
     return false;
   }, [loading, tickerPrice, config]);
 
-  const steps = ["Symbol", "Strategy", "Optimize"];
+  const steps = ["Symbol", "MACD Strategy", "RSI Strategy", "Optimize"];
 
   return (
     <Dialog onClose={onClose} open={open} maxWidth>
@@ -409,7 +552,7 @@ export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
           })}
         >
           <Stepper
-            sx={({ }) => ({
+            sx={({}) => ({
               marginTop: 2,
               marginBottom: 4,
               marginLeft: 0,
@@ -484,6 +627,7 @@ export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
                 <GradientBorder
                   borderRadius={borders.borderRadius.lg}
                   padding="1px"
+                  style={{ maxWidth: "50%" }}
                   backgroundImage={radialGradient(
                     palette.gradients.borderLight.main,
                     palette.gradients.borderLight.state,
@@ -508,6 +652,7 @@ export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
                 <GradientBorder
                   borderRadius={borders.borderRadius.lg}
                   padding="1px"
+                  style={{ maxWidth: "50%" }}
                   backgroundImage={radialGradient(
                     palette.gradients.borderLight.main,
                     palette.gradients.borderLight.state,
@@ -542,6 +687,7 @@ export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
                 <GradientBorder
                   borderRadius={borders.borderRadius.lg}
                   padding="1px"
+                  style={{ maxWidth: "50%" }}
                   backgroundImage={radialGradient(
                     palette.gradients.borderLight.main,
                     palette.gradients.borderLight.state,
@@ -560,9 +706,17 @@ export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
                 </GradientBorder>
               </VuiBox>
               <VuiBox display="flex" mt={1}>
-                <VuiTypography variant="button" color={config.maxBudget < pricePerOrderLeverage ? "warning" : "text"} fontWeight="light">
+                <VuiTypography
+                  variant="button"
+                  color={config.maxBudget < pricePerOrderLeverage ? "warning" : "text"}
+                  fontWeight="light"
+                >
                   {config.maxBudget < pricePerOrderLeverage
-                    ? ["Max Budget should be greater than Budget per order ", "$", pricePerOrderLeverage].join("")
+                    ? [
+                        "Max Budget should be greater than Budget per order ",
+                        "$",
+                        pricePerOrderLeverage,
+                      ].join("")
                     : "Including leverage, maximum DCA budget for the symbol"}
                 </VuiTypography>
               </VuiBox>
@@ -677,21 +831,24 @@ export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
                 </VuiBox>
               ) : null}
               <MiniStatisticsCard
-                title={{ text: "Strategy", fontWeight: "regular" }}
+                title={{
+                  text: [config.side === "BUY" ? "Buy" : "Sell", "Strategy"].join(" "),
+                  fontWeight: "regular",
+                }}
                 percentage={{
-                  color: "success",
+                  color: config.side === "BUY" ? "success" : "error",
                   text: [
                     "When histogram of Trading Frame is in",
                     config.side === "BUY" ? "bottom" : "top",
                     config.buyRequireHistogram.length > 0
                       ? [
-                        "and",
-                        config.requireHistogramCondition === "AND"
-                          ? "All of Require frames"
-                          : "One of Require frame",
-                        config.requireHistogramCondition === "AND" ? "are in" : "is in",
-                        config.side === "BUY" ? "bottom" : "top",
-                      ].join(" ")
+                          "and",
+                          config.requireHistogramCondition === "AND"
+                            ? "All of Require frames"
+                            : "One of Require frame",
+                          config.requireHistogramCondition === "AND" ? "are in" : "is in",
+                          config.side === "BUY" ? "bottom" : "top",
+                        ].join(" ")
                       : "",
                     `then Bot will open a ${config.side} Limit Order at`,
                     config.side === "BUY" ? "bottom" : "top",
@@ -756,6 +913,65 @@ export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
                     color="white"
                     fontWeight="medium"
                   >
+                    Enable RSI Strategy Check
+                  </VuiTypography>
+                  <VuiSwitch
+                    color="success"
+                    checked={config.enableRSIStrategy}
+                    onChange={(e, switched) => {
+                      onChange("enableRSIStrategy", switched);
+                    }}
+                  />
+                </VuiBox>
+                {config.enableRSIStrategy ? buyRSIStrategyCheckbox : null}
+              </VuiBox>
+              {config.enableRSIStrategy ? (
+                <MiniStatisticsCard
+                  title={{
+                    text: [config.side === "BUY" ? "Buy" : "Sell", "Strategy"].join(" "),
+                    fontWeight: "regular",
+                  }}
+                  percentage={{
+                    color: config.side === "BUY" ? "success" : "error",
+                    text: [
+                      "Default RSI Strategy is",
+                      config.side === "BUY" ? "below 30" : "above 70",
+                      "for",
+                      config.side,
+                      "signal. RSI Strategy will be combined with MACD Strategy to make order in Trading Frame.",
+                    ].join(" "),
+                  }}
+                />
+              ) : null}
+              <VuiBox mt={4} justifyContent="space-between" display="flex" alignItems="center">
+                <VuiBox minWidth="46%">
+                  <VuiButton onClick={() => setCurrentStep(1)} color={"light"} fullWidth>
+                    BACK
+                  </VuiButton>
+                </VuiBox>
+                <VuiBox minWidth="46%">
+                  <VuiButton
+                    onClick={() => setCurrentStep(3)}
+                    color={!config.enableRSIStrategy ? "dark" : "info"}
+                    fullWidth
+                  >
+                    NEXT
+                  </VuiButton>
+                </VuiBox>
+              </VuiBox>
+            </VuiBox>
+          ) : null}
+
+          {currentStep === 3 ? (
+            <VuiBox>
+              <VuiBox mb={2}>
+                <VuiBox mb={1} alignItems="center" justifyContent="space-between" display="flex">
+                  <VuiTypography
+                    component="label"
+                    variant="button"
+                    color="white"
+                    fontWeight="medium"
+                  >
                     Optimize Entry Position
                   </VuiTypography>
                   <VuiSwitch
@@ -797,7 +1013,7 @@ export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
               </VuiBox>
               <VuiBox mt={4} justifyContent="space-between" display="flex" alignItems="center">
                 <VuiBox minWidth="46%">
-                  <VuiButton onClick={() => setCurrentStep(1)} color={"light"} fullWidth>
+                  <VuiButton onClick={() => setCurrentStep(2)} color={"light"} fullWidth>
                     BACK
                   </VuiButton>
                 </VuiBox>
