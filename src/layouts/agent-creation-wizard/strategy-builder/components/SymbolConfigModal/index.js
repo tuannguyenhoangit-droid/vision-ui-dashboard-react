@@ -223,14 +223,16 @@ export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
 
   // when rsiStrategy change, update rsiRequireValues
   useEffect(() => {
-    const rsiValues = Object.keys(rsiStrategy).map((frame) => {
-      if (frame && rsiStrategy[frame]) {
-        return {
-          frame,
-          value: rsiStrategy[frame],
-        };
-      }
-    });
+    const rsiValues = Object.keys(rsiStrategy)
+      .filter((frame) => frame)
+      .map((frame) => {
+        if (frame && rsiStrategy[frame]) {
+          return {
+            frame,
+            value: rsiStrategy[frame],
+          };
+        }
+      });
     onChange("rsiRequireValues", rsiValues);
   }, [rsiStrategy]);
 
@@ -465,7 +467,7 @@ export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
           config.optimizeEntry,
           parseFloat(config.optimizeEntryPercent),
           config.enableRSIStrategy,
-          config.rsiRequireValues
+          config.rsiRequireValues.filter((rsi) => rsi !== null)
         );
 
         setLoading(false);
