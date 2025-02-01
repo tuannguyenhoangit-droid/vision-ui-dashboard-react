@@ -127,7 +127,7 @@ export function ProfitShare({ open, onClose = () => null, data = null }) {
           <VuiBox mt={2} gap="16px" flexDirection="column">
             <VuiBox display="flex">
               <VuiTypography variant="caption" color="white">
-                Create your own BOT at
+                Connect SA BOT to Binance Account at
               </VuiTypography>
             </VuiBox>
             <VuiBox display="flex" mt={0.5}>
