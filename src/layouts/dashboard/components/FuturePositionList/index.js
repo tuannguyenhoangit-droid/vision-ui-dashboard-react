@@ -23,7 +23,6 @@ import Card from "@mui/material/Card";
 // import Menu from "@mui/material/Menu";
 // import MenuItem from "@mui/material/MenuItem";
 
-
 import VuiBox from "components/VuiBox";
 import VuiTypography from "components/VuiTypography";
 import VuiProgress from "components/VuiProgress";
@@ -60,22 +59,22 @@ const FuturePositionItem = ({ row, onShareProfit = () => null }) => {
       </VuiTypography>
     ),
     size: (
-      <VuiTypography variant="button" color="white" fontWeight="bold">
+      <VuiTypography variant="caption" color="white">
         {[Math.abs(Math.round(row.notional * 1000) / 1000), "USDT"].join(" ")}
       </VuiTypography>
     ),
     entry: (
-      <VuiTypography variant="button" color="white" fontWeight="bold">
+      <VuiTypography variant="caption" color="white">
         {[Math.round(row.entryPrice * 1000) / 1000].join(" ")}
       </VuiTypography>
     ),
     price: (
-      <VuiTypography variant="button" color="white" fontWeight="bold">
+      <VuiTypography variant="caption" color="white">
         {Math.round(row.markPrice * 1000) / 1000}
       </VuiTypography>
     ),
     margin: (
-      <VuiTypography variant="button" color="white" fontWeight="bold">
+      <VuiTypography variant="caption" color="white">
         {["$", Math.round(row.initialMargin * 1000) / 1000].join(" ")}
       </VuiTypography>
     ),
@@ -83,7 +82,7 @@ const FuturePositionItem = ({ row, onShareProfit = () => null }) => {
       <VuiBox textAlign="left">
         <VuiTypography
           color={row.unRealizedProfit > 0 ? "success" : "error"}
-          variant="button"
+          variant="caption"
           fontWeight="bold"
         >
           {[
@@ -103,7 +102,7 @@ const FuturePositionItem = ({ row, onShareProfit = () => null }) => {
       </VuiBox>
     ),
     liquid: (
-      <VuiTypography variant="button" color="white" fontWeight="bold">
+      <VuiTypography variant="caption" color="white">
         {Math.round(row.liquidationPrice * 1000) / 1000}
       </VuiTypography>
     ),
@@ -167,7 +166,12 @@ function FuturePositionList(props) {
           </VuiBox>
         </VuiBox>
         <VuiBox ml={1} display="flex" alignItems="center" flexDirection="row">
-          <VuiButton size="small" variant="gradient" onClick={() => history.push('/strategy-builder')} color="info" >
+          <VuiButton
+            size="small"
+            variant="gradient"
+            onClick={() => history.push("/strategy-builder")}
+            color="info"
+          >
             <AddCircle style={{ marginRight: 4 }} />
             Strategy
           </VuiButton>

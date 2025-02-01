@@ -8,15 +8,25 @@ import { useSelector } from "react-redux";
 import { isMobile } from "react-device-detect";
 import { AddCircle } from "@mui/icons-material";
 
-const BestPerformanceVolumeItem = ({ row, onItemClick = () => null, currentPosition = undefined }) => {
-  const handleOnClick = () => onItemClick(row)
+const BestPerformanceVolumeItem = ({
+  row,
+  onItemClick = () => null,
+  currentPosition = undefined,
+}) => {
+  const handleOnClick = () => onItemClick(row);
   return {
     symbol: (
       <VuiBox display="flex" alignItems="center">
         {/* <AdobeXD size="20px" /> */}
         <VuiTypography
           // pl="16px"
-          color={currentPosition ? parseFloat(currentPosition?.unRealizedProfit) > 0 ? "success" : "error" : "white"}
+          color={
+            currentPosition
+              ? parseFloat(currentPosition?.unRealizedProfit) > 0
+                ? "success"
+                : "error"
+              : "white"
+          }
           variant="button"
           fontWeight="medium"
         >
@@ -25,7 +35,7 @@ const BestPerformanceVolumeItem = ({ row, onItemClick = () => null, currentPosit
       </VuiBox>
     ),
     netInflow: (
-      <VuiTypography variant="button" color="white" fontWeight="bold">
+      <VuiTypography variant="caption" color="white">
         {Math.round(row.totalNetInflow)}
       </VuiTypography>
     ),
@@ -34,12 +44,14 @@ const BestPerformanceVolumeItem = ({ row, onItemClick = () => null, currentPosit
         <VuiTypography color="white" variant="button" fontWeight="bold">
           {[Math.round(row.diff), "%"].join("")}
         </VuiTypography>
-        {!isMobile ? <VuiProgress
-          value={Math.round(row.diff)}
-          color="info"
-          label={false}
-          sx={{ background: "#2D2E5F" }}
-        /> : null}
+        {!isMobile ? (
+          <VuiProgress
+            value={Math.round(row.diff)}
+            color="info"
+            label={false}
+            sx={{ background: "#2D2E5F" }}
+          />
+        ) : null}
       </VuiBox>
     ),
     action: (
@@ -60,8 +72,8 @@ function BestPerformanceVolumeList(props) {
 
   const renderRow = () => {
     return data.map((row) => {
-      const currentPosition = position.find(e => e.symbol.includes(row.symbol));
-      return BestPerformanceVolumeItem({ row, onItemClick, currentPosition })
+      const currentPosition = position.find((e) => e.symbol.includes(row.symbol));
+      return BestPerformanceVolumeItem({ row, onItemClick, currentPosition });
     });
   };
 
@@ -70,11 +82,11 @@ function BestPerformanceVolumeList(props) {
       sx={({ breakpoints }) => ({
         [breakpoints.down("sm")]: {
           height: "100% !important",
-          padding: 1
+          padding: 1,
         },
         [breakpoints.up("sm")]: {
           height: "100% !important",
-          padding: 1
+          padding: 1,
         },
         [breakpoints.up("md")]: {
           height: "100% !important",

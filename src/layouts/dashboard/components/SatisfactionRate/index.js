@@ -31,19 +31,19 @@ const RecentOrderItem = ({ row }) => {
       </VuiTypography>
     ),
     price: (
-      <VuiTypography variant="button" color="white" fontWeight="bold">
+      <VuiTypography variant="caption" color="white">
         {["$", Math.round((parseFloat(row.stopPrice) || parseFloat(row.price)) * 1000) / 1000].join(
           ""
         )}
       </VuiTypography>
     ),
     quantity: (
-      <VuiTypography variant="button" color="white" fontWeight="bold">
+      <VuiTypography variant="caption" color="white">
         {row.origQty}
       </VuiTypography>
     ),
     total: (
-      <VuiTypography variant="button" color="white" fontWeight="bold">
+      <VuiTypography variant="caption" color="white">
         {["$", Math.round(parseFloat(row.price) * parseFloat(row.origQty) * 1000) / 1000].join("")}
       </VuiTypography>
     ),
