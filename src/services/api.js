@@ -513,3 +513,52 @@ export const cancelTransaction = async (transactionId) => {
       });
   });
 };
+
+// app.get(
+//   "/v1/exception-notification",
+// );
+
+export const getExceptionNotification = async (page = 1, limit = 10) => {
+  const token = await auth.currentUser?.getIdToken?.();
+  if (!token) return Promise.reject("Cannot get user token");
+  return new Promise(async (resolve, reject) => {
+    await axios
+      // .get(`/v1/exception-notification?page=${page}&limit=${limit}`, {
+      .get("http://localhost:3333/v1/exception-notification?page=1&limit=10", {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: ["Bearer", token].join(" "),
+        },
+      })
+      .then((response) => {
+        resolve(response.data);
+      })
+      .catch((error) => {
+        console.log("error", error);
+      });
+  });
+};
+
+// app.post(
+//   "/v1/exception-notification/read/:id",
+// );
+
+export const readExceptionNotification = async (id) => {
+  const token = await auth.currentUser?.getIdToken?.();
+  if (!token) return Promise.reject("Cannot get user token");
+  return new Promise(async (resolve, reject) => {
+    await axios
+      .post(`/v1/exception-notification/read/${id}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: ["Bearer", token].join(" "),
+        },
+      })
+      .then((response) => {
+        resolve(response.data);
+      })
+      .catch((error) => {
+        console.log("error", error);
+      });
+  });
+};

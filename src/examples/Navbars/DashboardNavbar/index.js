@@ -1,21 +1,3 @@
-/*!
-
-=========================================================
-
-=========================================================
-
-
-
-
-
-
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
-
 import { useState, useEffect } from "react";
 
 // react-router components
@@ -31,10 +13,8 @@ import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import Icon from "@mui/material/Icon";
 
-
 import VuiBox from "components/VuiBox";
 import VuiTypography from "components/VuiTypography";
-
 
 import Breadcrumbs from "examples/Breadcrumbs";
 import NotificationItem from "examples/Items/NotificationItem";
@@ -48,24 +28,16 @@ import {
   navbarMobileMenu,
 } from "examples/Navbars/DashboardNavbar/styles";
 
-
-import {
-  useVisionUIController,
-  setTransparentNavbar,
-  setMiniSidenav,
-  setOpenConfigurator,
-} from "context";
+import { useVisionUIController, setTransparentNavbar, setMiniSidenav } from "context";
 
 // Images
-import team2 from "assets/images/team-2.jpg";
-import logoSpotify from "assets/images/small-logos/logo-spotify.svg";
-import { useSelector } from "react-redux";
+import logoSpotify from "assets/images/shapes/binance.svg";
+import { useDispatch, useSelector } from "react-redux";
 import { isMobile } from "react-device-detect";
-import { Card } from "@mui/material";
-import VuiSwitch from "components/VuiSwitch";
-import { changeFutureActive } from "../../../services/api";
 import { Telegram } from "@mui/icons-material";
-import colors from "assets/theme/base/colors";
+import { setNotification } from "../../../redux/futures/notificationSlice";
+import { getExceptionNotification } from "services/api";
+import { timeDifference } from "utils";
 
 function DashboardNavbar({ absolute, light, isMini }) {
   const [navbarType, setNavbarType] = useState();
@@ -74,7 +46,8 @@ function DashboardNavbar({ absolute, light, isMini }) {
   const [openMenu, setOpenMenu] = useState(false);
   const route = useLocation().pathname.split("/").slice(1);
   const user = useSelector((state) => state.user);
-  const [futureActive, setFutureActive] = useState(user?.user?.futureActive);
+  const notification = useSelector((state) => state.notification);
+  const reduxDispatch = useDispatch();
 
   useEffect(() => {
     // Setting the navbar type
@@ -102,20 +75,24 @@ function DashboardNavbar({ absolute, light, isMini }) {
     return () => window.removeEventListener("scroll", handleTransparentNavbar);
   }, [dispatch, fixedNavbar]);
 
+  // get notification
+  useEffect(() => {
+    getExceptionNotification(notification.page, 10).then((res) => {
+      reduxDispatch(setNotification({ data: res.data, page: res.page }));
+    });
+  }, [notification.page]);
+
+  // get initial notification
+  useEffect(() => {
+    getExceptionNotification(1, 10).then((res) => {
+      reduxDispatch(setNotification({ data: res.data, page: res.page }));
+    });
+  }, []);
+
   const handleMiniSidenav = () => setMiniSidenav(dispatch, !miniSidenav);
   const handleOpenTelegram = () => window.open("https://t.me/sabot_official", "_blank");
   const handleOpenMenu = (event) => setOpenMenu(event.currentTarget);
   const handleCloseMenu = () => setOpenMenu(false);
-
-  const handleChangeFutureActive = async (switched) => {
-    await changeFutureActive(switched).then((res) => {
-      setFutureActive(res.futureActive);
-    });
-  };
-
-  useEffect(() => {
-    setFutureActive(user?.user?.futureActive);
-  }, [user?.user?.futureActive]);
 
   // Render the notifications menu
   const renderMenu = () => (
@@ -130,29 +107,14 @@ function DashboardNavbar({ absolute, light, isMini }) {
       onClose={handleCloseMenu}
       sx={{ mt: 2 }}
     >
-      <NotificationItem
-        image={<img src={team2} alt="person" />}
-        title={["New message", "from Laur"]}
-        date="13 minutes ago"
-        onClick={handleCloseMenu}
-      />
-      <NotificationItem
-        image={<img src={logoSpotify} alt="person" />}
-        title={["New album", "by Travis Scott"]}
-        date="1 day"
-        onClick={handleCloseMenu}
-      />
-      <NotificationItem
-        color="text"
-        image={
-          <Icon fontSize="small" sx={{ color: ({ palette: { white } }) => white.main }}>
-            payment
-          </Icon>
-        }
-        title={["", "Payment successfully completed"]}
-        date="2 days"
-        onClick={handleCloseMenu}
-      />
+      {notification.data.map((item) => (
+        <NotificationItem
+          image={<img src={logoSpotify} alt="person" />}
+          title={[item.error]}
+          date={timeDifference(item.createdAt)}
+          onClick={handleCloseMenu}
+        />
+      ))}
     </Menu>
   );
 
@@ -176,7 +138,7 @@ function DashboardNavbar({ absolute, light, isMini }) {
           <VuiBox sx={(theme) => navbarRow(theme, { isMini })}>
             <VuiBox
               pr={1}
-              sx={({ }) => ({
+              sx={({}) => ({
                 backgroundColor: "info.main !important",
               })}
             >
@@ -223,10 +185,7 @@ function DashboardNavbar({ absolute, light, isMini }) {
               >
                 <Telegram style={{ width: 24, height: 24, color: "#25a3e1" }} />
                 {isMobile ? null : (
-                  <VuiTypography
-                    variant="button"
-                    fontWeight="medium"
-                  >
+                  <VuiTypography variant="button" fontWeight="medium">
                     Support
                   </VuiTypography>
                 )}

@@ -5,6 +5,7 @@ import messageSlice from "../futures/messageSlice";
 import transactionSlice from "../futures/transaction";
 import subscriptionSlice from "../futures/subscription";
 import positionsSlice from "../futures/positions";
+import notificationSlice from "../futures/notificationSlice";
 
 export const store = configureStore({
   reducer: {
@@ -13,6 +14,7 @@ export const store = configureStore({
     message: messageSlice,
     transaction: transactionSlice,
     subscription: subscriptionSlice,
-    positions: positionsSlice
+    positions: positionsSlice,
+    notification: notificationSlice,
   },
 });
