@@ -90,9 +90,11 @@ function BestPerformanceVolumeList(props) {
         },
         [breakpoints.up("md")]: {
           height: "100% !important",
+          padding: 3,
         },
         [breakpoints.up("xl")]: {
           height: "100% !important",
+          padding: 3,
         },
       })}
     >
@@ -107,44 +109,6 @@ function BestPerformanceVolumeList(props) {
               &nbsp;<strong>Top token</strong> {description}
             </VuiTypography>
           </VuiBox>
-        </VuiBox>
-        <VuiBox display="flex" justifyContent="space-between" mb="auto">
-          {/* <Stack direction="row" spacing={{ sm: "10px", xl: "4px", xxl: "10px" }}>
-            <VuiBox
-              onClick={openFrameMenu}
-              bgColor="info"
-              display="flex"
-              justifyContent="center"
-              alignItems="center"
-              sx={{ borderRadius: "6px", width: "25px", height: "25px" }}
-            >
-              <IoTime color="#fff" size="12px" />
-            </VuiBox>
-            <VuiTypography color="text" variant="button" fontWeight="medium">
-              {frame}
-            </VuiTypography>
-          </Stack>
-          
-          <Stack direction="row" spacing={{ sm: "10px", xl: "4px", xxl: "10px" }} ml="16px">
-            <VuiBox
-              onClick={openDayAgoMenu}
-              bgColor="info"
-              display="flex"
-              justifyContent="center"
-              alignItems="center"
-              sx={{ borderRadius: "6px", width: "25px", height: "25px" }}
-            >
-              <IoCalendar color="#fff" size="12px" />
-            </VuiBox>
-            <VuiTypography color="text" variant="button" fontWeight="medium">
-              {[dayAgo, "Days"].join(" ")}
-            </VuiTypography>
-          </Stack> */}
-
-          {/* {renderMenuDayRange} */}
-          <VuiTypography color="text" variant="button" fontWeight="medium">
-            Data record by 5 days
-          </VuiTypography>
         </VuiBox>
       </VuiBox>
       <VuiBox

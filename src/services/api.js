@@ -5,11 +5,11 @@ const auth = getAuth(firebaseApp);
 
 axios.defaults.baseURL = process.env.REACT_APP_Server_Endpoint;
 
-export const getBestPerformanceVolume = async () => {
+export const getBestPerformanceVolume = async (frequency = "5d") => {
   return new Promise(async (resolve, reject) => {
     const date = new Date().toISOString().split("T")[0];
     await axios
-      .get(`v1/top-volume-performance/${date}`)
+      .get(`v1/top-volume-performance/${date}?frequency=${frequency}`)
       .then((response) => {
         resolve(response.data);
       })

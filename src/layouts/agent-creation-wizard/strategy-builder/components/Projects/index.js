@@ -185,9 +185,11 @@ function Projects({
         },
         [breakpoints.up("md")]: {
           height: "100% !important",
+          padding: 3,
         },
         [breakpoints.up("xl")]: {
           height: "100% !important",
+          padding: 3,
         },
       })}
     >
