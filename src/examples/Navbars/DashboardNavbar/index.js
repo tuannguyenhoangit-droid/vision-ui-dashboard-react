@@ -200,6 +200,24 @@ function DashboardNavbar({ absolute, light, isMini }) {
                 onClick={handleOpenMenu}
               >
                 <Icon className={light ? "text-white" : "text-dark"}>notifications</Icon>
+                <div
+                  style={{
+                    position: "absolute",
+                    top: 0,
+                    right: 0,
+                    backgroundColor: "red",
+                    color: "white",
+                    borderRadius: "50%",
+                    width: "15px",
+                    height: "15px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    fontSize: "10px",
+                  }}
+                >
+                  {notification.data.length}
+                </div>
               </IconButton>
               {renderMenu()}
             </VuiBox>
