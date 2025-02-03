@@ -43,7 +43,6 @@ import Profile from "layouts/profile";
 import SignIn from "layouts/authentication/sign-in";
 import SignUp from "layouts/authentication/sign-up";
 
-
 import { IoDocument, IoRocketSharp } from "react-icons/io5";
 import { IoIosDocument } from "react-icons/io";
 import { BsFillPersonFill } from "react-icons/bs";
@@ -56,6 +55,7 @@ import StrategyBuilder from "layouts/agent-creation-wizard/strategy-builder";
 import Performance from "layouts/performance-analytics/performance";
 import SubscriptionCheckout from "layouts/subscription-checkout";
 import SignOut from "layouts/authentication/sign-out";
+import Analytics from "layouts/agent-creation-wizard/analytics";
 
 const routes = [
   {
@@ -95,6 +95,15 @@ const routes = [
   //   noCollapse: true,
   // },
   { type: "title", title: "Agent Creation Wizard", key: "agent-creation-wizard" },
+  {
+    type: "collapse",
+    name: "Analytics",
+    key: "analytics",
+    route: "/analytics",
+    icon: <IoRocketSharp size="15px" color="inherit" />,
+    component: Analytics,
+    noCollapse: true,
+  },
   {
     type: "collapse",
     name: "Strategy Builder",

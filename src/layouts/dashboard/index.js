@@ -19,9 +19,7 @@
 // @mui material components
 import Grid from "@mui/material/Grid";
 
-
 import VuiBox from "components/VuiBox";
-
 
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
@@ -60,6 +58,9 @@ import VuiTypography from "components/VuiTypography";
 import VuiButton from "components/VuiButton";
 import { setPositions } from "../../redux/futures/positions";
 import { ProfitShare } from "./components/ProfitShare";
+import { lineChartDataDashboard } from "./data/lineChartData";
+import { lineChartOptionsDashboard } from "./data/lineChartOptions";
+import LineChart from "examples/Charts/LineCharts/LineChart";
 
 const auth = getAuth(firebaseApp);
 
@@ -89,14 +90,14 @@ function Dashboard() {
       if (history.location.pathname == "/dashboard") {
         auth.currentUser?.getIdToken?.().then((token) => {
           console.log("dashboard", token);
-          getCurrentPositions().then(position => dispatch(setPositions(position)));
+          getCurrentPositions().then((position) => dispatch(setPositions(position)));
           getOpenOrders().then(setOpenOrders);
           getTradeList().then(setTradeList);
           getBalance().then(setBalance);
           getIncomePnL().then(setIncomePnL);
           getAccountSubscriptionInfo().then((subscription) => {
-            dispatch(setUserSubscription(subscription.data))
-          })
+            dispatch(setUserSubscription(subscription.data));
+          });
         });
       }
     }, 1000);
@@ -124,25 +125,40 @@ function Dashboard() {
     <DashboardLayout>
       <DashboardNavbar />
       <VuiBox py={3}>
-        {user?.apiKeyHidden?.length === 0 ? <VuiBox mb={3}>
-          <Card>
-            <Grid container spacing={3}>
-              <Grid item xs={12} md={6} xl={6}>
-                <VuiTypography variant="h6" color="white">
-                  Setup your profile
-                </VuiTypography>
-                <VuiTypography variant="button" color="text">
-                  Complete setup your Binance API Key to start trading
-                </VuiTypography>
+        {user?.apiKeyHidden?.length === 0 ? (
+          <VuiBox mb={3}>
+            <Card>
+              <Grid container spacing={3}>
+                <Grid item xs={12} md={6} xl={6}>
+                  <VuiTypography variant="h6" color="white">
+                    Setup your profile
+                  </VuiTypography>
+                  <VuiTypography variant="button" color="text">
+                    Complete setup your Binance API Key to start trading
+                  </VuiTypography>
+                </Grid>
+                <Grid
+                  item
+                  xs={12}
+                  md={6}
+                  xl={6}
+                  display="flex"
+                  justifyContent="flex-end"
+                  alignItems="center"
+                >
+                  <VuiButton
+                    onClick={() => history.push("/profile")}
+                    size="small"
+                    color="info"
+                    variant="gradient"
+                  >
+                    Setup your profile
+                  </VuiButton>
+                </Grid>
               </Grid>
-              <Grid item xs={12} md={6} xl={6} display="flex" justifyContent="flex-end" alignItems="center">
-                <VuiButton onClick={() => history.push("/profile")} size="small" color="info" variant="gradient">
-                  Setup your profile
-                </VuiButton>
-              </Grid>
-            </Grid>
-          </Card>
-        </VuiBox> : null}
+            </Card>
+          </VuiBox>
+        ) : null}
         <VuiBox mb={3}>
           <Grid container spacing={3}>
             <Grid item xs={12} md={6} xl={3}>
@@ -206,14 +222,18 @@ function Dashboard() {
               <SatisfactionRate data={openOrders} />
             </Grid>
             <Grid item xs={12} lg={6} xl={6}>
-              <ReferralTracking profit={balance?.[0]?.crossUnPnl} position={position} balance={balance?.[0]?.balance} />
+              <ReferralTracking
+                profit={balance?.[0]?.crossUnPnl}
+                position={position}
+                balance={balance?.[0]?.balance}
+              />
             </Grid>
           </Grid>
         </VuiBox>
         <VuiBox mb={3}>
           <Grid container spacing={3}>
             <Grid item xs={12} lg={12} xl={12}>
-              {/* <Card>
+              <Card>
                 <VuiBox sx={{ height: "100%" }}>
                   <VuiTypography variant="lg" color="white" fontWeight="bold" mb="5px">
                     Sales Overview
@@ -233,13 +253,17 @@ function Dashboard() {
                     />
                   </VuiBox>
                 </VuiBox>
-              </Card> */}
+              </Card>
               <FuturePositionList data={position} onShareProfit={setProfitShareData} />
             </Grid>
           </Grid>
         </VuiBox>
       </VuiBox>
-      <ProfitShare open={profitShareData !== null} onClose={() => setProfitShareData(null)} data={profitShareData} />
+      <ProfitShare
+        open={profitShareData !== null}
+        onClose={() => setProfitShareData(null)}
+        data={profitShareData}
+      />
     </DashboardLayout>
   );
 }

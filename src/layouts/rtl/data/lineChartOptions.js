@@ -33,20 +33,7 @@ export const lineChartOptionsDashboard = {
   },
   xaxis: {
     type: "datetime",
-    categories: [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec",
-    ],
+    categories: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
     labels: {
       style: {
         colors: "#c8cfca",
@@ -87,7 +74,7 @@ export const lineChartOptionsDashboard = {
       opacityTo: 0,
       stops: [],
     },
-    colors: ["#0075FF", "#2CD9FF"],
+    // colors: ["#0075FF", "#2CD9FF"],
   },
-  colors: ["#0075FF", "#2CD9FF"],
+  // colors: ["#0075FF", "#2CD9FF"],
 };

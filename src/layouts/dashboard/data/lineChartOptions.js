@@ -26,27 +26,14 @@ export const lineChartOptionsDashboard = {
     theme: "dark",
   },
   dataLabels: {
-    enabled: false,
+    enabled: true,
   },
   stroke: {
     curve: "smooth",
   },
   xaxis: {
     type: "datetime",
-    categories: [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec",
-    ],
+    categories: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
     labels: {
       style: {
         colors: "#c8cfca",
@@ -69,7 +56,7 @@ export const lineChartOptionsDashboard = {
     },
   },
   legend: {
-    show: false,
+    show: true,
   },
   grid: {
     strokeDashArray: 5,
@@ -83,7 +70,7 @@ export const lineChartOptionsDashboard = {
       shadeIntensity: 0,
       gradientToColors: undefined, // optional, if not defined - uses the shades of same color in series
       inverseColors: true,
-      opacityFrom: 0.8,
+      opacityFrom: 0,
       opacityTo: 0,
       stops: [],
     },

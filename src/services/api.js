@@ -19,6 +19,21 @@ export const getBestPerformanceVolume = async (frequency = "5d") => {
   });
 };
 
+export const getBestPerformanceVolumeTrends = async (frequency = "5d") => {
+  return new Promise(async (resolve, reject) => {
+    const date = new Date().toISOString().split("T")[0];
+    await axios
+      // .get(`v1/top-volume-performance-trends?frequency=${frequency}`)
+      .get(`http://localhost:3333/v1/top-volume-performance-trends?frequency=${frequency}`)
+      .then((response) => {
+        resolve(response.data);
+      })
+      .catch((error) => {
+        console.log("error", error);
+      });
+  });
+};
+
 export const getOpenOrders = async () => {
   const token = await auth.currentUser?.getIdToken?.();
   if (!token) return [];

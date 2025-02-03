@@ -8,7 +8,6 @@ import VuiDialog from "components/VuiDialog";
 import { deleteSymbolConfig, getSymbolConfig } from "../../../services/api";
 import { setSymbolConfigData } from "../../../redux/futures/symbolConfigSlice";
 import { useDispatch } from "react-redux";
-import TwistBestPerfVolume from "./components/TwistBestPerfVolume";
 
 function StrategyBuilder() {
   const [symbolDeleteItem, setSymbolDeleteItem] = useState(null);
@@ -29,7 +28,6 @@ function StrategyBuilder() {
   return (
     <DashboardLayout>
       <DashboardNavbar />
-      <TwistBestPerfVolume setSymbolEditItem={setSymbolEditItem} />
       <Grid container spacing={3} direction="row" justifyContent="center" alignItems="stretch">
         <Grid item xs={12} md={12} lg={12}>
           <Projects
