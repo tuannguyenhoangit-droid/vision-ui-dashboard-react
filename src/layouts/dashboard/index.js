@@ -233,7 +233,7 @@ function Dashboard() {
         <VuiBox mb={3}>
           <Grid container spacing={3}>
             <Grid item xs={12} lg={12} xl={12}>
-              <Card>
+              {/* <Card>
                 <VuiBox sx={{ height: "100%" }}>
                   <VuiTypography variant="lg" color="white" fontWeight="bold" mb="5px">
                     Sales Overview
@@ -253,7 +253,7 @@ function Dashboard() {
                     />
                   </VuiBox>
                 </VuiBox>
-              </Card>
+              </Card> */}
               <FuturePositionList data={position} onShareProfit={setProfitShareData} />
             </Grid>
           </Grid>
