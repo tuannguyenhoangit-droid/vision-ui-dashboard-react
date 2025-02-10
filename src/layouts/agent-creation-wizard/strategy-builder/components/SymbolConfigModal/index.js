@@ -132,7 +132,9 @@ ColorlibStepIcon.propTypes = {
   icon: PropTypes.node,
 };
 
-const SUPPORT_CHART_FRAME = ["3m", "5m", "15m", "30m", "1h"];
+const MAX_DCA_PER_WAVE = [1, 2, 3, 4];
+
+const SUPPORT_CHART_FRAME = ["3m", "5m", "15m", "30m", "1h", "2h", "4h", "6h"];
 
 const SUPPORT_CHART_FRAME_WEIGHT = {
   "3m": 0,
@@ -140,6 +142,9 @@ const SUPPORT_CHART_FRAME_WEIGHT = {
   "15m": 2,
   "30m": 3,
   "1h": 4,
+  "2h": 5,
+  "4h": 6,
+  "6h": 7,
 };
 
 const RSI_STRATEGY_OPTIONS = [
@@ -183,6 +188,48 @@ const BUY_REQUIRE_CHART_FRAME_P2 = [
     weight: 6,
   },
 ];
+
+const BUY_REQUIRE_CHART_FRAME_P3 = [
+  {
+    id: "6h",
+    label: "6h",
+    pro: false,
+    weight: 7,
+  },
+  {
+    id: "8h",
+    label: "8h",
+    pro: false,
+    weight: 8,
+  },
+  {
+    id: "12h",
+    label: "12h",
+    pro: false,
+    weight: 9,
+  },
+];
+
+const BUY_REQUIRE_CHART_FRAME_P4 = [
+  {
+    id: "1d",
+    label: "1d",
+    pro: false,
+    weight: 10,
+  },
+  {
+    id: "3d",
+    label: "3d",
+    pro: false,
+    weight: 11,
+  },
+  {
+    id: "1w",
+    label: "1w",
+    pro: false,
+    weight: 12,
+  },
+];
 const initConfig = {
   side: "BUY",
   symbol: "",
@@ -196,6 +243,7 @@ const initConfig = {
   optimizeEntryPercent: 0,
   enableRSIStrategy: false,
   rsiRequireValues: [],
+  maxDCAPerWave: 2,
 };
 export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
   const [loading, setLoading] = useState(false);
@@ -286,6 +334,21 @@ export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
     });
   }, [config]);
 
+  const maxDCAPerWaveFrameButtons = useMemo(() => {
+    return MAX_DCA_PER_WAVE.map((dcaTime) => {
+      return (
+        <VuiButton
+          onClick={() => {
+            onChange("maxDCAPerWave", dcaTime);
+          }}
+          color={config.maxDCAPerWave === dcaTime ? "success" : "light"}
+        >
+          {dcaTime}
+        </VuiButton>
+      );
+    });
+  }, [config]);
+
   // render buy require chart frame checkbox
   const buyRequireChartFrameCheckbox = useMemo(() => {
     const renderFrames = (it) => {
@@ -338,6 +401,8 @@ export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
       <VuiBox display="flex" flexDirection="row" gap="16px">
         <VuiBox>{BUY_REQUIRE_CHART_FRAME.map((it) => renderFrames(it))}</VuiBox>
         <VuiBox>{BUY_REQUIRE_CHART_FRAME_P2.map((it) => renderFrames(it))}</VuiBox>
+        <VuiBox>{BUY_REQUIRE_CHART_FRAME_P3.map((it) => renderFrames(it))}</VuiBox>
+        <VuiBox>{BUY_REQUIRE_CHART_FRAME_P4.map((it) => renderFrames(it))}</VuiBox>
       </VuiBox>
     );
   }, [requireFrame, config]);
@@ -861,33 +926,26 @@ export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
                   ].join(" "),
                 }}
               />
-              <VuiBox mt={3} mb={2}>
-                <VuiBox alignItems="center" justifyContent="space-between" display="flex">
-                  <VuiTypography
-                    component="label"
-                    variant="button"
-                    color="white"
-                    fontWeight="medium"
-                  >
-                    Bot takes profit for you?
-                  </VuiTypography>
-                  <VuiSwitch
-                    color="success"
-                    checked={config.autoTakeProfit}
-                    onChange={(e, switched) => {
-                      onChange("autoTakeProfit", switched);
-                    }}
-                  />
-                </VuiBox>
+              <VuiBox mt={2} justifyContent="space-between" display="flex" alignItems="center">
+                <VuiTypography component="label" variant="button" color="white" fontWeight="medium">
+                  Max DCA
+                </VuiTypography>
 
-                <VuiBox display="flex">
-                  <VuiTypography component="label" variant="button" color="text" fontWeight="light">
-                    {config.autoTakeProfit
-                      ? "Yes, Bot helps me to take profit"
-                      : "No, I take profit manually"}
-                  </VuiTypography>
-                </VuiBox>
+                <ButtonGroup variant="contained" aria-label="Basic button group">
+                  {maxDCAPerWaveFrameButtons}
+                </ButtonGroup>
               </VuiBox>
+              <VuiBox display="flex" mt={1}>
+                <VuiTypography
+                  variant="button"
+                  color={config.maxBudget < pricePerOrderLeverage ? "warning" : "text"}
+                  fontWeight="light"
+                >
+                  The maximum number of DCA orders that will be opened in a single wave of
+                  Histogram.
+                </VuiTypography>
+              </VuiBox>
+
               <VuiBox mt={4} justifyContent="space-between" display="flex" alignItems="center">
                 <VuiBox minWidth="46%">
                   <VuiButton onClick={() => setCurrentStep(0)} color={"light"} fullWidth>
@@ -1013,6 +1071,33 @@ export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
                       })}
                     />
                   </GradientBorder>
+                </VuiBox>
+              </VuiBox>
+              <VuiBox mt={3} mb={2}>
+                <VuiBox alignItems="center" justifyContent="space-between" display="flex">
+                  <VuiTypography
+                    component="label"
+                    variant="button"
+                    color="white"
+                    fontWeight="medium"
+                  >
+                    Bot takes profit for you?
+                  </VuiTypography>
+                  <VuiSwitch
+                    color="success"
+                    checked={config.autoTakeProfit}
+                    onChange={(e, switched) => {
+                      onChange("autoTakeProfit", switched);
+                    }}
+                  />
+                </VuiBox>
+
+                <VuiBox display="flex">
+                  <VuiTypography component="label" variant="button" color="text" fontWeight="light">
+                    {config.autoTakeProfit
+                      ? "Yes, Bot helps me to take profit"
+                      : "No, I take profit manually"}
+                  </VuiTypography>
                 </VuiBox>
               </VuiBox>
               <VuiBox mt={4} justifyContent="space-between" display="flex" alignItems="center">
