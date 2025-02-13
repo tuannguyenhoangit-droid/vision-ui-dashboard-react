@@ -22,11 +22,8 @@ import JSEncrypt from "jsencrypt";
 // @mui material components
 import Card from "@mui/material/Card";
 
-
 import VuiBox from "components/VuiBox";
 import VuiTypography from "components/VuiTypography";
-
-
 
 import GradientBorder from "examples/GradientBorder";
 import borders from "assets/theme/base/borders";
@@ -87,7 +84,6 @@ function ProfileInfoCard({ title, description, info }) {
 
   const handleEncrypt = async () => {
     try {
-
       const publicKeyPEM = process.env.REACT_APP_ENCRYPT_PUBLIC_KEY.trim();
 
       const dataToEncrypt = `${apiKey}:${secretKey}`;
@@ -201,7 +197,7 @@ function ProfileInfoCard({ title, description, info }) {
             Require Whitelist IPs
           </VuiTypography>
           <VuiBox>
-            <Chip label="68.183.189.44" color="warning" />
+            <Chip label="152.42.167.202" color="warning" />
           </VuiBox>
         </VuiBox>
 

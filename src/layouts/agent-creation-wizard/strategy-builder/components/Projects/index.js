@@ -13,7 +13,7 @@ import { FaTrashAlt } from "react-icons/fa";
 import colors from "assets/theme/base/colors";
 import VuiButton from "components/VuiButton";
 import { isMobile } from "react-device-detect";
-import { getSymbolConfig, quickChangeFrame } from "../../../../../services/api";
+import { createSymbolConfig, getSymbolConfig, quickChangeFrame } from "../../../../../services/api";
 import { setMessage } from "../../../../../redux/futures/messageSlice";
 import { setSymbolConfigData } from "../../../../../redux/futures/symbolConfigSlice";
 import { Chip } from "@mui/material";
@@ -23,10 +23,12 @@ const SymbolConfigItem = ({
   row,
   onEditItem = () => null,
   onDeleteItem = () => null,
+  onAutoTakeProfit = () => null,
   currentPosition = undefined,
 }) => {
   const onEdit = () => onEditItem(row);
   const onDelete = () => onDeleteItem(row);
+  const onAutoTakeProfitChange = (row, status) => onAutoTakeProfit(row, status);
   return {
     symbol: (
       <VuiBox display="flex" alignItems="center">
@@ -97,7 +99,11 @@ const SymbolConfigItem = ({
     ),
     "auto take profit": (
       <VuiTypography variant="caption" color="white">
-        <VuiSwitch color="success" checked={row.autoTakeProfit || false}></VuiSwitch>
+        <VuiSwitch
+          color="success"
+          checked={row.autoTakeProfit || false}
+          onChange={(_, status) => onAutoTakeProfitChange(row, status)}
+        ></VuiSwitch>
       </VuiTypography>
     ),
     "optimized entry": (
@@ -165,10 +171,46 @@ function Projects({
       });
   };
 
+  const onAutoTakeProfit = async (config, autoTakeProfit) => {
+    try {
+      const result = await createSymbolConfig(
+        config.side,
+        config.symbol,
+        parseFloat(config.buyAmount),
+        parseInt(config.maxBudget),
+        config.frame,
+        config.requireHistogramCondition,
+        config.buyRequireHistogram,
+        autoTakeProfit,
+        config.optimizeEntry,
+        parseFloat(config.optimizeEntryPercent),
+        config.enableRSIStrategy,
+        config.rsiRequireValues
+      );
+      if (result.status === 1) {
+        dispatch(
+          setMessage({
+            message: "Change auto take profit success",
+            type: "success",
+          })
+        );
+        const userSymbolConfig = await getSymbolConfig();
+        dispatch(setSymbolConfigData(userSymbolConfig));
+      }
+    } catch (e) {
+      dispatch(
+        setMessage({
+          message: e.message,
+          type: "error",
+        })
+      );
+    }
+  };
+
   const renderRow = useMemo(() => {
     return symbolConfig.map((row) => {
       const currentPosition = position.find((e) => e.symbol.includes(row.symbol));
-      return SymbolConfigItem({ row, onEditItem, onDeleteItem, currentPosition });
+      return SymbolConfigItem({ row, onEditItem, onDeleteItem, currentPosition, onAutoTakeProfit });
     });
   }, [symbolConfig]);
 
@@ -223,13 +265,6 @@ function Projects({
             Trading Frame
           </VuiTypography>
           <VuiBox display="flex" alignItems="center">
-            <Chip
-              clickable
-              onClick={() => handleQuickChangeFrame("3m", ["5m"])}
-              color="warning"
-              label="3m-5m"
-              size={isMobile ? "small" : "medium"}
-            />
             <VuiBox ml={1}>
               <Chip
                 clickable
@@ -245,6 +280,51 @@ function Projects({
                 onClick={() => handleQuickChangeFrame("15m", ["30m"])}
                 color="warning"
                 label="15m-30m"
+                size={isMobile ? "small" : "medium"}
+              />
+            </VuiBox>
+            <VuiBox ml={1}>
+              <Chip
+                clickable
+                onClick={() => handleQuickChangeFrame("30m", ["1h"])}
+                color="warning"
+                label="30m-1h"
+                size={isMobile ? "small" : "medium"}
+              />
+            </VuiBox>
+            <VuiBox ml={1}>
+              <Chip
+                clickable
+                onClick={() => handleQuickChangeFrame("1h", ["2h"])}
+                color="warning"
+                label="1h-2h"
+                size={isMobile ? "small" : "medium"}
+              />
+            </VuiBox>
+            <VuiBox ml={1}>
+              <Chip
+                clickable
+                onClick={() => handleQuickChangeFrame("2h", ["4h"])}
+                color="warning"
+                label="2h-4h"
+                size={isMobile ? "small" : "medium"}
+              />
+            </VuiBox>
+            <VuiBox ml={1}>
+              <Chip
+                clickable
+                onClick={() => handleQuickChangeFrame("4h", ["12h"])}
+                color="warning"
+                label="4h-12h"
+                size={isMobile ? "small" : "medium"}
+              />
+            </VuiBox>
+            <VuiBox ml={1}>
+              <Chip
+                clickable
+                onClick={() => handleQuickChangeFrame("12h", ["1d"])}
+                color="warning"
+                label="12h-1d"
                 size={isMobile ? "small" : "medium"}
               />
             </VuiBox>

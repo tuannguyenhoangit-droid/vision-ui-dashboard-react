@@ -198,6 +198,7 @@ export const accountUpdateKeys = async (signature) => {
   return new Promise(async (resolve, reject) => {
     await axios
       .post("/v1/account/keys", payload, {
+        // .post("http://localhost:3333/v1/account/keys", payload, {
         headers: {
           "Content-Type": "application/json",
           Authorization: ["Bearer", token].join(" "),
