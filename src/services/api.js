@@ -226,7 +226,8 @@ export const createSymbolConfig = async (
   optimizeEntryPercent,
   enableRSIStrategy,
   rsiRequireValues = [],
-  rsiStrategy = ""
+  rsiStrategy = "",
+  maxDCAPerWave = 2
 ) => {
   const token = await auth.currentUser?.getIdToken?.();
   const payload = {
@@ -243,6 +244,7 @@ export const createSymbolConfig = async (
     enableRSIStrategy,
     rsiRequireValues,
     rsiStrategy,
+    maxDCAPerWave,
   };
   return new Promise(async (resolve, reject) => {
     await axios

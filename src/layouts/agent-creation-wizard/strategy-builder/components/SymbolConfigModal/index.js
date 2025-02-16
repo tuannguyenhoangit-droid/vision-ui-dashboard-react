@@ -443,7 +443,8 @@ export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
           parseFloat(config.optimizeEntryPercent),
           config.enableRSIStrategy,
           config.rsiRequireValues.filter((rsi) => rsi),
-          config.rsiStrategy
+          config.rsiStrategy,
+          config.maxDCAPerWave
         );
 
         setLoading(false);

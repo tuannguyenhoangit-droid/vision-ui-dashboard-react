@@ -62,7 +62,8 @@ export default function UpdateRSIConfigDialog({ open, onClose = () => null, item
         parseFloat(finalConfig.optimizeEntryPercent),
         finalConfig.enableRSIStrategy,
         finalConfig.rsiRequireValues,
-        finalConfig.rsiStrategy
+        finalConfig.rsiStrategy,
+        finalConfig.maxDCAPerWave
       );
       if (result.status === 1) {
         dispatch(

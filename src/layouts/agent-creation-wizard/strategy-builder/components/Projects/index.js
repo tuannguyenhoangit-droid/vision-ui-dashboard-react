@@ -190,7 +190,8 @@ function Projects({
         parseFloat(config.optimizeEntryPercent),
         config.enableRSIStrategy,
         config.rsiRequireValues,
-        config.rsiStrategy
+        config.rsiStrategy,
+        config.maxDCAPerWave
       );
       if (result.status === 1) {
         dispatch(
