@@ -20,17 +20,16 @@ function Analytics() {
     dataOutFlow: [],
   });
 
+
+
   useEffect(() => {
     getBestPerformanceVolumeTrends().then((data) => {
-      console.log("data", data);
       setBestPerformanceVolumeTrends({
         dataInFlow: data.dataInFlow.slice(0, 10),
         dataOutFlow: data.dataOutFlow,
       });
     });
   }, []);
-
-  console.log("bestPerformanceVolumeTrends", bestPerformanceVolumeTrends);
 
   // generate a random color when trigger this function
   // have to have full 6 digits
@@ -47,7 +46,7 @@ function Analytics() {
     const colors = Array.from({ length: bestPerformanceVolumeTrends.dataInFlow.length }).map(
       (_, index) => getRandomColor()
     );
-    console.log("colors", colors);
+
     return (
       <LineChart
         key={bestPerformanceVolumeTrends.dataInFlow.length}

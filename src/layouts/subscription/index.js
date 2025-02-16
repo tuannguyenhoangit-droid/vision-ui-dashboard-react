@@ -27,8 +27,6 @@ import sub_beginer from "assets/images/sub_beginer.png";
 import sub_pro from "assets/images/sub_pro.png";
 import sub_expert from "assets/images/sub_expert.png";
 
-
-
 import VuiBox from "components/VuiBox";
 import VuiTypography from "components/VuiTypography";
 import DefaultProjectCard from "examples/Cards/ProjectCards/DefaultProjectCard";
@@ -37,48 +35,44 @@ import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 // Overview page components
 import Header from "layouts/subscription/components/Header";
 import { useEffect, useState } from "react";
-import { getPendingTransaction, getSubscription } from "../../services/api";
+import { getPendingTransaction, getSubscription } from "services/api";
 import { Tab, Tabs } from "@mui/material";
 import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { setPendingTransaction } from "../../redux/futures/transaction";
-import { checkoutSubscription, setSubscription } from "../../redux/futures/subscription";
+import { setPendingTransaction } from "app-redux/futures/transaction";
+import { checkoutSubscription, setSubscription } from "app-redux/futures/subscription";
 import { isMobile } from "react-device-detect";
 
 const SUB_IMAGES = {
-  "SUB_BEGINNER": sub_beginer,
-  "SUB_PRO": sub_pro,
-  "SUB_EXPERT": sub_expert,
-}
+  SUB_BEGINNER: sub_beginer,
+  SUB_PRO: sub_pro,
+  SUB_EXPERT: sub_expert,
+};
 
 function Subscription() {
   const history = useHistory();
   const dispatch = useDispatch();
-  const subscription = useSelector((e) => e.subscription)
-
-
+  const subscription = useSelector((e) => e.subscription);
 
   const [tabValue, setTabValue] = useState("quarterly");
 
   const handleSetTabValue = (event, newValue) => setTabValue(newValue);
 
   useEffect(() => {
-
     // get current pending transaction
     getPendingTransaction().then((res) => {
       const pendingTransaction = res.data?.[0];
       if (pendingTransaction) {
-        dispatch(setPendingTransaction(pendingTransaction))
+        dispatch(setPendingTransaction(pendingTransaction));
         history.push("/subscription/checkout");
       } else {
         // no transaction, then display subscription
         getSubscription().then((subscription) => {
-          dispatch(setSubscription(subscription))
+          dispatch(setSubscription(subscription));
         });
       }
-    })
+    });
   }, []);
-
 
   return (
     <DashboardLayout>
@@ -88,16 +82,20 @@ function Subscription() {
 
       <Grid container spacing={3} mb={2} alignItems="center" alignSelf="center">
         <Grid item alignContent="center" alignItems="center">
-          <Card sx={({ breakpoints }) => ({
-            padding: isMobile ? 1 : 2
-          })}>
+          <Card
+            sx={({ breakpoints }) => ({
+              padding: isMobile ? 1 : 2,
+            })}
+          >
             <VuiBox display="flex" flexDirection="column" height="100%">
-              <VuiBox sx={({ breakpoints }) => ({
-                [breakpoints.up("md")]: {
-                  display: "flex",
-                  justifyContent: "space-between",
-                },
-              })}>
+              <VuiBox
+                sx={({ breakpoints }) => ({
+                  [breakpoints.up("md")]: {
+                    display: "flex",
+                    justifyContent: "space-between",
+                  },
+                })}
+              >
                 <VuiBox display="flex" flexDirection="column" mb={2}>
                   <VuiTypography color="white" variant="lg" fontWeight="bold" mb="6px">
                     Good Pricing, Great Profit
@@ -120,7 +118,7 @@ function Subscription() {
                       [breakpoints.down("sm")]: {
                         justifyContent: "center",
                         alignItems: "center",
-                        mb: 2
+                        mb: 2,
                       },
                       [breakpoints.up("sm")]: {
                         justifyContent: "center",
@@ -150,15 +148,21 @@ function Subscription() {
                       >
                         <DefaultProjectCard
                           onClick={() => {
-                            dispatch(checkoutSubscription(sub))
+                            dispatch(checkoutSubscription(sub));
                             history.push("/subscription/checkout");
                           }}
                           active={subscription.current === sub.id}
                           image={SUB_IMAGES[sub.id]}
                           label={sub.description}
                           title={sub.name}
-                          monthlyPrice={sub.prices.find((s) => s.type === tabValue && tabValue === "monthly")?.price}
-                          quarterlyPrice={sub.prices.find((s) => s.type === tabValue && tabValue === "quarterly")?.price}
+                          monthlyPrice={
+                            sub.prices.find((s) => s.type === tabValue && tabValue === "monthly")
+                              ?.price
+                          }
+                          quarterlyPrice={
+                            sub.prices.find((s) => s.type === tabValue && tabValue === "quarterly")
+                              ?.price
+                          }
                           features={[
                             ["Spot symbol configs", sub.maxSpotSymbol].join(": "),
                             ["Futures symbol configs", sub.maxSymbol].join(": "),

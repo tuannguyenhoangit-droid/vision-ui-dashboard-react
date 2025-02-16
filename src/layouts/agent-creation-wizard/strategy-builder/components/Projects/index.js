@@ -13,21 +13,23 @@ import { FaTrashAlt } from "react-icons/fa";
 import colors from "assets/theme/base/colors";
 import VuiButton from "components/VuiButton";
 import { isMobile } from "react-device-detect";
-import { createSymbolConfig, getSymbolConfig, quickChangeFrame } from "../../../../../services/api";
-import { setMessage } from "../../../../../redux/futures/messageSlice";
-import { setSymbolConfigData } from "../../../../../redux/futures/symbolConfigSlice";
+import { createSymbolConfig, getSymbolConfig, quickChangeFrame } from "services/api";
+import { setMessage } from "app-redux/futures/messageSlice";
+import { setSymbolConfigData } from "app-redux/futures/symbolConfigSlice";
 import { Chip } from "@mui/material";
 import { AddCircle } from "@mui/icons-material";
 
 const SymbolConfigItem = ({
   row,
   onEditItem = () => null,
+  onEditRSIItem = () => null,
   onDeleteItem = () => null,
   onAutoTakeProfit = () => null,
   currentPosition = undefined,
 }) => {
   const onEdit = () => onEditItem(row);
   const onDelete = () => onDeleteItem(row);
+  const onEditRSI = () => onEditRSIItem(row);
   const onAutoTakeProfitChange = (row, status) => onAutoTakeProfit(row, status);
   return {
     symbol: (
@@ -95,6 +97,7 @@ const SymbolConfigItem = ({
             -
           </VuiTypography>
         )}
+        <BsPencilSquare onClick={onEditRSI} color={colors.warning.main} cursor="pointer" />
       </VuiBox>
     ),
     "auto take profit": (
@@ -118,7 +121,7 @@ const SymbolConfigItem = ({
     ),
     action: (
       <VuiBox display="flex" alignItems="center">
-        <BsPencilSquare onClick={onEdit} color="white" cursor="pointer" />
+        <BsPencilSquare onClick={onEdit} color={colors.warning.main} cursor="pointer" />
         <VuiBox ml={1}>
           <FaTrashAlt onClick={onDelete} color={colors.error.focus} cursor="pointer" />
         </VuiBox>
@@ -131,6 +134,7 @@ function Projects({
   onMenuClick = () => null,
   onEditItem = () => null,
   onDeleteItem = () => null,
+  onEditRSIItem = () => null,
 }) {
   const symbolConfig = useSelector((e) => e.symbolConfig.data);
   const position = useSelector((e) => e.positions.data);
@@ -185,7 +189,8 @@ function Projects({
         config.optimizeEntry,
         parseFloat(config.optimizeEntryPercent),
         config.enableRSIStrategy,
-        config.rsiRequireValues
+        config.rsiRequireValues,
+        config.rsiStrategy
       );
       if (result.status === 1) {
         dispatch(
@@ -210,7 +215,14 @@ function Projects({
   const renderRow = useMemo(() => {
     return symbolConfig.map((row) => {
       const currentPosition = position.find((e) => e.symbol.includes(row.symbol));
-      return SymbolConfigItem({ row, onEditItem, onDeleteItem, currentPosition, onAutoTakeProfit });
+      return SymbolConfigItem({
+        row,
+        onEditItem,
+        onDeleteItem,
+        currentPosition,
+        onAutoTakeProfit,
+        onEditRSIItem,
+      });
     });
   }, [symbolConfig]);
 

@@ -43,7 +43,7 @@ import {
   getIncomePnL,
   getOpenOrders,
   getTradeList,
-} from "../../services/api";
+} from "services/api";
 import FuturePositionList from "./components/FuturePositionList";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -52,11 +52,11 @@ import { firebaseApp } from "../../firebase";
 import { useHistory } from "react-router-dom/cjs/react-router-dom";
 
 import { RiMoneyDollarCircleFill } from "react-icons/ri";
-import { setUserSubscription } from "../../redux/futures/userSlice";
+import { setUserSubscription } from "app-redux/futures/userSlice";
 import Card from "@mui/material/Card";
 import VuiTypography from "components/VuiTypography";
 import VuiButton from "components/VuiButton";
-import { setPositions } from "../../redux/futures/positions";
+import { setPositions } from "app-redux/futures/positions";
 import { ProfitShare } from "./components/ProfitShare";
 import { lineChartDataDashboard } from "./data/lineChartData";
 import { lineChartOptionsDashboard } from "./data/lineChartOptions";
@@ -89,7 +89,6 @@ function Dashboard() {
     setTimeout(() => {
       if (history.location.pathname == "/dashboard") {
         auth.currentUser?.getIdToken?.().then((token) => {
-          console.log("dashboard", token);
           getCurrentPositions().then((position) => dispatch(setPositions(position)));
           getOpenOrders().then(setOpenOrders);
           getTradeList().then(setTradeList);

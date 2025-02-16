@@ -225,7 +225,8 @@ export const createSymbolConfig = async (
   optimizeEntry,
   optimizeEntryPercent,
   enableRSIStrategy,
-  rsiRequireValues = []
+  rsiRequireValues = [],
+  rsiStrategy = ""
 ) => {
   const token = await auth.currentUser?.getIdToken?.();
   const payload = {
@@ -241,6 +242,7 @@ export const createSymbolConfig = async (
     optimizeEntryPercent,
     enableRSIStrategy,
     rsiRequireValues,
+    rsiStrategy,
   };
   return new Promise(async (resolve, reject) => {
     await axios
@@ -565,6 +567,26 @@ export const readExceptionNotification = async (id) => {
   return new Promise(async (resolve, reject) => {
     await axios
       .post(`/v1/exception-notification/read/${id}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: ["Bearer", token].join(" "),
+        },
+      })
+      .then((response) => {
+        resolve(response.data);
+      })
+      .catch((error) => {
+        console.log("error", error);
+      });
+  });
+};
+
+export const getRsiStrategyConfig = async () => {
+  const token = await auth.currentUser?.getIdToken?.();
+  if (!token) return Promise.reject("Cannot get user token");
+  return new Promise(async (resolve, reject) => {
+    await axios
+      .get(`/v1/rsi-config-strategy`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: ["Bearer", token].join(" "),

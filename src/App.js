@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 // react-router components
 import { Route, Switch, Redirect, useLocation, useHistory } from "react-router-dom";
@@ -11,7 +10,7 @@ import routes from "routes";
 import { useVisionUIController, setMiniSidenav } from "context";
 import { getAuth } from "firebase/auth";
 import { firebaseApp } from "./firebase";
-import { setUser } from "./redux/futures/userSlice";
+import { setUser } from "./app-redux/futures/userSlice";
 import { useDispatch } from "react-redux";
 import { userSignIn } from "services/api";
 
@@ -26,7 +25,6 @@ export default function App() {
 
   const dispatchRedux = useDispatch();
 
-
   useEffect(() => {
     const auth = getAuth(firebaseApp);
     let unsubscribe = null;
@@ -35,7 +33,6 @@ export default function App() {
     } else {
       //
       unsubscribe = auth.onAuthStateChanged(async (user) => {
-
         if (user) {
           if (user.emailVerified) {
             // sync user latest data
@@ -65,7 +62,6 @@ export default function App() {
     // Cleanup subscription on unmount
     return () => unsubscribe?.();
   }, [history]);
-
 
   // Open sidenav when mouse enter on mini sidenav
   const handleOnMouseEnter = () => {
@@ -106,7 +102,6 @@ export default function App() {
 
       return null;
     });
-
 
   return (
     <ThemeProvider theme={theme}>

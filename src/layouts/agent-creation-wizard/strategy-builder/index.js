@@ -5,18 +5,28 @@ import { useEffect, useState } from "react";
 import Projects from "layouts/agent-creation-wizard/strategy-builder/components/Projects";
 import { SymbolConfigModal } from "./components/SymbolConfigModal";
 import VuiDialog from "components/VuiDialog";
-import { deleteSymbolConfig, getSymbolConfig } from "../../../services/api";
-import { setSymbolConfigData } from "../../../redux/futures/symbolConfigSlice";
-import { useDispatch } from "react-redux";
+import { deleteSymbolConfig, getSymbolConfig } from "services/api";
+import { setSymbolConfigData } from "app-redux/futures/symbolConfigSlice";
+import { useDispatch, useSelector } from "react-redux";
+import UpdateRSIConfigDialog from "./components/UpdateRSIConfigDialog";
+import { setRsiStrategyConfig } from "app-redux/futures/rsiStrategyConfigSlice";
+import { getRsiStrategyConfig } from "services/api";
 
 function StrategyBuilder() {
   const [symbolDeleteItem, setSymbolDeleteItem] = useState(null);
   const [symbolEditItem, setSymbolEditItem] = useState(null);
   const [isOpenSymbolConfigModal, openSymbolConfigModal] = useState(false);
+  const [symbolUpdateRSIConfigItem, setSymbolUpdateRSIConfigItem] = useState(null);
+  const rsiStrategyConfigList = useSelector((e) => e.rsiStrategyConfig.data);
   const dispatch = useDispatch();
 
   useEffect(() => {
     getSymbolConfig().then((data) => dispatch(setSymbolConfigData(data)));
+    if (rsiStrategyConfigList.length === 0) {
+      getRsiStrategyConfig().then((response) => {
+        dispatch(setRsiStrategyConfig(response.data));
+      });
+    }
   }, []);
 
   const confirmDeleteSymbol = (item) => {
@@ -31,6 +41,9 @@ function StrategyBuilder() {
       <Grid container spacing={3} direction="row" justifyContent="center" alignItems="stretch">
         <Grid item xs={12} md={12} lg={12}>
           <Projects
+            onEditRSIItem={(item) => {
+              setSymbolUpdateRSIConfigItem(item);
+            }}
             onEditItem={(item) => {
               setSymbolEditItem(item);
             }}
@@ -50,6 +63,13 @@ function StrategyBuilder() {
           setSymbolEditItem(null);
         }}
         open={isOpenSymbolConfigModal || symbolEditItem !== null}
+      />
+      <UpdateRSIConfigDialog
+        item={symbolUpdateRSIConfigItem}
+        onClose={() => {
+          setSymbolUpdateRSIConfigItem(null);
+        }}
+        open={symbolUpdateRSIConfigItem !== null}
       />
       <VuiDialog
         onConfirm={confirmDeleteSymbol}

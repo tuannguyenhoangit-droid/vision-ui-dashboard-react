@@ -7,6 +7,8 @@ import Chip from "@mui/material/Chip";
 import MiniStatisticsCard from "examples/Cards/StatisticsCards/MiniStatisticsCard";
 import { Checkbox, Slider } from "@mui/material";
 import { isMobile } from "react-device-detect";
+import { useSelector } from "react-redux";
+
 const RSI_STRATEGY_OPTIONS = [
   // 1h -> 1w
   { id: "2h" },
@@ -18,58 +20,33 @@ const RSI_STRATEGY_OPTIONS = [
   { id: "1w" },
 ];
 
-const RSI_CONFIG = [
-  {
-    id: "1",
-    strategy: "Scalping",
-    timeFrames: ["1m", "5m", "15m"],
-    overbought: 80,
-    oversold: 20,
-    period: 7,
-  },
-  {
-    id: "2",
-    strategy: "Day Trading",
-    timeFrames: ["5m", "15m", "30m", "1h"],
-    overbought: 70,
-    oversold: 30,
-    period: 9,
-  },
-  {
-    id: "3",
-    strategy: "Mid-Term Trading",
-    timeFrames: ["1h", "2h", "4h"],
-    overbought: 72,
-    oversold: 28,
-    period: 12,
-  },
-  {
-    id: "4",
-    strategy: "Swing Trading",
-    timeFrames: ["4h", "12h", "1d"],
-    overbought: 70,
-    oversold: 30,
-    period: 14,
-  },
-  {
-    id: "5",
-    strategy: "Position Trading",
-    timeFrames: ["1d", "3d", "1w"],
-    overbought: 65,
-    oversold: 35,
-    period: 14,
-  },
-];
-
 const RSIConfigView = ({
+  defaultRsiStrategyId,
   config,
   onChange = () => {},
   onSubmit = () => {},
   onCancel = () => {},
+  buttonTitle = {
+    next: "NEXT",
+    back: "BACK",
+  },
 }) => {
   const [rsiStrategy, setRsiStrategy] = useState({});
   const [rsiRecommendStrategy, setRsiRecommendStrategy] = useState(false);
   const [rsiStrategyConfig, setRsiStrategyConfig] = useState({});
+  const rsiStrategyConfigList = useSelector((e) => e.rsiStrategyConfig.data);
+
+  useEffect(() => {
+    if (defaultRsiStrategyId) {
+      setRsiStrategyConfig(rsiStrategyConfigList.find((it) => it.id === defaultRsiStrategyId));
+      setRsiRecommendStrategy(true);
+    }
+    return () => {
+      setRsiStrategy({});
+      setRsiStrategyConfig({});
+      setRsiRecommendStrategy(false);
+    };
+  }, [config.symbol, rsiStrategyConfigList]);
 
   useEffect(() => {
     if (config.rsiRequireValues?.length > 0 && rsiRecommendStrategy === false) {
@@ -206,7 +183,7 @@ const RSIConfigView = ({
             checked={rsiRecommendStrategy}
             onChange={(e, switched) => {
               if (switched) {
-                setRsiStrategyConfig(RSI_CONFIG[1]);
+                setRsiStrategyConfig(rsiStrategyConfigList[1]);
                 setRsiRecommendStrategy(switched);
               } else {
                 setRsiStrategy({});
@@ -219,7 +196,7 @@ const RSIConfigView = ({
 
         {config.enableRSIStrategy ? (
           <VuiBox mb={2}>
-            {RSI_CONFIG.map((item) => (
+            {rsiStrategyConfigList.map((item) => (
               <Chip
                 clickable
                 style={{ margin: 4 }}
@@ -256,16 +233,16 @@ const RSIConfigView = ({
       <VuiBox mt={4} justifyContent="space-between" display="flex" alignItems="center">
         <VuiBox minWidth="46%">
           <VuiButton onClick={onCancel} color={"light"} fullWidth>
-            BACK
+            {buttonTitle.back}
           </VuiButton>
         </VuiBox>
         <VuiBox minWidth="46%">
           <VuiButton
-            onClick={() => onSubmit(rsiStrategy)}
+            onClick={() => onSubmit(rsiStrategy, rsiStrategyConfig.id)}
             color={!config.enableRSIStrategy ? "dark" : "info"}
             fullWidth
           >
-            NEXT
+            {buttonTitle.next}
           </VuiButton>
         </VuiBox>
       </VuiBox>

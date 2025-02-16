@@ -32,9 +32,9 @@ import palette from "assets/theme/base/colors";
 import VuiInput from "components/VuiInput";
 import VuiButton from "components/VuiButton";
 import { useEffect, useState } from "react";
-import { accountUpdateKeys } from "../../../../services/api";
+import { accountUpdateKeys } from "services/api";
 import { useDispatch, useSelector } from "react-redux";
-import { setMessage } from "../../../../redux/futures/messageSlice";
+import { setMessage } from "app-redux/futures/messageSlice";
 import { Chip } from "@mui/material";
 function ProfileInfoCard({ title, description, info }) {
   const labels = [];

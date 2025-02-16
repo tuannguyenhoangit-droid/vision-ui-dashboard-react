@@ -24,16 +24,13 @@ import palette from "assets/theme/base/colors";
 import borders from "assets/theme/base/borders";
 import { useEffect, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
-import { createSymbolConfig, getSymbolConfig, getTickerPrice } from "../../../../../services/api";
-import { setSymbolConfigData } from "../../../../../redux/futures/symbolConfigSlice";
+import { createSymbolConfig, getSymbolConfig, getTickerPrice } from "services/api";
+import { setSymbolConfigData } from "app-redux/futures/symbolConfigSlice";
 import useDebounce from "utils";
 
-import SettingsIcon from "@mui/icons-material/Settings";
-import GroupAddIcon from "@mui/icons-material/GroupAdd";
-import VideoLabelIcon from "@mui/icons-material/VideoLabel";
 import StepConnector, { stepConnectorClasses } from "@mui/material/StepConnector";
 import MiniStatisticsCard from "examples/Cards/StatisticsCards/MiniStatisticsCard";
-import { setMessage } from "../../../../../redux/futures/messageSlice";
+import { setMessage } from "app-redux/futures/messageSlice";
 import { Bolt, SettingsSuggest, SmartToy } from "@mui/icons-material";
 import { isMobile } from "react-device-detect";
 import RSIConfigView from "../RSIConfigView";
@@ -236,6 +233,7 @@ const initConfig = {
   enableRSIStrategy: false,
   rsiRequireValues: [],
   maxDCAPerWave: 2,
+  rsiStrategy: "", // SCALPING, DAY_TRADING, MID_TERM_TRADING, SWING_TRADING, POSITION_TRADING
 };
 export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
   const [loading, setLoading] = useState(false);
@@ -444,7 +442,8 @@ export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
           config.optimizeEntry,
           parseFloat(config.optimizeEntryPercent),
           config.enableRSIStrategy,
-          config.rsiRequireValues.filter((rsi) => rsi)
+          config.rsiRequireValues.filter((rsi) => rsi),
+          config.rsiStrategy
         );
 
         setLoading(false);
@@ -879,86 +878,17 @@ export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
 
           {currentStep === 2 ? (
             <RSIConfigView
+              defaultRsiStrategyId={config.rsiStrategy}
               onCancel={() => setCurrentStep(1)}
-              onSubmit={(rsiStrategy) => {
+              onSubmit={(rsiStrategy, rsiStrategyConfigId) => {
                 setRsiStrategy(rsiStrategy);
+                onChange("rsiStrategy", rsiStrategyConfigId);
                 setCurrentStep(3);
               }}
               config={config}
               onChange={onChange}
             />
           ) : null}
-
-          {/* <VuiBox>
-             <VuiBox mb={2}>
-               <VuiBox mb={1} alignItems="center" justifyContent="space-between" display="flex">
-                 <VuiTypography
-                  component="label"
-                  variant="button"
-                  color="white"
-                  fontWeight="medium"
-                >
-                  Enable RSI Strategy Check
-                </VuiTypography>
-                <VuiSwitch
-                  color="success"
-                  checked={config.enableRSIStrategy}
-                  onChange={(e, switched) => {
-                    onChange("enableRSIStrategy", switched);
-                  }}
-                />
-              </VuiBox>
-              {config.enableRSIStrategy ? buyRSIStrategyCheckbox : null}
-            </VuiBox>
-            {config.enableRSIStrategy ? (
-              <VuiBox>
-                {RSI_CONFIG.map((item) => (
-                  <Chip
-                    clickable
-                    onClick={() => handleQuickChangeFrame("5m", ["15m"])}
-                    label={item.strategy}
-                    color="warning"
-                    size={isMobile ? "small" : "medium"}
-                  />
-                ))}
-              </VuiBox>
-            ) : null}
-            {config.enableRSIStrategy ? (
-              <MiniStatisticsCard
-                title={{
-                  text: [config.side === "BUY" ? "Buy" : "Sell", "Strategy"].join(" "),
-                  fontWeight: "regular",
-                }}
-                percentage={{
-                  color: config.side === "BUY" ? "success" : "error",
-                  text: [
-                    "Default RSI Strategy is",
-                    config.side === "BUY" ? "below 30" : "above 70",
-                    "for",
-                    config.side,
-                    "signal. RSI Strategy will be combined with MACD Strategy to make order in Trading Frame.",
-                  ].join(" "),
-                }}
-              />
-            ) : null}
-            <VuiBox mt={4} justifyContent="space-between" display="flex" alignItems="center">
-              <VuiBox minWidth="46%">
-                <VuiButton onClick={() => setCurrentStep(1)} color={"light"} fullWidth>
-                  BACK
-                </VuiButton>
-              </VuiBox>
-              <VuiBox minWidth="46%">
-                <VuiButton
-                  onClick={() => setCurrentStep(3)}
-                  color={!config.enableRSIStrategy ? "dark" : "info"}
-                  fullWidth
-                >
-                  NEXT
-                </VuiButton>
-              </VuiBox>
-            </VuiBox>
-          </VuiBox>
-          null} */}
 
           {currentStep === 3 ? (
             <VuiBox>

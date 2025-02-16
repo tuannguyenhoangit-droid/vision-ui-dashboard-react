@@ -13,7 +13,7 @@ import VuiTypography from "components/VuiTypography";
 // custom styles for the NotificationItem
 import { menuItem, menuImage } from "examples/Items/NotificationItem/styles";
 
-const NotificationItem = forwardRef(({ color, image, title, date, ...rest }, ref) => (
+const NotificationItem = forwardRef(({ color, image, title, date, tradeData, ...rest }, ref) => (
   <MenuItem {...rest} ref={ref} sx={(theme) => menuItem(theme)}>
     <VuiBox
       width="2.25rem"
@@ -30,27 +30,37 @@ const NotificationItem = forwardRef(({ color, image, title, date, ...rest }, ref
       <VuiTypography variant="button" textTransform="capitalize" fontWeight="regular">
         <strong>{title[0]}</strong> {title[1]}
       </VuiTypography>
-      <VuiTypography
-        variant="caption"
-        color="text"
+      <VuiBox
         sx={{
           display: "flex",
           alignItems: "center",
+          justifyContent: "space-between",
           mt: 0.5,
         }}
       >
-        <VuiTypography variant="button" color="text">
-          <Icon
-            sx={{
-              lineHeight: 1.2,
-              mr: 0.5,
-            }}
-          >
-            watch_later
-          </Icon>
-        </VuiTypography>
-        {date}
-      </VuiTypography>
+        <VuiBox>
+          <VuiTypography variant="caption" color="text">
+            <Icon
+              sx={{
+                lineHeight: 1.2,
+                mr: 0.5,
+              }}
+            >
+              watch_later
+            </Icon>
+          </VuiTypography>
+          <VuiTypography variant="caption" color="text">
+            {date}
+          </VuiTypography>
+        </VuiBox>
+        {tradeData.symbol ? (
+          <VuiBox>
+            <VuiTypography variant="caption" color="text">
+              {["Symbol: ", tradeData.symbol, " - ", "Quantity: ", tradeData.quantity]}
+            </VuiTypography>
+          </VuiBox>
+        ) : null}
+      </VuiBox>
     </VuiBox>
   </MenuItem>
 ));

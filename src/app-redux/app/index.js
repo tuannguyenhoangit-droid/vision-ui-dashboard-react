@@ -6,6 +6,7 @@ import transactionSlice from "../futures/transaction";
 import subscriptionSlice from "../futures/subscription";
 import positionsSlice from "../futures/positions";
 import notificationSlice from "../futures/notificationSlice";
+import rsiStrategyConfigSlice from "../futures/rsiStrategyConfigSlice";
 
 export const store = configureStore({
   reducer: {
@@ -16,5 +17,6 @@ export const store = configureStore({
     subscription: subscriptionSlice,
     positions: positionsSlice,
     notification: notificationSlice,
+    rsiStrategyConfig: rsiStrategyConfigSlice,
   },
 });

@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 
 import { useDispatch, useSelector } from "react-redux";
-import { setMessage } from "../../redux/futures/messageSlice";
+import { setMessage } from "app-redux/futures/messageSlice";
 import VuiTypography from "components/VuiTypography";
 import { Alert } from "@mui/material";
 import PropTypes from "prop-types";

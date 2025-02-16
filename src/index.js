@@ -17,16 +17,15 @@
 */
 
 if (process.env.REACT_APP_ENV === "production") {
-  console.log = () => { };
+  console.log = () => {};
 }
 
 import React from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import App from "App";
-import { store } from "./redux/app";
+import { store } from "./app-redux/app";
 import { Provider } from "react-redux";
-
 
 import { VisionUIControllerProvider } from "context";
 

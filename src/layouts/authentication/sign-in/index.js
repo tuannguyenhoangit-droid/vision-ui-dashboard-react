@@ -21,7 +21,6 @@ import { useState } from "react";
 // react-router-dom components
 import { Link } from "react-router-dom";
 
-
 import VuiBox from "components/VuiBox";
 import VuiTypography from "components/VuiTypography";
 import VuiInput from "components/VuiInput";
@@ -50,10 +49,10 @@ import {
 import { firebaseApp } from "../../../firebase";
 
 import { useDispatch } from "react-redux";
-import { setMessage } from "../../../redux/futures/messageSlice";
+import { setMessage } from "app-redux/futures/messageSlice";
 import { useHistory } from "react-router-dom/cjs/react-router-dom";
-import { setUser } from "../../../redux/futures/userSlice";
-import { userSignIn } from "../../../services/api";
+import { setUser } from "app-redux/futures/userSlice";
+import { userSignIn } from "services/api";
 import { Checkbox } from "@mui/material";
 
 const auth = getAuth(firebaseApp);
@@ -61,7 +60,6 @@ const auth = getAuth(firebaseApp);
 const provider = new GoogleAuthProvider();
 
 function SignIn() {
-
   const [data, setData] = useState({ email: "", password: "" });
 
   const dispatch = useDispatch();
@@ -207,7 +205,13 @@ function SignIn() {
         </VuiBox>
 
         <VuiBox mt={4} mb={1} alignItems="center">
-          <VuiButton variant="gradient" circular onClick={handleSignInWithPassword} color="info" fullWidth>
+          <VuiButton
+            variant="gradient"
+            circular
+            onClick={handleSignInWithPassword}
+            color="info"
+            fullWidth
+          >
             Sign In with Account
           </VuiButton>
           <VuiBox display="flex" alignItems="center" justifyContent="center" mt={2} mb={2}>

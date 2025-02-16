@@ -21,7 +21,6 @@ import JSEncrypt from "jsencrypt";
 // react-router-dom components
 import { Link } from "react-router-dom";
 
-
 import VuiBox from "components/VuiBox";
 import VuiTypography from "components/VuiTypography";
 import VuiInput from "components/VuiInput";
@@ -38,11 +37,11 @@ import CoverLayout from "layouts/authentication/components/CoverLayout";
 
 // Images
 import bgSignIn from "assets/images/signUpImage.png";
-import { accountSignUp } from "../../../services/api";
+import { accountSignUp } from "services/api";
 import { firebaseApp } from "../../../firebase";
 import { getAuth, sendEmailVerification, signInWithEmailAndPassword } from "firebase/auth";
 import { Checkbox } from "@mui/material";
-import { setMessage } from "../../../redux/futures/messageSlice";
+import { setMessage } from "app-redux/futures/messageSlice";
 import { useDispatch } from "react-redux";
 import { validateEmail } from "../../../utils";
 
@@ -64,10 +63,12 @@ function SignUp() {
     try {
       if (data.displayName && data.email && data.password) {
         if (!validateEmail(data.email)) {
-          dispatch(setMessage({
-            message: "Invalid email format",
-            type: "warning",
-          }));
+          dispatch(
+            setMessage({
+              message: "Invalid email format",
+              type: "warning",
+            })
+          );
           return;
         }
         setLoading(true);
@@ -79,7 +80,11 @@ function SignUp() {
         // Mã hóa dữ liệu
         const passwordEncrypted = encryptor.encrypt(data.password);
 
-        const { status, message } = await accountSignUp(data.displayName, data.email, passwordEncrypted);
+        const { status, message } = await accountSignUp(
+          data.displayName,
+          data.email,
+          passwordEncrypted
+        );
         const auth = getAuth(firebaseApp);
         const userCredential = await signInWithEmailAndPassword(auth, data.email, data.password);
         const user = userCredential.user;
@@ -91,19 +96,22 @@ function SignUp() {
           });
         }
 
-
-        dispatch(setMessage({
-          message: message,
-          type: status === 1 ? "success" : "warning",
-        }));
+        dispatch(
+          setMessage({
+            message: message,
+            type: status === 1 ? "success" : "warning",
+          })
+        );
         setLoading(false);
       } else {
         // TODO
         console.log("Params missing");
-        dispatch(setMessage({
-          message: "Please fill all fields",
-          type: "warning",
-        }));
+        dispatch(
+          setMessage({
+            message: "Please fill all fields",
+            type: "warning",
+          })
+        );
         return;
       }
     } catch (e) {

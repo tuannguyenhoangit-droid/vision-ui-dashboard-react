@@ -35,9 +35,10 @@ import logoSpotify from "assets/images/shapes/binance.svg";
 import { useDispatch, useSelector } from "react-redux";
 import { isMobile } from "react-device-detect";
 import { Telegram } from "@mui/icons-material";
-import { setNotification } from "../../../redux/futures/notificationSlice";
+import { setNotification } from "app-redux/futures/notificationSlice";
 import { getExceptionNotification } from "services/api";
 import { timeDifference } from "utils";
+import VuiButton from "components/VuiButton";
 
 function DashboardNavbar({ absolute, light, isMini }) {
   const [navbarType, setNavbarType] = useState();
@@ -75,18 +76,13 @@ function DashboardNavbar({ absolute, light, isMini }) {
     return () => window.removeEventListener("scroll", handleTransparentNavbar);
   }, [dispatch, fixedNavbar]);
 
-  // get notification
-  useEffect(() => {
-    getExceptionNotification(notification.page, 10).then((res) => {
-      reduxDispatch(setNotification({ data: res.data, page: res.page }));
-    });
-  }, [notification.page]);
-
   // get initial notification
   useEffect(() => {
-    getExceptionNotification(1, 10).then((res) => {
-      reduxDispatch(setNotification({ data: res.data, page: res.page }));
-    });
+    if (notification.data.length === 0) {
+      getExceptionNotification(1, 10).then((res) => {
+        reduxDispatch(setNotification({ data: res.data, page: res.page }));
+      });
+    }
   }, []);
 
   const handleMiniSidenav = () => setMiniSidenav(dispatch, !miniSidenav);
@@ -107,10 +103,17 @@ function DashboardNavbar({ absolute, light, isMini }) {
       onClose={handleCloseMenu}
       sx={{ mt: 2 }}
     >
+      <VuiBox p={2} display="flex" justifyContent="space-between">
+        <VuiTypography color="white" variant="h6">
+          Notification
+        </VuiTypography>
+        <VuiButton variant="text"> View more</VuiButton>
+      </VuiBox>
       {notification.data.map((item) => (
         <NotificationItem
           image={<img src={logoSpotify} alt="person" />}
           title={[item.error]}
+          tradeData={item.queryObject}
           date={timeDifference(item.createdAt)}
           onClick={handleCloseMenu}
         />
@@ -200,26 +203,28 @@ function DashboardNavbar({ absolute, light, isMini }) {
                 onClick={handleOpenMenu}
               >
                 <Icon className={light ? "text-white" : "text-dark"}>notifications</Icon>
-                <div
-                  style={{
-                    position: "absolute",
-                    top: 0,
-                    right: 0,
-                    backgroundColor: "red",
-                    color: "white",
-                    borderRadius: "50%",
-                    width: "15px",
-                    height: "15px",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    fontSize: "10px",
-                  }}
-                >
-                  {notification.data.length}
-                </div>
+                {notification.data.length > 0 ? (
+                  <div
+                    style={{
+                      position: "absolute",
+                      top: 0,
+                      right: 0,
+                      backgroundColor: "red",
+                      color: "white",
+                      borderRadius: "50%",
+                      width: "15px",
+                      height: "15px",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      fontSize: "10px",
+                    }}
+                  >
+                    {notification.data.length}
+                  </div>
+                ) : null}
               </IconButton>
-              {renderMenu()}
+              {notification.data.length > 0 ? renderMenu() : null}
             </VuiBox>
           </VuiBox>
         )}
