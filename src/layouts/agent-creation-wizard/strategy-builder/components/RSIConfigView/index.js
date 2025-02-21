@@ -5,9 +5,10 @@ import VuiSwitch from "components/VuiSwitch";
 import VuiButton from "components/VuiButton";
 import Chip from "@mui/material/Chip";
 import MiniStatisticsCard from "examples/Cards/StatisticsCards/MiniStatisticsCard";
-import { Checkbox, Slider } from "@mui/material";
+import { ButtonGroup, Checkbox, Slider } from "@mui/material";
 import { isMobile } from "react-device-detect";
 import { useSelector } from "react-redux";
+import { current } from "@reduxjs/toolkit";
 
 const RSI_STRATEGY_OPTIONS = [
   // 1h -> 1w
@@ -21,7 +22,7 @@ const RSI_STRATEGY_OPTIONS = [
 ];
 
 const RSIConfigView = ({
-  defaultRsiStrategyId,
+  defaultRsiStrategyIds,
   config,
   onChange = () => {},
   onSubmit = () => {},
@@ -31,18 +32,30 @@ const RSIConfigView = ({
     back: "BACK",
   },
 }) => {
-  const [rsiStrategy, setRsiStrategy] = useState({});
+  const [rsiStrategy, setRsiStrategy] = useState([]);
   const [rsiRecommendStrategy, setRsiRecommendStrategy] = useState(false);
   const [rsiStrategyConfig, setRsiStrategyConfig] = useState({});
   const rsiStrategyConfigList = useSelector((e) => e.rsiStrategyConfig.data);
+  const [rsiSide, setRsiSide] = useState("");
 
   useEffect(() => {
-    if (defaultRsiStrategyId) {
-      setRsiStrategyConfig(rsiStrategyConfigList.find((it) => it.id === defaultRsiStrategyId));
+    if (typeof defaultRsiStrategyIds === "object") {
+      setRsiStrategyConfig({
+        BUY: rsiStrategyConfigList.find((it) => it.id === defaultRsiStrategyIds["BUY"]),
+        SELL: rsiStrategyConfigList.find((it) => it.id === defaultRsiStrategyIds["SELL"]),
+      });
+      setRsiRecommendStrategy(true);
+    } else if (defaultRsiStrategyIds) {
+      setRsiStrategyConfig({
+        BUY: rsiStrategyConfigList.find((it) => it.id === defaultRsiStrategyIds),
+        SELL: {},
+      });
       setRsiRecommendStrategy(true);
     }
+    setRsiSide(config.side === "BOTH" ? "BUY" : config.side);
     return () => {
-      setRsiStrategy({});
+      setRsiSide("");
+      setRsiStrategy([]);
       setRsiStrategyConfig({});
       setRsiRecommendStrategy(false);
     };
@@ -50,27 +63,52 @@ const RSIConfigView = ({
 
   useEffect(() => {
     if (config.rsiRequireValues?.length > 0 && rsiRecommendStrategy === false) {
-      config.rsiRequireValues?.forEach((rsiValue) => {
-        rsiStrategy[rsiValue.frame] = rsiValue.value;
-      });
-      setRsiStrategy({ ...rsiStrategy });
+      setRsiStrategy({ ...config.rsiRequireValues });
     }
   }, [config, rsiRecommendStrategy]);
 
+  console.log("rsiStrategy", rsiStrategy);
+  console.log("rsiStrategyConfig", rsiStrategyConfig);
+  console.log("rsiSide", rsiSide);
+
   useEffect(() => {
-    const rsiStrategy = {};
-    if (rsiStrategyConfig.timeFrames?.length > 0) {
-      (rsiStrategyConfig.timeFrames || []).forEach((frame) => {
-        rsiStrategy[frame] =
-          config.side === "BUY" ? rsiStrategyConfig.oversold : rsiStrategyConfig.overbought;
+    const rsiStrategies = [];
+    const currentRsiStrategyConfig = rsiStrategyConfig?.[rsiSide] || rsiStrategyConfig || {};
+    const timeFrames = currentRsiStrategyConfig.timeFrames || [];
+    if (timeFrames?.length > 0) {
+      timeFrames.forEach((frame) => {
+        rsiStrategies.push({
+          frame,
+          value:
+            rsiSide === "BUY"
+              ? currentRsiStrategyConfig.oversold
+              : currentRsiStrategyConfig.overbought,
+          side: rsiSide,
+        });
       });
-      setRsiStrategy({ ...rsiStrategy });
+      console.log("rsiStrategies", rsiStrategies);
+      // merge data
+      setRsiStrategy((pre) => {
+        return [
+          ...rsiStrategies,
+          ...(Array.isArray(pre) ? pre : Object.keys(pre).map((k) => pre[k])).filter(
+            (item) => item.side && item.side !== rsiSide
+          ),
+        ];
+      });
     }
-  }, [rsiStrategyConfig]);
+  }, [rsiStrategyConfig, rsiSide]);
 
   const buyRSIStrategyCheckbox = useMemo(() => {
     const renderFrames = (it) => {
-      const currentChecked = rsiStrategy[it.id] || 0;
+      const current = (
+        Array.isArray(rsiStrategy)
+          ? rsiStrategy
+          : Object.keys(rsiStrategy).map((k) => rsiStrategy[k])
+      ).find((item) => item.frame === it.id && item.side === rsiSide);
+
+      console.log("current", current);
+      const currentChecked = current !== undefined;
       return (
         <VuiBox
           id={it.id}
@@ -95,9 +133,19 @@ const RSIConfigView = ({
               defaultChecked={currentChecked}
               checked={currentChecked}
               onChange={(e, checked) =>
-                setRsiStrategy({
-                  ...rsiStrategy,
-                  [it.id]: checked ? (config.side === "BUY" ? 30 : 70) : 0,
+                setRsiStrategy((pre) => {
+                  return [
+                    ...(Array.isArray(pre) ? pre : Object.keys(pre).map((k) => pre[k])),
+                    {
+                      ...(current === undefined
+                        ? {
+                            frame: it.id,
+                            side: rsiSide,
+                          }
+                        : current),
+                      value: checked ? (rsiSide === "BUY" ? 30 : 70) : 0,
+                    },
+                  ];
                 })
               }
             />
@@ -110,15 +158,15 @@ const RSIConfigView = ({
             >
               {["Frame", it.id].join(" ")}
             </VuiTypography>
-            {rsiStrategy[it.id] ? (
+            {currentChecked ? (
               <VuiTypography
                 ml={1}
                 variant="caption"
-                color={config.side === "BUY" ? "success" : "error"}
+                color={rsiSide === "BUY" ? "success" : "error"}
                 fontWeight="normal"
                 sx={{ cursor: "pointer", userSelect: "none" }}
               >
-                {["RSI", config.side === "BUY" ? "<" : ">", rsiStrategy[it.id] || 0].join(" ")}
+                {["RSI", rsiSide === "BUY" ? "<" : ">", current.value || 0].join(" ")}
               </VuiTypography>
             ) : null}
           </VuiBox>
@@ -128,25 +176,35 @@ const RSIConfigView = ({
             size="small"
             min={1}
             max={100}
-            value={rsiStrategy[it.id] || 0}
+            value={current?.value || 0}
             onChange={(e, value) => {
-              setRsiStrategy({
-                ...rsiStrategy,
-                [it.id]: value,
+              setRsiStrategy((pre) => {
+                return [
+                  ...pre.filter((item) => item.frame !== it.id && item.side === rsiSide),
+                  {
+                    ...current,
+                    value: value,
+                  },
+                ];
               });
             }}
-            disabled={currentChecked === 0}
-            defaultValue={config.side === "BUY" ? 30 : 70}
+            disabled={!currentChecked}
+            defaultValue={rsiSide === "BUY" ? 30 : 70}
             valueLabelDisplay="auto"
           />
         </VuiBox>
       );
     };
-
-    if (rsiRecommendStrategy) {
+    console.log(
+      "rsiRecommendStrategy && rsiStrategyConfig[rsiSide]",
+      rsiRecommendStrategy && rsiStrategyConfig[rsiSide]
+    );
+    if (rsiRecommendStrategy && rsiStrategyConfig[rsiSide]) {
       return (
         <VuiBox sx={{ width: "100%" }}>
-          {(rsiStrategyConfig.timeFrames || []).map((frame) => renderFrames({ id: frame }))}
+          {(rsiStrategyConfig[rsiSide].timeFrames || []).map((frame) =>
+            renderFrames({ id: frame })
+          )}
         </VuiBox>
       );
     }
@@ -154,7 +212,7 @@ const RSIConfigView = ({
     return (
       <VuiBox sx={{ width: "100%" }}>{RSI_STRATEGY_OPTIONS.map((it) => renderFrames(it))}</VuiBox>
     );
-  }, [rsiStrategy, config, rsiRecommendStrategy]);
+  }, [rsiStrategy, config, rsiRecommendStrategy, rsiSide]);
 
   return (
     <VuiBox>
@@ -171,6 +229,25 @@ const RSIConfigView = ({
             }}
           />
         </VuiBox>
+
+        <VuiBox mt={2} mb={2} display="flex" justifyContent="center">
+          <ButtonGroup variant="contained" aria-label="Basic button group">
+            <VuiButton
+              disabled={config.side === "SELL"}
+              onClick={() => setRsiSide("BUY")}
+              color={rsiSide === "BUY" ? "success" : "light"}
+            >
+              BUY
+            </VuiButton>
+            <VuiButton
+              disabled={config.side === "BUY"}
+              onClick={() => setRsiSide("SELL")}
+              color={rsiSide === "SELL" ? "error" : "light"}
+            >
+              SELL
+            </VuiButton>
+          </ButtonGroup>
+        </VuiBox>
         {config.enableRSIStrategy ? buyRSIStrategyCheckbox : null}
       </VuiBox>
       <VuiBox mb={2}>
@@ -183,7 +260,12 @@ const RSIConfigView = ({
             checked={rsiRecommendStrategy}
             onChange={(e, switched) => {
               if (switched) {
-                setRsiStrategyConfig(rsiStrategyConfigList[1]);
+                setRsiStrategyConfig((pre) => {
+                  return {
+                    ...pre,
+                    [rsiSide]: rsiStrategyConfigList[1],
+                  };
+                });
                 setRsiRecommendStrategy(switched);
               } else {
                 setRsiStrategy({});
@@ -201,11 +283,20 @@ const RSIConfigView = ({
                 clickable
                 style={{ margin: 4 }}
                 onClick={() => {
-                  setRsiStrategyConfig(item);
+                  setRsiStrategyConfig((pre) => {
+                    return {
+                      ...pre,
+                      [rsiSide]: item,
+                    };
+                  });
                   setRsiRecommendStrategy(true);
                 }}
                 label={item.strategy}
-                color={item.id === rsiStrategyConfig.id ? "success" : "warning"}
+                color={
+                  item.id === (rsiStrategyConfig?.[rsiSide]?.id || rsiStrategyConfig?.id)
+                    ? "success"
+                    : "warning"
+                }
                 size={isMobile ? "small" : "medium"}
               />
             ))}
@@ -238,7 +329,7 @@ const RSIConfigView = ({
         </VuiBox>
         <VuiBox minWidth="46%">
           <VuiButton
-            onClick={() => onSubmit(rsiStrategy, rsiStrategyConfig.id)}
+            onClick={() => onSubmit(rsiStrategy, rsiStrategyConfig, rsiSide)}
             color={!config.enableRSIStrategy ? "dark" : "info"}
             fullWidth
           >

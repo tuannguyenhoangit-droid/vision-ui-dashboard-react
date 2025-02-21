@@ -261,17 +261,7 @@ export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
 
   // when rsiStrategy change, update rsiRequireValues
   useEffect(() => {
-    const rsiValues = Object.keys(rsiStrategy)
-      .filter((frame) => rsiStrategy[frame])
-      .map((frame) => {
-        if (frame && rsiStrategy[frame]) {
-          return {
-            frame,
-            value: rsiStrategy[frame],
-          };
-        }
-      });
-    onChange("rsiRequireValues", rsiValues);
+    onChange("rsiRequireValues", rsiStrategy);
   }, [rsiStrategy]);
 
   // init config from item
@@ -288,12 +278,8 @@ export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
         setRequireFrame({ ...requireFrame });
       }
 
-      const rsiStrategy = {};
       if (itemWithInit.rsiRequireValues?.length > 0) {
-        itemWithInit.rsiRequireValues?.forEach((rsiValue) => {
-          rsiStrategy[rsiValue.frame] = rsiValue.value;
-        });
-        setRsiStrategy({ ...rsiStrategy });
+        setRsiStrategy({ ...itemWithInit.rsiRequireValues });
       }
 
       setConfig(itemWithInit);
@@ -303,7 +289,7 @@ export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
         ...initConfig,
       });
       setRequireFrame({});
-      setRsiStrategy({});
+      setRsiStrategy([]);
       setCurrentStep(0);
       setTickerPrice({});
     };
@@ -430,21 +416,29 @@ export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
     if (config.symbol && config.frame && config.buyAmount) {
       setLoading(true);
       try {
+        const finalConfig = {
+          ...config,
+          rsiStrategy: {
+            BUY: config?.rsiStrategy?.["BUY"]?.id || "",
+            SELL: config?.rsiStrategy?.["SELL"]?.id || "",
+          },
+        };
+
         const result = await createSymbolConfig(
-          config.side,
-          config.symbol,
-          parseFloat(config.buyAmount),
-          parseInt(config.maxBudget),
-          config.frame,
-          config.requireHistogramCondition,
-          config.buyRequireHistogram,
-          config.autoTakeProfit,
-          config.optimizeEntry,
-          parseFloat(config.optimizeEntryPercent),
-          config.enableRSIStrategy,
-          config.rsiRequireValues.filter((rsi) => rsi),
-          config.rsiStrategy,
-          config.maxDCAPerWave
+          finalConfig.side,
+          finalConfig.symbol,
+          parseFloat(finalConfig.buyAmount),
+          parseInt(finalConfig.maxBudget),
+          finalConfig.frame,
+          finalConfig.requireHistogramCondition,
+          finalConfig.buyRequireHistogram,
+          finalConfig.autoTakeProfit,
+          finalConfig.optimizeEntry,
+          parseFloat(finalConfig.optimizeEntryPercent),
+          finalConfig.enableRSIStrategy,
+          finalConfig.rsiRequireValues.filter((rsi) => rsi),
+          finalConfig.rsiStrategy,
+          finalConfig.maxDCAPerWave
         );
 
         setLoading(false);
@@ -491,7 +485,8 @@ export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
     // loading
     if (loading) return true;
 
-    if (config?.symbol?.length === 0 || !["BUY", "SELL"].includes(config?.side)) return true;
+    if (config?.symbol?.length === 0 || !["BUY", "SELL", "BOTH"].includes(config?.side))
+      return true;
 
     // not found market lot size && ticker price
     const marketLotSize = tickerPrice?.exchangeInfo?.filters.find(
@@ -576,22 +571,24 @@ export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
                   SIDE
                 </VuiTypography>
                 <ButtonGroup variant="contained" aria-label="Basic button group">
-                  {!item?.side || item?.side === "BUY" ? (
-                    <VuiButton
-                      onClick={() => onChange("side", "BUY")}
-                      color={config.side === "BUY" ? "success" : "light"}
-                    >
-                      BUY
-                    </VuiButton>
-                  ) : null}
-                  {!item?.side || item?.side === "SELL" ? (
-                    <VuiButton
-                      onClick={() => onChange("side", "SELL")}
-                      color={config.side === "SELL" ? "error" : "light"}
-                    >
-                      SELL
-                    </VuiButton>
-                  ) : null}
+                  <VuiButton
+                    onClick={() => onChange("side", "BOTH")}
+                    color={config.side === "BOTH" ? "warning" : "light"}
+                  >
+                    BOTH
+                  </VuiButton>
+                  <VuiButton
+                    onClick={() => onChange("side", "BUY")}
+                    color={config.side === "BUY" ? "success" : "light"}
+                  >
+                    BUY
+                  </VuiButton>
+                  <VuiButton
+                    onClick={() => onChange("side", "SELL")}
+                    color={config.side === "SELL" ? "error" : "light"}
+                  >
+                    SELL
+                  </VuiButton>
                 </ButtonGroup>
               </VuiBox>
               <VuiBox mb={2} justifyContent="space-between" display="flex" alignItems="center">
@@ -817,10 +814,9 @@ export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
                   fontWeight: "regular",
                 }}
                 percentage={{
-                  color: config.side === "BUY" ? "success" : "error",
+                  color: "success",
                   text: [
-                    "When histogram of Trading Frame is in",
-                    config.side === "BUY" ? "bottom" : "top",
+                    "When histogram of Trading Frame is in bottom (top)",
                     config.buyRequireHistogram.length > 0
                       ? [
                           "and",
@@ -828,11 +824,11 @@ export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
                             ? "All of Require frames"
                             : "One of Require frame",
                           config.requireHistogramCondition === "AND" ? "are in" : "is in",
-                          config.side === "BUY" ? "bottom" : "top",
+                          "bottom (top)",
                         ].join(" ")
                       : "",
-                    `then Bot will open a ${config.side} Limit Order at`,
-                    config.side === "BUY" ? "bottom" : "top",
+                    `then Bot will open a Buy (Sell) Limit Order at`,
+                    "bottom (top)",
                     "of Bollinger Band of Trading Frame and cancel the Order if it not filled after",
                     config.frame,
                   ].join(" "),
@@ -879,7 +875,7 @@ export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
 
           {currentStep === 2 ? (
             <RSIConfigView
-              defaultRsiStrategyId={config.rsiStrategy}
+              defaultRsiStrategyIds={config.rsiStrategy}
               onCancel={() => setCurrentStep(1)}
               onSubmit={(rsiStrategy, rsiStrategyConfigId) => {
                 setRsiStrategy(rsiStrategy);

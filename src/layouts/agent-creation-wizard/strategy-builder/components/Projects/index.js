@@ -87,11 +87,38 @@ const SymbolConfigItem = ({
     "rsi frame": (
       <VuiBox display="flex" flexDirection="row" gap={0.5}>
         {row?.rsiRequireValues?.length > 0 ? (
-          row.rsiRequireValues.map((rsi) => (
-            <VuiTypography variant="caption" color="white">
-              {[rsi.frame, rsi.value].join(":")}
-            </VuiTypography>
-          ))
+          <VuiBox display="flex" flexDirection="column">
+            <VuiBox>
+              {row.rsiStrategy["BUY"] ? (
+                <VuiTypography variant="caption" color="white">
+                  {["B", row.rsiStrategy["BUY"]].join(": ")}
+                </VuiTypography>
+              ) : (
+                row.rsiRequireValues
+                  .filter((rsi) => rsi.side === "BUY" || rsi.side == undefined)
+                  .map((rsi) => (
+                    <VuiTypography variant="caption" color="white">
+                      {["[", rsi.frame, ":", rsi.value, "]"]}
+                    </VuiTypography>
+                  ))
+              )}
+            </VuiBox>
+            <VuiBox>
+              {row.rsiStrategy["SELL"] ? (
+                <VuiTypography variant="caption" color="white">
+                  {["S", row.rsiStrategy["SELL"]].join(": ")}
+                </VuiTypography>
+              ) : (
+                row.rsiRequireValues
+                  .filter((rsi) => rsi.side === "SELL")
+                  .map((rsi) => (
+                    <VuiTypography variant="caption" color="white">
+                      {["[", rsi.frame, ":", rsi.value, "]"]}
+                    </VuiTypography>
+                  ))
+              )}
+            </VuiBox>
+          </VuiBox>
         ) : (
           <VuiTypography variant="caption" color="white">
             -

@@ -30,22 +30,14 @@ export default function UpdateRSIConfigDialog({ open, onClose = () => null, item
     setConfig({ ...config, [key]: value });
   };
 
-  const onSubmit = async (rsiStrategy, rsiStrategyConfigId) => {
-    const rsiValues = Object.keys(rsiStrategy)
-      .filter((frame) => rsiStrategy[frame])
-      .map((frame) => {
-        if (frame && rsiStrategy[frame]) {
-          return {
-            frame,
-            value: rsiStrategy[frame],
-          };
-        }
-      });
-
+  const onSubmit = async (rsiStrategiesValues, rsiStrategyConfigId) => {
     const finalConfig = {
       ...config,
-      rsiStrategy: rsiStrategyConfigId,
-      rsiRequireValues: rsiValues,
+      rsiStrategy: {
+        BUY: rsiStrategyConfigId?.["BUY"]?.id || "",
+        SELL: rsiStrategyConfigId?.["SELL"]?.id || "",
+      },
+      rsiRequireValues: rsiStrategiesValues,
     };
 
     try {
@@ -110,7 +102,7 @@ export default function UpdateRSIConfigDialog({ open, onClose = () => null, item
                 next: "UPDATE",
                 back: "CANCEL",
               }}
-              defaultRsiStrategyId={config.rsiStrategy}
+              defaultRsiStrategyIds={config.rsiStrategy}
               onCancel={onClose}
               onSubmit={onSubmit}
               config={config}
