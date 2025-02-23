@@ -35,6 +35,7 @@ import { useHistory } from "react-router-dom/cjs/react-router-dom";
 import { BsShare } from "react-icons/bs";
 
 const FuturePositionItem = ({ row, onShareProfit = () => null }) => {
+  console.log("item", row.symbol, row.positionAmt);
   return {
     symbol: (
       <VuiBox display="flex" alignItems="center">
@@ -52,10 +53,10 @@ const FuturePositionItem = ({ row, onShareProfit = () => null }) => {
     side: (
       <VuiTypography
         variant="button"
-        color={parseInt(row.positionAmt) >= 0 ? "success" : "error"}
+        color={parseFloat(row.positionAmt) >= 0 ? "success" : "error"}
         fontWeight="bold"
       >
-        {parseInt(row.positionAmt) >= 0 ? "BUY" : "SELL"}
+        {parseFloat(row.positionAmt) >= 0 ? "BUY" : "SELL"}
       </VuiTypography>
     ),
     size: (

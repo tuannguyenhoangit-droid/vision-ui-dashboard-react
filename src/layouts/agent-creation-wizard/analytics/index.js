@@ -11,6 +11,7 @@ import { Card } from "@mui/material";
 import { getBestPerformanceVolumeTrends } from "services/api";
 import VuiBox from "components/VuiBox";
 import VuiTypography from "components/VuiTypography";
+import RecommandedSymbols from "./components/RecommandedSymbols";
 
 function Analytics() {
   const [symbolEditItem, setSymbolEditItem] = useState(null);
@@ -19,8 +20,6 @@ function Analytics() {
     dataInFlow: [],
     dataOutFlow: [],
   });
-
-
 
   useEffect(() => {
     getBestPerformanceVolumeTrends().then((data) => {
@@ -97,6 +96,7 @@ function Analytics() {
   return (
     <DashboardLayout>
       <DashboardNavbar />
+      <RecommandedSymbols onItemClick={setSymbolEditItem} />
       <TwistBestPerfVolume setSymbolEditItem={setSymbolEditItem} />
       <Grid
         mt={1}

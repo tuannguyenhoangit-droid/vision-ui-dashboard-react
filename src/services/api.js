@@ -602,3 +602,25 @@ export const getRsiStrategyConfig = async () => {
       });
   });
 };
+
+// get recommanded symbol
+
+export const getRecommandedSymbols = async () => {
+  const token = await auth.currentUser?.getIdToken?.();
+  if (!token) return Promise.reject("Cannot get user token");
+  return new Promise(async (resolve, reject) => {
+    await axios
+      .get("/v1/recommand/24h-volume-stoch-signal", {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: ["Bearer", token].join(" "),
+        },
+      })
+      .then((response) => {
+        resolve(response.data);
+      })
+      .catch((error) => {
+        console.log("error", error);
+      });
+  });
+};

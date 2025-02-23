@@ -54,10 +54,12 @@ const SymbolConfigItem = ({
     side: (
       <VuiTypography
         variant="button"
-        color={row.side === "BUY" ? "success" : "error"}
+        color={row.side === "BOTH" ? "warning" : row.side === "BUY" ? "success" : "error"}
         fontWeight="bold"
       >
-        {row.side}
+        {row.side === "BOTH" && row.autoTradeStatus
+          ? [row.side, row.autoTradeSide].join("-")
+          : row.side}
       </VuiTypography>
     ),
     frame: (
