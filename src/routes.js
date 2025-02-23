@@ -56,6 +56,7 @@ import Performance from "layouts/performance-analytics/performance";
 import SubscriptionCheckout from "layouts/subscription-checkout";
 import SignOut from "layouts/authentication/sign-out";
 import Analytics from "layouts/agent-creation-wizard/analytics";
+import Recommendation from "layouts/agent-creation-wizard/recommended";
 
 const routes = [
   {
@@ -95,6 +96,15 @@ const routes = [
   //   noCollapse: true,
   // },
   { type: "title", title: "Agent Creation Wizard", key: "agent-creation-wizard" },
+  {
+    type: "collapse",
+    name: "AI Recommended",
+    key: "ai-recommended",
+    route: "/ai-recommended",
+    icon: <IoRocketSharp size="15px" color="inherit" />,
+    component: Recommendation,
+    noCollapse: true,
+  },
   {
     type: "collapse",
     name: "Analytics",
