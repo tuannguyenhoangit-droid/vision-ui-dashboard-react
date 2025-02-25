@@ -610,7 +610,7 @@ export const getRecommandedSymbols = async () => {
   if (!token) return Promise.reject("Cannot get user token");
   return new Promise(async (resolve, reject) => {
     await axios
-      .get("/v1/recommand/24h-volume-stoch-signal", {
+      .get("/v1/recommand/signals", {
         headers: {
           "Content-Type": "application/json",
           Authorization: ["Bearer", token].join(" "),

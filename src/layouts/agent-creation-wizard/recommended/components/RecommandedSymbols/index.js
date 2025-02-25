@@ -38,11 +38,7 @@ const RecommandedSymbolsItem = ({ row, onItemClick = () => null }) => {
         {new Date(row.updatedAt).toLocaleString()}
       </VuiTypography>
     ),
-    recommanded: (
-      <VuiTypography variant="caption" color="white">
-        {row.recommanded}
-      </VuiTypography>
-    ),
+
     confidence: (
       <VuiTypography variant="caption" color="white">
         {[row.stochSignal.confidence.toFixed(2), "%"].join("")}
@@ -60,15 +56,10 @@ const RecommandedSymbolsItem = ({ row, onItemClick = () => null }) => {
 };
 
 const RecommandedSymbols = (props) => {
-  const { onItemClick = () => null } = props;
-  const [recommandedSymbols, setRecommandedSymbols] = useState([]);
-
-  useEffect(() => {
-    getRecommandedSymbols().then((data) => setRecommandedSymbols(data));
-  }, []);
+  const { onItemClick = () => null, data = [], title = "", description = "" } = props;
 
   const renderRow = () => {
-    return recommandedSymbols.map((row) => RecommandedSymbolsItem({ row, onItemClick }));
+    return data.map((row) => RecommandedSymbolsItem({ row, onItemClick }));
   };
 
   return (
@@ -95,12 +86,12 @@ const RecommandedSymbols = (props) => {
       <VuiBox display="flex" justifyContent="space-between" alignItems="center" mb="32px">
         <VuiBox mb="auto">
           <VuiTypography color="white" variant="lg" mb="6px" gutterBottom>
-            Recommanded Symbols
+            {title}
           </VuiTypography>
           <VuiBox display="flex" alignItems="center" lineHeight={0}>
             <BsCheckCircleFill color="green" size="15px" />
             <VuiTypography variant="button" fontWeight="regular" color="text">
-              &nbsp;<strong>Top symbols recommanded by AI</strong>
+              &nbsp;<strong>{description}</strong>
             </VuiTypography>
           </VuiBox>
         </VuiBox>
@@ -126,7 +117,6 @@ const RecommandedSymbols = (props) => {
             { name: "confidence", align: "left" },
             { name: "score", align: "left" },
             { name: "date", align: "left" },
-            { name: "recommanded", align: "left" },
             { name: "action", align: "left" },
           ]}
           rows={renderRow()}
