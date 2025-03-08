@@ -42,7 +42,6 @@ function DashboardNavbar({ absolute, light, isMini }) {
   const [openMenu, setOpenMenu] = useState(false);
   const [openLearnStrategies, setOpenLearnStrategies] = useState(false);
   const [openBotStrategies, setOpenBotStrategies] = useState(false);
-  const reduxDispatch = useDispatch();
 
   useEffect(() => {
     // Setting the navbar type
@@ -51,23 +50,8 @@ function DashboardNavbar({ absolute, light, isMini }) {
     } else {
       setNavbarType("static");
     }
-
-    // A function that sets the transparent state of the navbar.
-    function handleTransparentNavbar() {
-      setTransparentNavbar(dispatch, (fixedNavbar && window.scrollY === 0) || !fixedNavbar);
-    }
-
-    /** 
-     The event listener that's calling the handleTransparentNavbar function when 
-     scrolling the window.
-    */
-    window.addEventListener("scroll", handleTransparentNavbar);
-
-    // Call the handleTransparentNavbar function to set the state with the initial value.
-    handleTransparentNavbar();
-
-    // Remove event listener on cleanup
-    return () => window.removeEventListener("scroll", handleTransparentNavbar);
+    setMiniSidenav(dispatch, true);
+    setTransparentNavbar(dispatch, false);
   }, [dispatch, fixedNavbar]);
 
   const handleMiniSidenav = () => setMiniSidenav(dispatch, !miniSidenav);
@@ -331,7 +315,7 @@ function DashboardNavbar({ absolute, light, isMini }) {
               sx={navbarMobileMenu}
               onClick={handleMiniSidenav}
             >
-              <Icon className={"text-white"}>{miniSidenav ? "menu_open" : "menu"}</Icon>
+              <Icon className={"text-white"}>{miniSidenav ? "menu" : "menu_open"}</Icon>
             </IconButton>
             <IconButton
               size="small"
