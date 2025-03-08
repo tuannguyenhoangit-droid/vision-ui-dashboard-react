@@ -20,7 +20,6 @@
 // @mui icons
 import Grid from "@mui/material/Grid";
 
-
 import VuiBox from "components/VuiBox";
 import ProfileInfoCard from "examples/Cards/InfoCards/ProfileInfoCard";
 
@@ -31,7 +30,6 @@ import PlatformSettings from "layouts/profile/components/PlatformSettings";
 import CarInformations from "./components/CarInformations";
 
 function Overview() {
-
   return (
     <DashboardLayout>
       <Header />
@@ -49,6 +47,26 @@ function Overview() {
             item
             xs={12}
             md={6}
+            xl={4}
+            xxl={4}
+            sx={({ breakpoints }) => ({
+              [breakpoints.only("xl")]: {
+                gridArea: "2 / 1 / 3 / 3",
+              },
+            })}
+          >
+            <ProfileInfoCard
+              title="Binance API Key (Required)"
+              description="Do not grant Withdraw Permission"
+              info={{
+                Permisions: "Allow Read, Allow Future Order",
+              }}
+            />
+          </Grid>
+          <Grid
+            item
+            xs={12}
+            md={6}
             xl={3}
             xxl={3}
             sx={({ breakpoints }) => ({
@@ -60,27 +78,7 @@ function Overview() {
           >
             <PlatformSettings />
           </Grid>
-          <Grid
-            item
-            xs={12}
-            md={6}
-            xl={4}
-            xxl={4}
-            sx={({ breakpoints }) => ({
-              [breakpoints.only("xl")]: {
-                gridArea: "2 / 1 / 3 / 3",
-              },
-            })}
-          >
 
-            <ProfileInfoCard
-              title="Binance API Key (Required)"
-              description="Do not grant Withdraw Permission"
-              info={{
-                Permisions: "Allow Read, Allow Future Order",
-              }}
-            />
-          </Grid>
           <Grid
             item
             xs={12}
@@ -97,7 +95,6 @@ function Overview() {
           </Grid>
         </Grid>
       </VuiBox>
-
 
       {/* <Footer /> */}
     </DashboardLayout>

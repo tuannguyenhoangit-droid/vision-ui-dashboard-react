@@ -1,6 +1,5 @@
 import PropTypes from "prop-types";
 
-
 import VuiBox from "components/VuiBox";
 import VuiTypography from "components/VuiTypography";
 
@@ -8,7 +7,6 @@ import PageLayout from "examples/LayoutContainers/PageLayout";
 
 // Authentication layout components
 import Footer from "layouts/authentication/components/Footer";
-
 
 import colors from "assets/theme/base/colors";
 import { isMobile } from "react-device-detect";

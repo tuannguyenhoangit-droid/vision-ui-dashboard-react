@@ -30,27 +30,21 @@ import Divider from "@mui/material/Divider";
 import Link from "@mui/material/Link";
 import Icon from "@mui/material/Icon";
 
-
 import VuiBox from "components/VuiBox";
 import VuiTypography from "components/VuiTypography";
-import VuiButton from "components/VuiButton";
-
 
 import SidenavCollapse from "examples/Sidenav/SidenavCollapse";
-import SidenavCard from "examples/Sidenav/SidenavCard";
 
 // Custom styles for the Sidenav
 import SidenavRoot from "examples/Sidenav/SidenavRoot";
 import sidenavLogoLabel from "examples/Sidenav/styles/sidenav";
 
-
 import { useVisionUIController, setMiniSidenav, setTransparentSidenav } from "context";
-
 
 import SimmmpleLogo from "examples/Icons/SimmmpleLogo";
 
 // function Sidenav({ color, brand, brandName, routes, ...rest }) {
-function Sidenav({ color, brandName, routes, ...rest }) {
+function Sidenav({ color, brandName, routes, backgroundColor, ...rest }) {
   const [controller, dispatch] = useVisionUIController();
   const { miniSidenav, transparentSidenav } = controller;
   const location = useLocation();
@@ -62,7 +56,7 @@ function Sidenav({ color, brandName, routes, ...rest }) {
   useEffect(() => {
     // A function that sets the mini state of the sidenav.
     function handleMiniSidenav() {
-      setMiniSidenav(dispatch, window.innerWidth < 1200);
+      //  setMiniSidenav(dispatch, window.innerWidth < 1200);
     }
 
     /** 
@@ -149,6 +143,7 @@ function Sidenav({ color, brandName, routes, ...rest }) {
         textAlign="center"
         sx={{
           overflow: "unset !important",
+          backgroundColor: backgroundColor || "transparent",
         }}
       >
         <VuiBox

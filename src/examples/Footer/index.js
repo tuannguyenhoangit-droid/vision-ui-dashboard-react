@@ -39,31 +39,77 @@ function Footer() {
         </VuiTypography>
       </VuiBox>
       <VuiBox item xs={6} md={6} xl={6}>
-        <VuiTypography variant="button" color="white" fontWeight="medium">Strategy</VuiTypography>
+        <VuiTypography variant="button" color="white" fontWeight="medium">
+          Strategy
+        </VuiTypography>
         <VuiBox>
-          <VuiButton target="_blank" href="https://en.wikipedia.org/wiki/MACD" style={{ justifyContent: "left" }} variant="text" color="white">MACD</VuiButton>
+          <VuiButton
+            target="_blank"
+            href="https://en.wikipedia.org/wiki/MACD"
+            style={{ justifyContent: "left" }}
+            variant="text"
+            color="white"
+          >
+            MACD
+          </VuiButton>
         </VuiBox>
         <VuiBox>
-          <VuiButton target="_blank" href="https://en.wikipedia.org/wiki/Bollinger_Bands" style={{ justifyContent: "left" }} variant="text" color="white">Bollinger Bands</VuiButton>
+          <VuiButton
+            target="_blank"
+            href="https://en.wikipedia.org/wiki/Bollinger_Bands"
+            style={{ justifyContent: "left" }}
+            variant="text"
+            color="white"
+          >
+            Bollinger Bands
+          </VuiButton>
         </VuiBox>
         <VuiBox>
-          <VuiButton target="_blank" href="https://en.wikipedia.org/wiki/Moving_average" style={{ justifyContent: "left" }} variant="text" color="white">EMA</VuiButton>
+          <VuiButton
+            target="_blank"
+            href="https://en.wikipedia.org/wiki/Moving_average"
+            style={{ justifyContent: "left" }}
+            variant="text"
+            color="white"
+          >
+            EMA
+          </VuiButton>
         </VuiBox>
         <VuiBox>
-          <VuiButton target="_blank" href="https://en.wikipedia.org/wiki/Dollar_cost_averaging" style={{ justifyContent: "left" }} variant="text" color="white">DCA</VuiButton>
+          <VuiButton
+            target="_blank"
+            href="https://en.wikipedia.org/wiki/Dollar_cost_averaging"
+            style={{ justifyContent: "left" }}
+            variant="text"
+            color="white"
+          >
+            DCA
+          </VuiButton>
         </VuiBox>
       </VuiBox>
       <VuiBox item xs={6} md={6} xl={6}>
-        <VuiTypography variant="button" color="white" fontWeight="medium">About Us</VuiTypography>
+        <VuiTypography variant="button" color="white" fontWeight="medium">
+          About Us
+        </VuiTypography>
         <VuiBox>
-          <VuiButton onClick={() => history.push("/terms-and-conditions")} variant="text" color="white">Terms and Conditions</VuiButton>
+          <VuiButton
+            onClick={() => history.push("/terms-and-conditions")}
+            variant="text"
+            color="white"
+          >
+            Terms and Conditions
+          </VuiButton>
         </VuiBox>
         <VuiBox>
-          <VuiButton onClick={() => history.push("/privacy-policy")} variant="text" color="white">Privacy Policy</VuiButton>
+          <VuiButton onClick={() => history.push("/privacy-policy")} variant="text" color="white">
+            Privacy Policy
+          </VuiButton>
         </VuiBox>
       </VuiBox>
       <VuiBox item xs={6} md={6} xl={6}>
-        <VuiTypography variant="button" color="white" fontWeight="medium">Socials</VuiTypography>
+        <VuiTypography variant="button" color="white" fontWeight="medium">
+          Socials
+        </VuiTypography>
         <VuiBox mr={0}>
           <VuiButton
             component={Link}
@@ -73,7 +119,11 @@ function Footer() {
             rel="noreferrer"
             color="white"
           >
-            <VuiBox style={{ width: 20, height: 20, marginLeft: 2, marginRight: 4 }} component="img" src={Binance} />
+            <VuiBox
+              style={{ width: 20, height: 20, marginLeft: 2, marginRight: 4 }}
+              component="img"
+              src={Binance}
+            />
             &nbsp; Binance Square
           </VuiButton>
           <VuiBox>
@@ -89,7 +139,6 @@ function Footer() {
               &nbsp; Telegram
             </VuiButton>
           </VuiBox>
-
         </VuiBox>
         {/*<VuiBox display="flex" justifyContent="center" flexWrap="wrap" mb={3}>
           <VuiBox mr={{ xs: "20px", lg: "46px" }}>

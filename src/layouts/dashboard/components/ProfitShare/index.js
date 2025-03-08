@@ -86,7 +86,9 @@ export function ProfitShare({ open, onClose = () => null, data = null }) {
             </VuiTypography>
             <VuiTypography variant="h6" color="white" fontWeight="bold">
               {[
-                Math.round(parseInt(notional) / parseFloat(positionInitialMargin)).toFixed(0),
+                Math.abs(
+                  Math.round(parseInt(notional) / parseFloat(positionInitialMargin))
+                ).toFixed(0),
                 "x",
               ].join(" ")}
             </VuiTypography>

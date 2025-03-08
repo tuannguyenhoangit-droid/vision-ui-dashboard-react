@@ -57,6 +57,7 @@ import SubscriptionCheckout from "layouts/subscription-checkout";
 import SignOut from "layouts/authentication/sign-out";
 import Analytics from "layouts/agent-creation-wizard/analytics";
 import Recommendation from "layouts/agent-creation-wizard/recommended";
+import Landing from "layouts/landing";
 
 const routes = [
   {
@@ -159,6 +160,14 @@ const routes = [
     route: "/subscription/checkout",
     icon: <BsFillPersonFill size="15px" color="inherit" />,
     component: SubscriptionCheckout,
+    noCollapse: true,
+  },
+  {
+    name: "Landing",
+    key: "landing",
+    route: "/",
+    icon: <IoIosDocument size="15px" color="inherit" />,
+    component: Landing,
     noCollapse: true,
   },
   {

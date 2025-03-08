@@ -14,7 +14,12 @@ import { setUser } from "./app-redux/futures/userSlice";
 import { useDispatch } from "react-redux";
 import { userSignIn } from "services/api";
 
-const NO_AUTH_PATHS = ["/privacy-policy", "/authentication/verify-email", "/terms-and-conditions"];
+const NO_AUTH_PATHS = [
+  "/privacy-policy",
+  "/authentication/verify-email",
+  "/terms-and-conditions",
+  "/",
+];
 
 export default function App() {
   const [controller, dispatch] = useVisionUIController();
@@ -26,12 +31,12 @@ export default function App() {
   const dispatchRedux = useDispatch();
 
   useEffect(() => {
-    const auth = getAuth(firebaseApp);
     let unsubscribe = null;
-    if (NO_AUTH_PATHS.includes(history.location.pathname)) {
+    if (NO_AUTH_PATHS.some((path) => history.location.pathname === path)) {
       // do nothing
     } else {
       //
+      const auth = getAuth(firebaseApp);
       unsubscribe = auth.onAuthStateChanged(async (user) => {
         if (user) {
           if (user.emailVerified) {

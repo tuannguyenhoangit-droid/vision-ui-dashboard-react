@@ -58,10 +58,8 @@ import VuiTypography from "components/VuiTypography";
 import VuiButton from "components/VuiButton";
 import { setPositions } from "app-redux/futures/positions";
 import { ProfitShare } from "./components/ProfitShare";
-import { lineChartDataDashboard } from "./data/lineChartData";
-import { lineChartOptionsDashboard } from "./data/lineChartOptions";
-import LineChart from "examples/Charts/LineCharts/LineChart";
-
+import shield from "assets/images/shield.png";
+import { isMobile } from "react-device-detect";
 const auth = getAuth(firebaseApp);
 
 const startOrDay = new Date();
@@ -126,15 +124,25 @@ function Dashboard() {
       <VuiBox py={3}>
         {user?.apiKeyHidden?.length === 0 ? (
           <VuiBox mb={3}>
-            <Card>
+            <Card sx={{ backgroundColor: "primary.main" }}>
               <Grid container spacing={3}>
-                <Grid item xs={12} md={6} xl={6}>
-                  <VuiTypography variant="h6" color="white">
-                    Setup your profile
-                  </VuiTypography>
-                  <VuiTypography variant="button" color="text">
-                    Complete setup your Binance API Key to start trading
-                  </VuiTypography>
+                <Grid item xs={12} md={6} xl={6} display="flex" flexDirection="row">
+                  <VuiBox
+                    mr={3}
+                    component="img"
+                    style={{ maxHeight: isMobile ? "60px" : "80px" }}
+                    src={shield}
+                    alt="Binance"
+                  />
+                  <VuiBox>
+                    <VuiTypography variant="h6" color="white">
+                      Setup Binance API Key
+                    </VuiTypography>
+                    <VuiTypography variant="button" color="warning" fontWeight="regular">
+                      To start trading, you need to setup your Binance API Key. We dont require
+                      withdraw permission.
+                    </VuiTypography>
+                  </VuiBox>
                 </Grid>
                 <Grid
                   item
@@ -142,7 +150,7 @@ function Dashboard() {
                   md={6}
                   xl={6}
                   display="flex"
-                  justifyContent="flex-end"
+                  justifyContent={"flex-end"}
                   alignItems="center"
                 >
                   <VuiButton
@@ -151,7 +159,7 @@ function Dashboard() {
                     color="info"
                     variant="gradient"
                   >
-                    Setup your profile
+                    Setup API Key
                   </VuiButton>
                 </Grid>
               </Grid>
@@ -173,7 +181,7 @@ function Dashboard() {
                 title={{ text: "Today Profit" }}
                 count={["$", incomePnL?.data?.[0]?.income || 0].join("")}
                 percentage={{
-                  color: todayProfitPercent >= 0 ? "success" : "error",
+                  color: todayProfitPercent < 0 ? "error" : "success",
                   text: [
                     "(",
                     todayProfitPercent >= 0 ? "+" : "",
@@ -192,7 +200,7 @@ function Dashboard() {
                 title={{ text: "Unrelease PnL" }}
                 count={["$", Math.round((balance?.[0]?.crossUnPnl || 0) * 100) / 100].join("")}
                 percentage={{
-                  color: balance?.[0]?.crossUnPnl > 0 ? "success" : "error",
+                  color: balance?.[0]?.crossUnPnl < 0 ? "error" : "success",
                   text: [
                     "(",
                     unRealizedProfitPercent > 0 ? "+" : "",

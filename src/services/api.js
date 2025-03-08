@@ -265,7 +265,7 @@ export const createSymbolConfig = async (
 
 export const quickChangeFrame = async (frame, buyRequireHistogram = []) => {
   const token = await auth.currentUser?.getIdToken?.();
-  if (!token) return Promise.reject("Cannot get user token");
+  if (!token) return Promise.reject("Cannot get user token 1");
   const payload = {
     frame,
     buyRequireHistogram,
@@ -289,7 +289,7 @@ export const quickChangeFrame = async (frame, buyRequireHistogram = []) => {
 
 export const getSymbolConfig = async () => {
   const token = await auth.currentUser?.getIdToken?.();
-  if (!token) return Promise.reject("Cannot get user token");
+  if (!token) return Promise.reject("Cannot get user token 2");
   return new Promise(async (resolve, reject) => {
     await axios
       .get("/v1/future/symbol-config", {
@@ -309,7 +309,7 @@ export const getSymbolConfig = async () => {
 
 export const deleteSymbolConfig = async (symbol) => {
   const token = await auth.currentUser?.getIdToken?.();
-  if (!token) return Promise.reject("Cannot get user token");
+  if (!token) return Promise.reject("Cannot get user token 3");
   return new Promise(async (resolve, reject) => {
     await axios
       .delete(`/v1/future/symbol-config/${symbol}`, {
@@ -329,7 +329,7 @@ export const deleteSymbolConfig = async (symbol) => {
 
 export const getTickerPrice = async (symbol) => {
   const token = await auth.currentUser?.getIdToken?.();
-  if (!token) return Promise.reject("Cannot get user token");
+  if (!token) return Promise.reject("Cannot get user token 4");
   return new Promise(async (resolve, reject) => {
     await axios
       .get(`/v1/future/ticker/price/${[symbol, "USDT"].join("")}`, {
@@ -349,7 +349,7 @@ export const getTickerPrice = async (symbol) => {
 
 export const getSubscription = async () => {
   const token = await auth.currentUser?.getIdToken?.();
-  if (!token) return Promise.reject("Cannot get user token");
+  if (!token) return Promise.reject("Cannot get user token 5");
   return new Promise(async (resolve, reject) => {
     await axios
       .get("/v1/account/subscription", {
@@ -371,7 +371,7 @@ export const getSubscription = async () => {
 
 export const getAccountSubscriptionInfo = async () => {
   const token = await auth.currentUser?.getIdToken?.();
-  if (!token) return Promise.reject("Cannot get user token");
+  if (!token) return Promise.reject("Cannot get user token 6");
   return new Promise(async (resolve, reject) => {
     await axios
       .get("/v1/account/subscription/info", {
@@ -393,7 +393,7 @@ export const getAccountSubscriptionInfo = async () => {
 
 export const getPaymentConfigs = async () => {
   const token = await auth.currentUser?.getIdToken?.();
-  if (!token) return Promise.reject("Cannot get user token");
+  if (!token) return Promise.reject("Cannot get user token 7");
   return new Promise(async (resolve, reject) => {
     await axios
       .get("/v1/payment-configs", {
@@ -416,7 +416,7 @@ export const changeFutureActive = async (futureActive) => {
     futureActive,
   };
   const token = await auth.currentUser?.getIdToken?.();
-  if (!token) return Promise.reject("Cannot get user token");
+  if (!token) return Promise.reject("Cannot get user token 8");
   return new Promise(async (resolve, reject) => {
     await axios
       .post("/v1/account/future-active", payload, {
@@ -443,7 +443,7 @@ export const createTransaction = async (subscriptionId, network, priceType) => {
     priceType,
   };
   const token = await auth.currentUser?.getIdToken?.();
-  if (!token) return Promise.reject("Cannot get user token");
+  if (!token) return Promise.reject("Cannot get user token 9");
   return new Promise(async (resolve, reject) => {
     await axios
       .post("/v1/transaction", payload, {
@@ -465,7 +465,7 @@ export const createTransaction = async (subscriptionId, network, priceType) => {
 
 export const getPendingTransaction = async () => {
   const token = await auth.currentUser?.getIdToken?.();
-  if (!token) return Promise.reject("Cannot get user token");
+  if (!token) return Promise.reject("Cannot get user token 10");
   return new Promise(async (resolve, reject) => {
     await axios
       .get("/v1/transaction", {
@@ -491,7 +491,7 @@ export const validateTransaction = async (transactionId, transactionHash) => {
     transactionHash,
   };
   const token = await auth.currentUser?.getIdToken?.();
-  if (!token) return Promise.reject("Cannot get user token");
+  if (!token) return Promise.reject("Cannot get user token 11");
   return new Promise(async (resolve, reject) => {
     await axios
       .post("/v1/transaction/validate", payload, {
@@ -516,7 +516,7 @@ export const cancelTransaction = async (transactionId) => {
     transactionId,
   };
   const token = await auth.currentUser?.getIdToken?.();
-  if (!token) return Promise.reject("Cannot get user token");
+  if (!token) return Promise.reject("Cannot get user token 12");
   return new Promise(async (resolve, reject) => {
     await axios
       .post("/v1/transaction/cancel", payload, {
@@ -540,7 +540,7 @@ export const cancelTransaction = async (transactionId) => {
 
 export const getExceptionNotification = async (page = 1, limit = 10) => {
   const token = await auth.currentUser?.getIdToken?.();
-  if (!token) return Promise.reject("Cannot get user token");
+  if (!token) return Promise.reject("Cannot get user token 13");
   return new Promise(async (resolve, reject) => {
     await axios
       .get(`/v1/exception-notification?page=${page}&limit=${limit}`, {
@@ -565,7 +565,7 @@ export const getExceptionNotification = async (page = 1, limit = 10) => {
 
 export const readExceptionNotification = async (id) => {
   const token = await auth.currentUser?.getIdToken?.();
-  if (!token) return Promise.reject("Cannot get user token");
+  if (!token) return Promise.reject("Cannot get user token 14");
   return new Promise(async (resolve, reject) => {
     await axios
       .post(`/v1/exception-notification/read/${id}`, {
@@ -585,7 +585,7 @@ export const readExceptionNotification = async (id) => {
 
 export const getRsiStrategyConfig = async () => {
   const token = await auth.currentUser?.getIdToken?.();
-  if (!token) return Promise.reject("Cannot get user token");
+  if (!token) return Promise.reject("Cannot get user token 15");
   return new Promise(async (resolve, reject) => {
     await axios
       .get(`/v1/rsi-config-strategy`, {
@@ -607,7 +607,7 @@ export const getRsiStrategyConfig = async () => {
 
 export const getRecommandedSymbols = async () => {
   const token = await auth.currentUser?.getIdToken?.();
-  if (!token) return Promise.reject("Cannot get user token");
+  if (!token) return Promise.reject("Cannot get user token 16");
   return new Promise(async (resolve, reject) => {
     await axios
       .get("/v1/recommand/signals", {

@@ -28,7 +28,6 @@ import VuiAvatar from "components/VuiAvatar";
 import VuiBox from "components/VuiBox";
 import VuiTypography from "components/VuiTypography";
 
-
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import { isMobile } from "react-device-detect";
 import { useSelector } from "react-redux";
@@ -114,7 +113,6 @@ function Header() {
                   display: "flex",
                   justifyContent: "center",
                   alignItems: "center",
-
                 },
                 [breakpoints.up("xs")]: {
                   display: "flex",
@@ -124,9 +122,8 @@ function Header() {
                 [breakpoints.up("md")]: {
                   display: "flex",
                   justifyContent: "flex-start",
-                  alignItems: "flex-start"
+                  alignItems: "flex-start",
                 },
-
               })}
             >
               <VuiTypography variant="lg" color="white" fontWeight="bold">
@@ -138,37 +135,13 @@ function Header() {
             </VuiBox>
           </Grid>
           <Grid item xs={12} md={6} lg={6.5} xl={6} xxl={4} sx={{ margin: "auto" }}>
-
-            <VuiBox flexDirection="column" sx={({ breakpoints }) => ({
-              [breakpoints.down("xs")]: {
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-
-              },
-              [breakpoints.up("xs")]: {
-                justifyContent: "center",
-                alignItems: "center",
-                display: "flex",
-              },
-              [breakpoints.up("md")]: {
-                display: "flex",
-                justifyContent: "flex-end",
-                alignItems: "flex-end",
-              },
-            })}
-            >
-              <VuiBox>
-                <VuiTypography variant="xxs" color="white" fontWeight="bold">
-                  Subscription
-                </VuiTypography>
-              </VuiBox>
-              <VuiBox flexDirection="column" sx={({ breakpoints }) => ({
+            <VuiBox
+              flexDirection="column"
+              sx={({ breakpoints }) => ({
                 [breakpoints.down("xs")]: {
+                  display: "flex",
                   justifyContent: "center",
                   alignItems: "center",
-                  display: "flex",
-
                 },
                 [breakpoints.up("xs")]: {
                   justifyContent: "center",
@@ -180,21 +153,63 @@ function Header() {
                   justifyContent: "flex-end",
                   alignItems: "flex-end",
                 },
-              })}>
-                <VuiTypography variant="lg" color="primary" fontWeight="bold">
-                  {user?.subscription?.data?.name || ""}
-                </VuiTypography>
-                <Chip style={{ marginLeft: 8 }} size="small" color={user?.subscription?.status === "active" ? "success" : "warning"} label={user?.subscription?.status || ""} />
-              </VuiBox>
+              })}
+            >
               <VuiBox>
-                <VuiTypography variant="button" color="white" fontWeight="bold">
-                  {["Expired in", dayDifference(user?.subscription?.endAt || 0), "day(s)"].join(
-                    " "
-                  )}
+                <VuiTypography variant="xxs" color="white" fontWeight="bold">
+                  Subscription
                 </VuiTypography>
               </VuiBox>
+              {user?.subscription?.data?.name ? (
+                <VuiBox>
+                  <VuiBox
+                    flexDirection="column"
+                    sx={({ breakpoints }) => ({
+                      [breakpoints.down("xs")]: {
+                        justifyContent: "center",
+                        alignItems: "center",
+                        display: "flex",
+                      },
+                      [breakpoints.up("xs")]: {
+                        justifyContent: "center",
+                        alignItems: "center",
+                        display: "flex",
+                      },
+                      [breakpoints.up("md")]: {
+                        display: "flex",
+                        justifyContent: "flex-end",
+                        alignItems: "flex-end",
+                      },
+                    })}
+                  >
+                    <VuiTypography variant="lg" color="primary" fontWeight="bold">
+                      {user?.subscription?.data?.name || ""}
+                    </VuiTypography>
+                    <Chip
+                      style={{ marginLeft: 8 }}
+                      size="small"
+                      color={user?.subscription?.status === "active" ? "success" : "warning"}
+                      label={user?.subscription?.status || ""}
+                    />
+                  </VuiBox>
+                  <VuiBox>
+                    <VuiTypography variant="button" color="white" fontWeight="bold">
+                      {[
+                        "Expired inaa",
+                        dayDifference(user?.subscription?.endAt || 0),
+                        "day(s)",
+                      ].join(" ")}
+                    </VuiTypography>
+                  </VuiBox>
+                </VuiBox>
+              ) : (
+                <VuiBox>
+                  <VuiTypography variant="lg" color="primary" fontWeight="bold">
+                    Expired
+                  </VuiTypography>
+                </VuiBox>
+              )}
             </VuiBox>
-
           </Grid>
         </Grid>
       </Card>
