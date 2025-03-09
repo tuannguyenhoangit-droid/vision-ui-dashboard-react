@@ -41,7 +41,7 @@ import sidenavLogoLabel from "examples/Sidenav/styles/sidenav";
 
 import { useVisionUIController, setMiniSidenav, setTransparentSidenav } from "context";
 
-import SimmmpleLogo from "examples/Icons/SimmmpleLogo";
+import SA_BOT_IMAGE from "assets/images/sabot_ic.png";
 
 // function Sidenav({ color, brand, brandName, routes, ...rest }) {
 function Sidenav({ color, brandName, routes, backgroundColor, ...rest }) {
@@ -56,7 +56,8 @@ function Sidenav({ color, brandName, routes, backgroundColor, ...rest }) {
   useEffect(() => {
     // A function that sets the mini state of the sidenav.
     function handleMiniSidenav() {
-      //  setMiniSidenav(dispatch, window.innerWidth < 1200);
+      setTransparentSidenav(dispatch, window.innerWidth > 1440);
+      setMiniSidenav(dispatch, window.innerWidth < 1440);
     }
 
     /** 
@@ -179,7 +180,16 @@ function Sidenav({ color, brandName, routes, backgroundColor, ...rest }) {
                 })
               }
             >
-              <SimmmpleLogo size="24px" />
+              <VuiBox
+                sx={{
+                  width: 32,
+                  height: 32,
+                  marginRight: 2,
+                  color: "white",
+                }}
+                component="img"
+                src={SA_BOT_IMAGE}
+              />
             </VuiBox>
             <VuiTypography
               variant="button"

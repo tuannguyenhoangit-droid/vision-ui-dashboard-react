@@ -60,13 +60,23 @@ import Recommendation from "layouts/agent-creation-wizard/recommended";
 import Landing from "layouts/landing";
 
 const routes = [
+  { type: "title", title: "Dashboard", key: "dashboard" },
   {
     type: "collapse",
-    name: "Dashboard",
-    key: "dashboard",
-    route: "/dashboard",
+    name: "Future",
+    key: "future",
+    route: "/future",
     icon: <IoHome size="15px" color="inherit" />,
-    component: Dashboard,
+    component: Dashboard, // Future
+    noCollapse: true,
+  },
+  {
+    type: "collapse",
+    name: "Spot (Coming Soon)",
+    key: "spot",
+    route: "/future", // temporary
+    icon: <IoHome size="15px" color="inherit" />,
+    component: Dashboard, // temporary
     noCollapse: true,
   },
   // {

@@ -41,9 +41,9 @@ function StrategyBuilder() {
       <Grid container spacing={3} direction="row" justifyContent="center" alignItems="stretch">
         <Grid item xs={12} md={12} lg={12}>
           <Projects
-            onEditRSIItem={(item) => {
-              setSymbolUpdateRSIConfigItem(item);
-            }}
+            // onEditRSIItem={(item) => {
+            //   setSymbolUpdateRSIConfigItem(item);
+            // }}
             onEditItem={(item) => {
               setSymbolEditItem(item);
             }}
@@ -64,13 +64,13 @@ function StrategyBuilder() {
         }}
         open={isOpenSymbolConfigModal || symbolEditItem !== null}
       />
-      <UpdateRSIConfigDialog
+      {/* <UpdateRSIConfigDialog
         item={symbolUpdateRSIConfigItem}
         onClose={() => {
           setSymbolUpdateRSIConfigItem(null);
         }}
         open={symbolUpdateRSIConfigItem !== null}
-      />
+      /> */}
       <VuiDialog
         onConfirm={confirmDeleteSymbol}
         cancelTitle="Cancel"

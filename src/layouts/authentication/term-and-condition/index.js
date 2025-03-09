@@ -10,7 +10,6 @@ import borders from "assets/theme/base/borders";
 import VuiTypography from "components/VuiTypography";
 
 function TermAndCondition() {
-
   return (
     <VuiBox
       component="form"
@@ -28,9 +27,9 @@ function TermAndCondition() {
         </VuiTypography>
         <VuiBox>
           <VuiTypography component="label" variant="button" color="white" fontWeight="light">
-            Welcome to SA Bot Trading Platform. By using this platform, you agree to comply with
-            these Terms and Conditions. Please read them carefully before signing up or using any
-            of our services.
+            Welcome to SA Bot - Automated Trading Platform. By using this platform, you agree to
+            comply with these Terms and Conditions. Please read them carefully before signing up or
+            using any of our services.
           </VuiTypography>
         </VuiBox>
       </VuiBox>
@@ -41,8 +40,7 @@ function TermAndCondition() {
         </VuiTypography>
         <VuiBox>
           <VuiTypography component="label" variant="button" color="text" fontWeight="light">
-            • The platform is designed to assist users in creating strategies for automatic
-            trading.
+            • The platform is designed to assist users in creating strategies for automatic trading.
           </VuiTypography>
         </VuiBox>
         <VuiBox>
@@ -65,8 +63,8 @@ function TermAndCondition() {
         </VuiTypography>
         <VuiBox>
           <VuiTypography component="label" variant="button" color="text" fontWeight="light">
-            • Users can create an account using either a Google account or an email address
-            (with verification).
+            • Users can create an account using either a Google account or an email address (with
+            verification).
           </VuiTypography>
         </VuiBox>
         <VuiBox>
@@ -88,15 +86,14 @@ function TermAndCondition() {
         </VuiTypography>
         <VuiBox>
           <VuiTypography component="label" variant="button" color="text" fontWeight="light">
-            • Users are required to link their Binance Futures accounts using API keys with
-            "Read" and "Futures Order" permissions. Withdraw permission is neither required nor
-            used.
+            • Users are required to link their Binance Futures accounts using API keys with "Read"
+            and "Futures Order" permissions. Withdraw permission is neither required nor used.
           </VuiTypography>
         </VuiBox>
         <VuiBox>
           <VuiTypography component="label" variant="button" color="text" fontWeight="light">
-            • API keys are encrypted using RSA during transmission to the server and stored
-            securely with AES encryption in our database.
+            • API keys are encrypted using RSA during transmission to the server and stored securely
+            with AES encryption in our database.
           </VuiTypography>
         </VuiBox>
         <VuiBox>
@@ -113,8 +110,8 @@ function TermAndCondition() {
         </VuiTypography>
         <VuiBox>
           <VuiTypography component="label" variant="button" color="text" fontWeight="light">
-            • The platform offers four subscription tiers. All subscriptions are payable in USDT
-            and offer different features, quotas, and pricing.
+            • The platform offers four subscription tiers. All subscriptions are payable in USDT and
+            offer different features, quotas, and pricing.
           </VuiTypography>
         </VuiBox>
         <VuiBox>
@@ -130,14 +127,14 @@ function TermAndCondition() {
         </VuiTypography>
         <VuiBox>
           <VuiTypography component="label" variant="button" color="text" fontWeight="light">
-            • Trading cryptocurrencies involves significant risks, including the potential loss
-            of your entire investment.
+            • Trading cryptocurrencies involves significant risks, including the potential loss of
+            your entire investment.
           </VuiTypography>
         </VuiBox>
         <VuiBox>
           <VuiTypography component="label" variant="button" color="text" fontWeight="light">
-            • The platform does not guarantee the success of any trading strategy or offer
-            financial advice.
+            • The platform does not guarantee the success of any trading strategy or offer financial
+            advice.
           </VuiTypography>
         </VuiBox>
       </VuiBox>
@@ -148,8 +145,8 @@ function TermAndCondition() {
         </VuiTypography>
         <VuiBox>
           <VuiTypography component="label" variant="button" color="text" fontWeight="light">
-            • The platform uses advanced encryption methods to ensure the security of your API
-            keys and personal data.
+            • The platform uses advanced encryption methods to ensure the security of your API keys
+            and personal data.
           </VuiTypography>
         </VuiBox>
         <VuiBox>
@@ -178,9 +175,9 @@ function TermAndCondition() {
         </VuiTypography>
         <VuiBox>
           <VuiTypography component="label" variant="button" color="text" fontWeight="light">
-            • The platform reserves the right to suspend or terminate user accounts for
-            violations of these Terms and Conditions. Refunds are not provided for unused
-            portions of subscriptions.
+            • The platform reserves the right to suspend or terminate user accounts for violations
+            of these Terms and Conditions. Refunds are not provided for unused portions of
+            subscriptions.
           </VuiTypography>
         </VuiBox>
       </VuiBox>

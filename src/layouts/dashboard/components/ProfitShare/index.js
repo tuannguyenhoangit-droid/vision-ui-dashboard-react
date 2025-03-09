@@ -68,7 +68,7 @@ export function ProfitShare({ open, onClose = () => null, data = null }) {
           })}
         >
           <VuiTypography variant="caption" color="white">
-            Automatic Trading Platform
+            Automated Trading Platform
           </VuiTypography>
           <VuiTypography variant="h6" color="white">
             SA BOT

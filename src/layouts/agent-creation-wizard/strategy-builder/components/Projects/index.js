@@ -1,10 +1,10 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import Card from "@mui/material/Card";
 import Icon from "@mui/material/Icon";
 import { BsCheckCircleFill, BsPencilSquare } from "react-icons/bs";
 import VuiBox from "components/VuiBox";
 import VuiTypography from "components/VuiTypography";
-
+import IconButton from "@mui/material/IconButton";
 import Table from "examples/Tables/Table";
 import { useDispatch, useSelector } from "react-redux";
 import VuiSwitch from "components/VuiSwitch";
@@ -16,8 +16,92 @@ import { isMobile } from "react-device-detect";
 import { createSymbolConfig, getSymbolConfig, quickChangeFrame } from "services/api";
 import { setMessage } from "app-redux/futures/messageSlice";
 import { setSymbolConfigData } from "app-redux/futures/symbolConfigSlice";
-import { Chip } from "@mui/material";
-import { AddCircle } from "@mui/icons-material";
+import { Chip, Menu, MenuItem } from "@mui/material";
+import { AddCircle, TrendingUp } from "@mui/icons-material";
+
+const TradingFrameList = [
+  {
+    label: "5m:30m",
+    value: "5m",
+    depends: ["30m"],
+  },
+  {
+    label: "15m:2h",
+    value: "15m",
+    depends: ["2h"],
+  },
+  {
+    label: "30m:4h",
+    value: "30m",
+    depends: ["4h"],
+  },
+  {
+    label: "1h:4h",
+    value: "1h",
+    depends: ["4h"],
+  },
+  {
+    label: "2h:6h",
+    value: "2h",
+    depends: ["6h"],
+  },
+  {
+    label: "4h:12h",
+    value: "4h",
+    depends: ["12h"],
+  },
+  {
+    label: "4h:1d",
+    value: "4h",
+    depends: ["1d"],
+  },
+  {
+    label: "12h:3d",
+    value: "12h",
+    depends: ["3d"],
+  },
+  {
+    label: "1d:1w",
+    value: "1d",
+    depends: ["1w"],
+  },
+];
+
+const TradingFrameMenu = ({ open, onClose, handleQuickChangeFrame }) => {
+  return (
+    <Menu
+      anchorEl={open}
+      open={Boolean(open)}
+      onClose={onClose}
+      anchorReference={null}
+      anchorOrigin={{
+        vertical: "bottom",
+        horizontal: "left",
+      }}
+    >
+      <VuiBox p={1}>
+        <VuiBox ml={1} mb={1}>
+          <VuiTypography variant="button" color="white" fontWeight="bold">
+            Trading Frame
+          </VuiTypography>
+        </VuiBox>
+        {TradingFrameList.map((frame) => (
+          <MenuItem key={frame.value}>
+            <VuiBox display="flex" alignItems="center">
+              <Chip
+                clickable
+                onClick={() => handleQuickChangeFrame(frame.value, frame.depends)}
+                label={["Frame", frame.label].join(": ")}
+                color="warning"
+                size={isMobile ? "small" : "medium"}
+              />
+            </VuiBox>
+          </MenuItem>
+        ))}
+      </VuiBox>
+    </Menu>
+  );
+};
 
 const SymbolConfigItem = ({
   row,
@@ -31,6 +115,7 @@ const SymbolConfigItem = ({
   const onDelete = () => onDeleteItem(row);
   const onEditRSI = () => onEditRSIItem(row);
   const onAutoTakeProfitChange = (row, status) => onAutoTakeProfit(row, status);
+
   return {
     symbol: (
       <VuiBox display="flex" alignItems="center">
@@ -86,49 +171,49 @@ const SymbolConfigItem = ({
         ))}
       </VuiBox>
     ),
-    "rsi frame": (
-      <VuiBox display="flex" flexDirection="row" gap={0.5}>
-        {row?.rsiRequireValues?.length > 0 ? (
-          <VuiBox display="flex" flexDirection="column">
-            <VuiBox>
-              {row.rsiStrategy["BUY"] ? (
-                <VuiTypography variant="caption" color="white">
-                  {["B", row.rsiStrategy["BUY"]].join(": ")}
-                </VuiTypography>
-              ) : (
-                row.rsiRequireValues
-                  .filter((rsi) => rsi.side === "BUY" || rsi.side == undefined)
-                  .map((rsi) => (
-                    <VuiTypography variant="caption" color="white">
-                      {["[", rsi.frame, ":", rsi.value, "]"]}
-                    </VuiTypography>
-                  ))
-              )}
-            </VuiBox>
-            <VuiBox>
-              {row.rsiStrategy["SELL"] ? (
-                <VuiTypography variant="caption" color="white">
-                  {["S", row.rsiStrategy["SELL"]].join(": ")}
-                </VuiTypography>
-              ) : (
-                row.rsiRequireValues
-                  .filter((rsi) => rsi.side === "SELL")
-                  .map((rsi) => (
-                    <VuiTypography variant="caption" color="white">
-                      {["[", rsi.frame, ":", rsi.value, "]"]}
-                    </VuiTypography>
-                  ))
-              )}
-            </VuiBox>
-          </VuiBox>
-        ) : (
-          <VuiTypography variant="caption" color="white">
-            -
-          </VuiTypography>
-        )}
-        <BsPencilSquare onClick={onEditRSI} color={colors.warning.main} cursor="pointer" />
-      </VuiBox>
-    ),
+    // "rsi frame": (
+    //   <VuiBox display="flex" flexDirection="row" gap={0.5}>
+    //     {row?.rsiRequireValues?.length > 0 ? (
+    //       <VuiBox display="flex" flexDirection="column">
+    //         <VuiBox>
+    //           {row.rsiStrategy["BUY"] ? (
+    //             <VuiTypography variant="caption" color="white">
+    //               {["B", row.rsiStrategy["BUY"]].join(": ")}
+    //             </VuiTypography>
+    //           ) : (
+    //             row.rsiRequireValues
+    //               .filter((rsi) => rsi.side === "BUY" || rsi.side == undefined)
+    //               .map((rsi) => (
+    //                 <VuiTypography variant="caption" color="white">
+    //                   {["[", rsi.frame, ":", rsi.value, "]"]}
+    //                 </VuiTypography>
+    //               ))
+    //           )}
+    //         </VuiBox>
+    //         <VuiBox>
+    //           {row.rsiStrategy["SELL"] ? (
+    //             <VuiTypography variant="caption" color="white">
+    //               {["S", row.rsiStrategy["SELL"]].join(": ")}
+    //             </VuiTypography>
+    //           ) : (
+    //             row.rsiRequireValues
+    //               .filter((rsi) => rsi.side === "SELL")
+    //               .map((rsi) => (
+    //                 <VuiTypography variant="caption" color="white">
+    //                   {["[", rsi.frame, ":", rsi.value, "]"]}
+    //                 </VuiTypography>
+    //               ))
+    //           )}
+    //         </VuiBox>
+    //       </VuiBox>
+    //     ) : (
+    //       <VuiTypography variant="caption" color="white">
+    //         -
+    //       </VuiTypography>
+    //     )}
+    //     <BsPencilSquare onClick={onEditRSI} color={colors.warning.main} cursor="pointer" />
+    //   </VuiBox>
+    // ),
     "auto take profit": (
       <VuiTypography variant="caption" color="white">
         <VuiSwitch
@@ -168,7 +253,7 @@ function Projects({
   const symbolConfig = useSelector((e) => e.symbolConfig.data);
   const position = useSelector((e) => e.positions.data);
   const dispatch = useDispatch();
-
+  const [openTradingFrameMenu, setOpenTradingFrameMenu] = useState(false);
   const closeMenu = (action) => {
     onMenuClick?.(action);
   };
@@ -307,67 +392,43 @@ function Projects({
             Trading Frame
           </VuiTypography>
           <VuiBox display="flex" alignItems="center">
-            <VuiBox ml={1}>
+            {TradingFrameList.map((frame) => (
+              <VuiBox
+                ml={1}
+                sx={({ breakpoints }) => ({
+                  [breakpoints.down("md")]: {
+                    display: "none",
+                  },
+                })}
+              >
+                <Chip
+                  clickable
+                  onClick={() => handleQuickChangeFrame(frame.value, frame.depends)}
+                  label={frame.label}
+                  color="warning"
+                  size={isMobile ? "small" : "medium"}
+                />
+              </VuiBox>
+            ))}
+            <VuiBox
+              ml={1}
+              sx={({ breakpoints }) => ({
+                [breakpoints.up("md")]: {
+                  display: "none",
+                },
+              })}
+            >
               <Chip
                 clickable
-                onClick={() => handleQuickChangeFrame("5m", ["15m"])}
-                label="5m-15m"
-                color="warning"
                 size={isMobile ? "small" : "medium"}
-              />
-            </VuiBox>
-            <VuiBox ml={1}>
-              <Chip
-                clickable
-                onClick={() => handleQuickChangeFrame("15m", ["30m"])}
+                onClick={(event) => setOpenTradingFrameMenu(event.currentTarget)}
                 color="warning"
-                label="15m-30m"
-                size={isMobile ? "small" : "medium"}
-              />
-            </VuiBox>
-            <VuiBox ml={1}>
-              <Chip
-                clickable
-                onClick={() => handleQuickChangeFrame("30m", ["1h"])}
-                color="warning"
-                label="30m-1h"
-                size={isMobile ? "small" : "medium"}
-              />
-            </VuiBox>
-            <VuiBox ml={1}>
-              <Chip
-                clickable
-                onClick={() => handleQuickChangeFrame("1h", ["2h"])}
-                color="warning"
-                label="1h-2h"
-                size={isMobile ? "small" : "medium"}
-              />
-            </VuiBox>
-            <VuiBox ml={1}>
-              <Chip
-                clickable
-                onClick={() => handleQuickChangeFrame("2h", ["4h"])}
-                color="warning"
-                label="2h-4h"
-                size={isMobile ? "small" : "medium"}
-              />
-            </VuiBox>
-            <VuiBox ml={1}>
-              <Chip
-                clickable
-                onClick={() => handleQuickChangeFrame("4h", ["12h"])}
-                color="warning"
-                label="4h-12h"
-                size={isMobile ? "small" : "medium"}
-              />
-            </VuiBox>
-            <VuiBox ml={1}>
-              <Chip
-                clickable
-                onClick={() => handleQuickChangeFrame("12h", ["1d"])}
-                color="warning"
-                label="12h-1d"
-                size={isMobile ? "small" : "medium"}
+                label={
+                  <VuiBox display="flex" alignItems="center">
+                    <TrendingUp style={{ marginRight: 4, width: 20, height: 20 }} />
+                    Frame
+                  </VuiBox>
+                }
               />
             </VuiBox>
           </VuiBox>
@@ -395,7 +456,7 @@ function Projects({
             { name: "amount", align: "left" },
             { name: "max budget", align: "left" },
             { name: "require frames", align: "left" },
-            { name: "rsi frame", align: "left" },
+            // { name: "rsi frame", align: "left" },
             { name: "auto take profit", align: "left" },
             { name: "optimized entry", align: "left" },
             { name: "uptime", align: "left" },
@@ -404,6 +465,11 @@ function Projects({
           rows={renderRow}
         />
       </VuiBox>
+      <TradingFrameMenu
+        open={openTradingFrameMenu}
+        onClose={() => setOpenTradingFrameMenu(false)}
+        handleQuickChangeFrame={handleQuickChangeFrame}
+      />
     </Card>
   );
 }

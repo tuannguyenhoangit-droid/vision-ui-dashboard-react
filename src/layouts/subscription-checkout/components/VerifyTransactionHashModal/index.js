@@ -56,7 +56,7 @@ function VerifyTransactionHashModal({ open, onClose }) {
 
             onClose();
             setTimeout(() => {
-              history.push("/dashboard");
+              history.push("/future");
             }, 1500);
           }
         })

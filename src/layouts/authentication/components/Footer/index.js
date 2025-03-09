@@ -26,7 +26,6 @@ import InstagramIcon from "@mui/icons-material/Instagram";
 import PinterestIcon from "@mui/icons-material/Pinterest";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 
-
 import VuiBox from "components/VuiBox";
 import VuiTypography from "components/VuiTypography";
 
@@ -58,9 +57,9 @@ function Footer() {
               color="text"
               mr="2px"
             >
-              SA Bot{" "}
+              SA Bot{" - "}
             </VuiTypography>
-            Trading Platform
+            Automated Trading Platform
           </VuiTypography>
         </Grid>
         {/* <Grid item xs={10}>

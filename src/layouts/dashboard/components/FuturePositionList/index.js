@@ -35,7 +35,6 @@ import { useHistory } from "react-router-dom/cjs/react-router-dom";
 import { BsShare } from "react-icons/bs";
 
 const FuturePositionItem = ({ row, onShareProfit = () => null }) => {
-  console.log("item", row.symbol, row.positionAmt);
   return {
     symbol: (
       <VuiBox display="flex" alignItems="center">

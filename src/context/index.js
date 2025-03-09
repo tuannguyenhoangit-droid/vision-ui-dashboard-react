@@ -66,7 +66,7 @@ function reducer(state, action) {
 
 function VisionUIControllerProvider({ children }) {
   const initialState = {
-    miniSidenav: true,
+    miniSidenav: false,
     transparentSidenav: true,
     sidenavColor: "info",
     transparentNavbar: true,

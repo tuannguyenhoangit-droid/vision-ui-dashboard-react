@@ -217,6 +217,54 @@ const RSIConfigView = ({
   return (
     <VuiBox>
       <VuiBox mb={2}>
+        <VuiBox display="flex" flexDirection="row" justifyContent="center" alignItems="center">
+          <VuiTypography
+            textAlign="center"
+            component="label"
+            variant="h6"
+            color="white"
+            fontWeight="medium"
+          >
+            Advanced Settings
+          </VuiTypography>
+        </VuiBox>
+        <VuiBox
+          mb={2}
+          display="flex"
+          flexDirection="row"
+          justifyContent="space-between"
+          alignItems="center"
+        >
+          <VuiTypography
+            textAlign="center"
+            component="label"
+            variant="button"
+            color="white"
+            fontWeight="medium"
+          >
+            Side
+          </VuiTypography>
+          <VuiBox mt={2} display="flex" justifyContent="center">
+            <ButtonGroup variant="contained" aria-label="Basic button group">
+              <VuiButton
+                size="small"
+                disabled={config.side === "SELL"}
+                onClick={() => setRsiSide("BUY")}
+                color={rsiSide === "BUY" ? "success" : "light"}
+              >
+                BUY
+              </VuiButton>
+              <VuiButton
+                size="small"
+                disabled={config.side === "BUY"}
+                onClick={() => setRsiSide("SELL")}
+                color={rsiSide === "SELL" ? "error" : "light"}
+              >
+                SELL
+              </VuiButton>
+            </ButtonGroup>
+          </VuiBox>
+        </VuiBox>
         <VuiBox mb={1} alignItems="center" justifyContent="space-between" display="flex">
           <VuiTypography component="label" variant="button" color="white" fontWeight="medium">
             Enable RSI Strategy Check
@@ -228,25 +276,6 @@ const RSIConfigView = ({
               onChange("enableRSIStrategy", switched);
             }}
           />
-        </VuiBox>
-
-        <VuiBox mt={2} mb={2} display="flex" justifyContent="center">
-          <ButtonGroup variant="contained" aria-label="Basic button group">
-            <VuiButton
-              disabled={config.side === "SELL"}
-              onClick={() => setRsiSide("BUY")}
-              color={rsiSide === "BUY" ? "success" : "light"}
-            >
-              BUY
-            </VuiButton>
-            <VuiButton
-              disabled={config.side === "BUY"}
-              onClick={() => setRsiSide("SELL")}
-              color={rsiSide === "SELL" ? "error" : "light"}
-            >
-              SELL
-            </VuiButton>
-          </ButtonGroup>
         </VuiBox>
         {config.enableRSIStrategy ? buyRSIStrategyCheckbox : null}
       </VuiBox>

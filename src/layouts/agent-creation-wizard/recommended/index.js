@@ -42,14 +42,6 @@ function Recommendation() {
             data={recommandedSymbols.midTermSignals}
           />
         </Grid>
-        <Grid item xs={12} md={12}>
-          <RecommandedSymbols
-            title="Short Term Signals"
-            description="Top symbols recommanded by AI"
-            onItemClick={setSymbolEditItem}
-            data={recommandedSymbols.shortTermSignals}
-          />
-        </Grid>
       </Grid>
 
       <SymbolConfigModal

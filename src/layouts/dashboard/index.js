@@ -85,7 +85,7 @@ function Dashboard() {
 
   useEffect(() => {
     setTimeout(() => {
-      if (history.location.pathname == "/dashboard") {
+      if (history.location.pathname == "/future") {
         auth.currentUser?.getIdToken?.().then((token) => {
           getCurrentPositions().then((position) => dispatch(setPositions(position)));
           getOpenOrders().then(setOpenOrders);

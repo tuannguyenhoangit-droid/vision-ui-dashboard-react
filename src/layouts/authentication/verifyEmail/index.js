@@ -42,10 +42,12 @@ function VerifyEmail() {
     <CoverLayout
       title="Verify Email"
       color="white"
-      description={"The email need to be verified before access SA Bot Trading Platform"}
+      description={
+        "The email need to be verified before access SA Bot - Automated Trading Platform"
+      }
       image={bgSignIn}
       premotto="AGENT AI FOR TRADING"
-      motto="THE SA BOT TRADING PLATFORM"
+      motto="THE SA BOT - AUTOMATED TRADING PLATFORM"
       cardContent
     >
       <Alert
@@ -61,11 +63,19 @@ function VerifyEmail() {
       >
         {message}
       </Alert>
-      {success && <VuiBox mt={3} textAlign="center">
-        <VuiButton circular variant="gradient" onClick={() => history.push("/authentication/sign-in")} color="info" fullWidth>
-          SIGN IN NOW
-        </VuiButton>
-      </VuiBox>}
+      {success && (
+        <VuiBox mt={3} textAlign="center">
+          <VuiButton
+            circular
+            variant="gradient"
+            onClick={() => history.push("/authentication/sign-in")}
+            color="info"
+            fullWidth
+          >
+            SIGN IN NOW
+          </VuiButton>
+        </VuiBox>
+      )}
     </CoverLayout>
   );
 }

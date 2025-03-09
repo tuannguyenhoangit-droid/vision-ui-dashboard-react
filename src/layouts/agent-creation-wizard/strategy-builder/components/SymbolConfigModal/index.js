@@ -512,7 +512,7 @@ export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
     return false;
   }, [loading, tickerPrice, config]);
 
-  const steps = ["Symbol", "MACD Strategy", "RSI Strategy", "Optimize"];
+  const steps = ["Symbol", "MACD Strategy", "Optimize"];
 
   return (
     <Dialog onClose={onClose} open={open} maxWidth>
@@ -575,7 +575,7 @@ export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
                     onClick={() => onChange("side", "BOTH")}
                     color={config.side === "BOTH" ? "warning" : "light"}
                   >
-                    BOTH
+                    BOTH (beta)
                   </VuiButton>
                   <VuiButton
                     onClick={() => onChange("side", "BUY")}
@@ -873,7 +873,7 @@ export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
             </VuiBox>
           ) : null}
 
-          {currentStep === 2 ? (
+          {/* {currentStep === 2 ? (
             <RSIConfigView
               defaultRsiStrategyIds={config.rsiStrategy}
               onCancel={() => setCurrentStep(1)}
@@ -885,9 +885,9 @@ export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
               config={config}
               onChange={onChange}
             />
-          ) : null}
+          ) : null} */}
 
-          {currentStep === 3 ? (
+          {currentStep === 2 ? (
             <VuiBox>
               <VuiBox mb={2}>
                 <VuiBox mb={1} alignItems="center" justifyContent="space-between" display="flex">

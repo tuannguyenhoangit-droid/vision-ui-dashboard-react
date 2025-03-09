@@ -1,8 +1,5 @@
 import { useState, useEffect } from "react";
 
-// react-router components
-import { useLocation, Link } from "react-router-dom";
-
 // prop-types is a library for typechecking of props.
 import PropTypes from "prop-types";
 
@@ -21,11 +18,8 @@ import {
   navbar,
   navbarContainer,
   navbarRow,
-  navbarIconButton,
   navbarMobileMenu,
 } from "examples/Navbars/DashboardNavbar/styles";
-import { useDispatch } from "react-redux";
-import { isMobile } from "react-device-detect";
 import { useVisionUIController, setTransparentNavbar, setMiniSidenav } from "context";
 
 // Images
@@ -39,9 +33,9 @@ function DashboardNavbar({ absolute, light, isMini }) {
   const [controller, dispatch] = useVisionUIController();
   const { miniSidenav, transparentNavbar, fixedNavbar } = controller;
   const history = useHistory();
-  const [openMenu, setOpenMenu] = useState(false);
   const [openLearnStrategies, setOpenLearnStrategies] = useState(false);
   const [openBotStrategies, setOpenBotStrategies] = useState(false);
+  const [mainActionButtonRound, setMainActionButtonRound] = useState(false);
 
   useEffect(() => {
     // Setting the navbar type
@@ -52,12 +46,28 @@ function DashboardNavbar({ absolute, light, isMini }) {
     }
     setMiniSidenav(dispatch, true);
     setTransparentNavbar(dispatch, false);
+    setMainActionButtonRound(true);
+    // A function that sets the transparent state of the navbar.
+    function handleTransparentNavbar() {
+      setTransparentNavbar(dispatch, (fixedNavbar && window.scrollY === 0) || !fixedNavbar);
+      setMainActionButtonRound((fixedNavbar && window.scrollY === 0) || !fixedNavbar);
+    }
+
+    /** 
+     The event listener that's calling the handleTransparentNavbar function when 
+     scrolling the window.
+    */
+    window.addEventListener("scroll", handleTransparentNavbar);
+
+    // Call the handleTransparentNavbar function to set the state with the initial value.
+    handleTransparentNavbar();
+
+    // Remove event listener on cleanup
+    return () => window.removeEventListener("scroll", handleTransparentNavbar);
   }, [dispatch, fixedNavbar]);
 
   const handleMiniSidenav = () => setMiniSidenav(dispatch, !miniSidenav);
   const handleOpenTelegram = () => window.open("https://t.me/sabot_official", "_blank");
-  const handleOpenMenu = (event) => setOpenMenu(event.currentTarget);
-  const handleCloseMenu = () => setOpenMenu(false);
   const handleCloseLearnStrategies = () => setOpenLearnStrategies(false);
   const handleCloseBotStrategies = () => setOpenBotStrategies(false);
 
@@ -287,28 +297,31 @@ function DashboardNavbar({ absolute, light, isMini }) {
             </VuiButton>
             <VuiButton
               sx={({ breakpoints }) => ({
-                [breakpoints.down("xl")]: {
+                [breakpoints.down("md")]: {
                   display: "none",
                 },
               })}
               onClick={openSignIn}
-              variant="text"
+              variant={mainActionButtonRound ? "outlined" : "text"}
               color="white"
+              size="small"
             >
               Sign In
             </VuiButton>
             <VuiButton
               sx={({ breakpoints }) => ({
-                [breakpoints.down("xl")]: {
+                [breakpoints.down("md")]: {
                   display: "none",
                 },
               })}
               onClick={openSignUp}
-              variant="text"
+              variant={mainActionButtonRound ? "outlined" : "text"}
               color="white"
+              size="small"
             >
               Sign Up
             </VuiButton>
+
             <IconButton
               size="small"
               color="inherit"

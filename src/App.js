@@ -11,7 +11,7 @@ import { useVisionUIController, setMiniSidenav } from "context";
 import { getAuth } from "firebase/auth";
 import { firebaseApp } from "./firebase";
 import { setUser } from "./app-redux/futures/userSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { userSignIn } from "services/api";
 
 const NO_AUTH_PATHS = [
@@ -27,6 +27,7 @@ export default function App() {
   const [onMouseEnter, setOnMouseEnter] = useState(false);
   const { pathname } = useLocation();
   const history = useHistory();
+  const currentUser = useSelector((state) => state.user);
 
   const dispatchRedux = useDispatch();
 
@@ -39,7 +40,7 @@ export default function App() {
       const auth = getAuth(firebaseApp);
       unsubscribe = auth.onAuthStateChanged(async (user) => {
         if (user) {
-          if (user.emailVerified) {
+          if (user.emailVerified && currentUser?.user === null) {
             // sync user latest data
             const signedUser = await userSignIn(
               user.displayName,
@@ -52,7 +53,7 @@ export default function App() {
             dispatchRedux(setUser(signedUser.data));
 
             setTimeout(() => {
-              history.push("/dashboard");
+              history.push("/future");
             }, 1000);
           }
         } else {
@@ -66,7 +67,7 @@ export default function App() {
 
     // Cleanup subscription on unmount
     return () => unsubscribe?.();
-  }, [history]);
+  }, [history.location.pathname]);
 
   // Open sidenav when mouse enter on mini sidenav
   const handleOnMouseEnter = () => {
@@ -127,7 +128,7 @@ export default function App() {
       {/* {layout === "vr" && <Configurator />} */}
       <Switch>
         {getRoutes(routes)}
-        <Redirect from="*" to="/dashboard" />
+        <Redirect from="*" to="/future" />
       </Switch>
     </ThemeProvider>
   );

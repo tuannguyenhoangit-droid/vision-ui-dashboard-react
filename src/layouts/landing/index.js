@@ -63,6 +63,19 @@ function Landing() {
         brand=""
         brandName="SA Trading Bot"
         routes={[
+          // sign in and sign up
+          {
+            type: "collapse",
+            name: "Sign In",
+            icon: "bot",
+            route: "/authentication/sign-in",
+          },
+          {
+            type: "collapse",
+            name: "Sign Up",
+            icon: "bot",
+            route: "/authentication/sign-up",
+          },
           {
             type: "collapse",
             name: "Bot Strategies",
@@ -126,15 +139,24 @@ function Landing() {
             >
               Not a Grid Bot!
               <br />
-              It follows trendlines and makes trades
+              SA Bot follows trendlines and makes trades
             </VuiTypography>
             <VuiBox mt={2} display="flex" flexDirection="row" gap={2}>
-              <VuiBox>
+              <VuiBox
+                display="flex"
+                flexDirection="row"
+                gap={2}
+                justifyContent="flex-start"
+                alignItems="center"
+              >
                 <VuiButton
                   color="primary"
                   variant="gradient"
                   onClick={() => history.push("/authentication/sign-in")}
                 >
+                  Try Now
+                </VuiButton>
+                <VuiButton color="primary" variant="gradient" href="#bot-strategies">
                   Get Started
                 </VuiButton>
               </VuiBox>
@@ -176,7 +198,7 @@ function Landing() {
           </Grid>
         </Grid>
         {/* About Bot Strategies */}
-        <Grid item xs={12} md={12} lg={12} xl={12}>
+        <Grid item xs={12} md={12} lg={12} xl={12} id="bot-strategies">
           <VuiBox
             mb={isMobile ? 1 : 4}
             display="flex"
@@ -204,7 +226,7 @@ function Landing() {
                       type: "internal",
                       route: undefined,
                       color: "white",
-                      label: "VIEW ALL",
+                      label: "LEARN MORE",
                     }}
                     authors={[]}
                   />
@@ -219,7 +241,7 @@ function Landing() {
                       type: "internal",
                       route: undefined,
                       color: "white",
-                      label: "VIEW ALL",
+                      label: "LEARN MORE",
                     }}
                     authors={[]}
                   />
@@ -234,7 +256,7 @@ function Landing() {
                       type: "internal",
                       route: undefined,
                       color: "white",
-                      label: "VIEW ALL",
+                      label: "LEARN MORE",
                     }}
                     authors={
                       [
@@ -256,7 +278,7 @@ function Landing() {
                       type: "internal",
                       route: undefined,
                       color: "white",
-                      label: "VIEW ALL",
+                      label: "LEARN MORE",
                     }}
                     authors={
                       [
@@ -278,7 +300,7 @@ function Landing() {
                       type: "internal",
                       route: undefined,
                       color: "white",
-                      label: "VIEW ALL",
+                      label: "LEARN MORE",
                     }}
                     authors={
                       [
@@ -318,14 +340,26 @@ function Landing() {
             display="flex"
             flexDirection="row"
           >
-            <Grid item xs={12} md={6} xl={6}>
+            <Grid item xs={12} md={8} xl={6}>
+              <Card sx={{ backgroundColor: "#35125c" }}>
+                <VuiBox>
+                  <VuiTypography color="white" variant="lg" fontWeight="bold" mb="6px">
+                    Unlimited Trading Frame
+                  </VuiTypography>
+                  <VuiTypography color="text" variant="body2" fontWeight="regular">
+                    Support unlimited trading frame, from 15m, 30m, ... to 1D, 3D, 1W
+                  </VuiTypography>
+                </VuiBox>
+              </Card>
+              <VuiBox mt={2} />
               <Card sx={{ backgroundColor: "#35125c" }}>
                 <VuiBox>
                   <VuiTypography color="white" variant="lg" fontWeight="bold" mb="6px">
                     Future Trading
                   </VuiTypography>
                   <VuiTypography color="text" variant="body2" fontWeight="regular">
-                    Bot can trade future contracts and take profit easily
+                    Help traders navigate Futures Trading with precision, automation, and
+                    trend-based strategies
                   </VuiTypography>
                 </VuiBox>
               </Card>
@@ -336,29 +370,21 @@ function Landing() {
                     Spot - Accumulative Trading
                   </VuiTypography>
                   <VuiTypography color="text" variant="body2" fontWeight="regular">
-                    Bot can trade spot as accumulative trading for long term holding
+                    Designed for traders who want to accumulate assets over time and hold them for
+                    the long term
                   </VuiTypography>
                 </VuiBox>
               </Card>
               <VuiBox mt={2} />
-              <Card sx={{ backgroundColor: "#35125c" }}>
-                <VuiBox>
-                  <VuiTypography color="white" variant="lg" fontWeight="bold" mb="6px">
-                    Future - Copy Trading Leader Support
-                  </VuiTypography>
-                  <VuiTypography color="text" variant="body2" fontWeight="regular">
-                    Bot also support copy trading leader's when you have a leader in Binance
-                  </VuiTypography>
-                </VuiBox>
-              </Card>
-              <VuiBox mt={2} />
+
               <Card sx={{ backgroundColor: "#35125c" }}>
                 <VuiBox>
                   <VuiTypography color="white" variant="lg" fontWeight="bold" mb="6px">
                     Long Term Signals
                   </VuiTypography>
                   <VuiTypography color="text" variant="body2" fontWeight="regular">
-                    Recommend long term signals for long term holding
+                    AI-powered long-term signals to help traders make informed buy and sell
+                    decisions based on deep market analysis
                   </VuiTypography>
                 </VuiBox>
               </Card>
@@ -366,7 +392,7 @@ function Landing() {
             <Grid
               item
               xs={12}
-              md={6}
+              md={4}
               xl={6}
               display="flex"
               justifyContent="center"
@@ -374,7 +400,7 @@ function Landing() {
             >
               <VuiBox
                 component="img"
-                style={{ maxWidth: "80%", width: "420px" }}
+                style={{ maxWidth: "80%", width: isMobile ? "240px" : "420px" }}
                 src={botFeatures}
                 alt="Bot Features"
               />
@@ -392,7 +418,7 @@ function Landing() {
             >
               If you cant <span style={{ color: "#FFD700" }}>HOLD</span>, you cant be{" "}
               <span style={{ color: "#FFD700" }}>RICH</span>. If you cant{" "}
-              <span style={{ color: "#982176" }}>DCA</span>, you cant be{" "}
+              <span style={{ color: "#982176" }}>DCA</span>, you cant{" "}
               <span style={{ color: "#982176" }}>WIN</span>.
             </VuiTypography>
           </VuiBox>
@@ -642,7 +668,7 @@ function Landing() {
             <VuiTypography textAlign="center" color="white" variant="h4" fontWeight="bold">
               How to use SA Bot
             </VuiTypography>
-            <VuiTypography color="text" variant="body2" fontWeight="regular">
+            <VuiTypography color="text" variant="body2" fontWeight="regular" textAlign="center">
               The following steps will guide you through the process of using SA Bot.
             </VuiTypography>
           </VuiBox>
@@ -723,7 +749,7 @@ function Landing() {
             <Grid
               item
               xs={12}
-              md={6}
+              md={12}
               xl={6}
               display="flex"
               justifyContent="center"
@@ -731,12 +757,12 @@ function Landing() {
             >
               <VuiBox
                 component="img"
-                style={{ maxWidth: "80%", width: "420px" }}
+                style={{ maxWidth: "80%", width: isMobile ? "240px" : "420px" }}
                 src={botFAQ}
                 alt="Bot FAQ"
               />
             </Grid>
-            <Grid item xs={12} md={6} xl={6}>
+            <Grid item xs={12} md={12} xl={6}>
               <Card sx={{ backgroundColor: "#35125c" }}>
                 <VuiBox>
                   <VuiTypography color="white" variant="lg" fontWeight="bold" mb="6px">
@@ -835,8 +861,8 @@ function Landing() {
             </VuiTypography>
           </VuiBox>
           <Card sx={{ backgroundColor: "#35125c" }}>
-            <Grid container spacing={3}>
-              <Grid item xs={12} md={4} xl={4}>
+            <Grid container spacing={0}>
+              <Grid item xs={12} md={12} xl={4}>
                 <VuiButton
                   sx={{ width: "100%" }}
                   variant="text"
@@ -844,7 +870,18 @@ function Landing() {
                 >
                   <Card sx={{ backgroundColor: "#35125c", width: "100%" }}>
                     <VuiBox display="flex" flexDirection="row" alignItems="center">
-                      <Email style={{ width: 32, height: 32, marginRight: 2, color: "white" }} />
+                      <Email
+                        sx={({ breakpoints }) => ({
+                          width: isMobile ? 16 : 32,
+                          height: isMobile ? 16 : 32,
+                          marginRight: isMobile ? 1 : 2,
+                          color: "white",
+                          [breakpoints.down("md")]: {
+                            width: 24,
+                            height: 24,
+                          },
+                        })}
+                      />
                       <VuiBox display="flex" flexDirection="column" alignItems="flex-start" ml={2}>
                         <VuiTypography color="white" variant="lg" fontWeight="bold">
                           Email
@@ -857,7 +894,7 @@ function Landing() {
                   </Card>
                 </VuiButton>
               </Grid>
-              <Grid item xs={12} md={4} xl={4}>
+              <Grid item xs={12} md={12} xl={4}>
                 <VuiButton
                   sx={{ width: "100%" }}
                   variant="text"
@@ -865,7 +902,20 @@ function Landing() {
                 >
                   <Card sx={{ backgroundColor: "#35125c", width: "100%" }}>
                     <VuiBox display="flex" flexDirection="row" alignItems="center">
-                      <Telegram style={{ width: 32, height: 32, marginRight: 2, color: "white" }} />
+                      <Telegram
+                        sx={({ breakpoints }) => ({
+                          width: isMobile ? 16 : 32,
+                          height: isMobile ? 16 : 32,
+                          marginRight: isMobile ? 1 : 2,
+                          color: "white",
+                          [breakpoints.down("md")]: {
+                            width: 24,
+                            height: 24,
+                            marginRight: 1,
+                            color: "white",
+                          },
+                        })}
+                      />
                       <VuiBox display="flex" flexDirection="column" alignItems="flex-start" ml={2}>
                         <VuiTypography color="white" variant="lg" fontWeight="bold">
                           Telegram
@@ -878,7 +928,7 @@ function Landing() {
                   </Card>
                 </VuiButton>
               </Grid>
-              <Grid item xs={12} md={4} xl={4}>
+              <Grid item xs={12} md={12} xl={4}>
                 <VuiButton
                   sx={{ width: "100%" }}
                   onClick={() =>
@@ -891,7 +941,15 @@ function Landing() {
                       <VuiBox
                         component="img"
                         src={Binance}
-                        style={{ width: 32, height: 32, marginRight: 2 }}
+                        sx={({ breakpoints }) => ({
+                          width: isMobile ? 16 : 32,
+                          height: isMobile ? 16 : 32,
+                          marginRight: isMobile ? 1 : 2,
+                          [breakpoints.down("md")]: {
+                            width: 24,
+                            height: 24,
+                          },
+                        })}
                       />
                       <VuiBox display="flex" flexDirection="column" alignItems="flex-start" ml={2}>
                         <VuiTypography color="white" variant="lg" fontWeight="bold">

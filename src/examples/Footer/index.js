@@ -28,14 +28,14 @@ function Footer() {
           <VuiTypography
             component="a"
             variant="button"
-            href="https://simmmple.com/"
+            href="#"
             sx={{ textAlign: "center", fontWeight: "500 !important" }}
             color="white"
             mr="2px"
           >
-            SA Bot
+            SA Bot{" - "}
           </VuiTypography>
-          Trading Platform
+          Automated Trading Platform
         </VuiTypography>
       </VuiBox>
       <VuiBox item xs={6} md={6} xl={6}>

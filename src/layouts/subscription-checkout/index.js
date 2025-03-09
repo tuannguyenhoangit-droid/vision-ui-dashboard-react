@@ -375,7 +375,7 @@ function SubscriptionCheckout({ location }) {
                       >
                         Privacy Policy
                       </VuiTypography>{" "}
-                      of SA Bot Trading Platform.
+                      of SA Bot - Automated Trading Platform.
                     </VuiTypography>
                   </VuiBox>
                 </VuiBox>
