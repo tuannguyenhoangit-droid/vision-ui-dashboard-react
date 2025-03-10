@@ -30,5 +30,7 @@ export default {
     lg: 1024,
     xl: 1440,
     xxl: 1680,
+    xxxl: 1920,
+    xxxxl: 2560,
   },
 };

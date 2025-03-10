@@ -25,25 +25,57 @@ function Landing() {
       sx={({ breakpoints, transitions, functions: { pxToRem } }) => ({
         p: isMobile ? 1.5 : 3,
         position: "relative",
+        [breakpoints.up("xxxxl")]: {
+          marginLeft: pxToRem(300),
+          marginRight: pxToRem(300),
+          transition: transitions.create(["margin-left", "margin-right"], {
+            easing: transitions.easing.easeInOut,
+            duration: transitions.duration.standard,
+          }),
+        },
+        [breakpoints.up("xxxl")]: {
+          marginLeft: pxToRem(270),
+          marginRight: pxToRem(270),
+          transition: transitions.create(["margin-left", "margin-right"], {
+            easing: transitions.easing.easeInOut,
+            duration: transitions.duration.standard,
+          }),
+        },
+        [breakpoints.up("xxl")]: {
+          marginLeft: pxToRem(190),
+          marginRight: pxToRem(190),
+          transition: transitions.create(["margin-left", "margin-right"], {
+            easing: transitions.easing.easeInOut,
+            duration: transitions.duration.standard,
+          }),
+        },
         [breakpoints.up("xl")]: {
-          marginLeft: pxToRem(274),
-          marginRight: pxToRem(274),
+          marginLeft: pxToRem(150),
+          marginRight: pxToRem(150),
+          transition: transitions.create(["margin-left", "margin-right"], {
+            easing: transitions.easing.easeInOut,
+            duration: transitions.duration.standard,
+          }),
+        },
+        [breakpoints.up("lg")]: {
+          marginLeft: pxToRem(50),
+          marginRight: pxToRem(50),
           transition: transitions.create(["margin-left", "margin-right"], {
             easing: transitions.easing.easeInOut,
             duration: transitions.duration.standard,
           }),
         },
         [breakpoints.up("md")]: {
-          marginLeft: pxToRem(isMobile ? 40 : 120),
-          marginRight: pxToRem(isMobile ? 40 : 120),
+          marginLeft: pxToRem(isMobile ? 15 : 30),
+          marginRight: pxToRem(isMobile ? 15 : 30),
           transition: transitions.create(["margin-left", "margin-right"], {
             easing: transitions.easing.easeInOut,
             duration: transitions.duration.standard,
           }),
         },
         [breakpoints.up("sm")]: {
-          marginLeft: pxToRem(isMobile ? 30 : 60),
-          marginRight: pxToRem(isMobile ? 30 : 60),
+          marginLeft: pxToRem(isMobile ? 10 : 20),
+          marginRight: pxToRem(isMobile ? 10 : 20),
           transition: transitions.create(["margin-left", "margin-right"], {
             easing: transitions.easing.easeInOut,
             duration: transitions.duration.standard,
@@ -102,8 +134,8 @@ function Landing() {
           <Grid
             item
             xs={12}
-            md={isMobile ? 6 : 4}
-            lg={isMobile ? 6 : 5}
+            md={isMobile ? 8 : 7}
+            lg={isMobile ? 8 : 7}
             xl={isMobile ? 6 : 5}
             pl={2}
           >
@@ -162,32 +194,32 @@ function Landing() {
               </VuiBox>
             </VuiBox>
           </Grid>
-          <Grid item xs={12} md={isMobile ? 6 : 8} lg={isMobile ? 6 : 7} xl={isMobile ? 6 : 7}>
+          <Grid item xs={12} md={isMobile ? 4 : 5} lg={isMobile ? 4 : 5} xl={isMobile ? 6 : 7}>
             <VuiBox
               display="flex"
               flexDirection="row"
               sx={({ breakpoints }) => {
                 return {
                   [breakpoints.up("xl")]: {
-                    height: "480px",
+                    height: "320px",
                     justifyContent: "flex-end",
                     paddingRight: 10,
                   },
                   [breakpoints.only("lg")]: {
-                    height: "380px",
+                    height: "280px",
                     justifyContent: "flex-end",
                     paddingRight: 4,
                   },
                   [breakpoints.only("md")]: {
-                    height: isMobile ? "260px" : "360px",
+                    height: "240px",
                     justifyContent: "flex-end",
                   },
                   [breakpoints.only("sm")]: {
-                    height: isMobile ? "220px" : "300px",
+                    height: "200px",
                     justifyContent: "center",
                   },
                   [breakpoints.down("sm")]: {
-                    height: isMobile ? "220px" : "300px",
+                    height: "160px",
                     justifyContent: "center",
                   },
                 };
