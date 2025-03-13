@@ -26,8 +26,28 @@ const TradingFrameList = [
     depends: ["30m"],
   },
   {
+    label: "15m:30m",
+    value: "15m",
+    depends: ["30m"],
+  },
+  {
+    label: "15m:1h",
+    value: "15m",
+    depends: ["1h"],
+  },
+  {
     label: "15m:2h",
     value: "15m",
+    depends: ["2h"],
+  },
+  {
+    label: "30m:1h",
+    value: "30m",
+    depends: ["1h"],
+  },
+  {
+    label: "30m:2h",
+    value: "30m",
     depends: ["2h"],
   },
   {
@@ -220,7 +240,7 @@ const SymbolConfigItem = ({
           color="success"
           checked={row.autoTakeProfit || false}
           onChange={(_, status) => onAutoTakeProfitChange(row, status)}
-        ></VuiSwitch>
+        />
       </VuiTypography>
     ),
     "optimized entry": (
@@ -244,8 +264,16 @@ const SymbolConfigItem = ({
   };
 };
 
-const SymbolConfigItemMobile = ({ row, position }) => {
+const SymbolConfigItemMobile = ({
+  row,
+  position,
+  onAutoTakeProfitChange,
+  onEditItem,
+  onDeleteItem,
+}) => {
   const currentPosition = position.find((e) => e.symbol.includes(row.symbol));
+  const onEdit = () => onEditItem(row);
+  const onDelete = () => onDeleteItem(row);
   return (
     <VuiBox
       key={row.symbol}
@@ -254,7 +282,7 @@ const SymbolConfigItemMobile = ({ row, position }) => {
         marginBottom: 1,
       }}
     >
-      <Card>
+      <Card sx={{ backgroundColor: "rgba(255, 255, 255, 0.05)" }}>
         <Grid container>
           <Grid item xs={6}>
             <VuiTypography
@@ -274,9 +302,11 @@ const SymbolConfigItemMobile = ({ row, position }) => {
             <Chip
               color={row.side === "BOTH" ? "warning" : row.side === "BUY" ? "success" : "error"}
               label={
-                <VuiBox display="flex" alignItems="center">
-                  {row.side}
-                </VuiBox>
+                <VuiTypography variant="caption" color="white">
+                  {row.side === "BOTH" && row.autoTradeStatus
+                    ? [row.side, row.autoTradeSide].join("-")
+                    : row.side}
+                </VuiTypography>
               }
               size="small"
             />
@@ -286,28 +316,96 @@ const SymbolConfigItemMobile = ({ row, position }) => {
               Trading Frame: {row.frame}
             </VuiTypography>
           </Grid>
-          <Grid item xs={6} display="flex" justifyContent="flex-end">
-            <VuiBox textAlign="left">
+          <Grid
+            item
+            xs={6}
+            alignItems="center"
+            display="flex"
+            flexDirection="row"
+            justifyContent="flex-end"
+          >
+            <VuiTypography variant="caption" color="white">
+              R.Frames:
+            </VuiTypography>
+            {row?.buyRequireHistogram?.map?.((frame) => (
               <VuiTypography variant="caption" color="white">
-                R.Frames:
+                {frame}
               </VuiTypography>
-              {row?.buyRequireHistogram?.map?.((frame) => (
-                <VuiTypography variant="caption" color="white">
-                  {frame}
-                </VuiTypography>
-              ))}
-            </VuiBox>
+            ))}
           </Grid>
           <Grid item xs={6}>
             <VuiTypography variant="caption" color="white">
               Amount: {row.buyAmount}
             </VuiTypography>
           </Grid>
-          <Grid item xs={6} display="flex" justifyContent="flex-end">
+          <Grid
+            item
+            xs={6}
+            alignItems="center"
+            display="flex"
+            flexDirection="row"
+            justifyContent="flex-end"
+          >
             <VuiTypography variant="caption" color="white">
               Max Budget: {row.maxBudget}
             </VuiTypography>
           </Grid>
+
+          <VuiBox
+            width="100%"
+            display="flex"
+            flexDirection="row"
+            justifyContent="space-between"
+            alignItems="center"
+          >
+            <VuiBox>
+              <VuiTypography variant="caption" color="white">
+                Auto T.Profit
+                <VuiSwitch
+                  sx={{ marginLeft: 1 }}
+                  color="success"
+                  checked={row.autoTakeProfit || false}
+                  onChange={(_, status) => onAutoTakeProfitChange(row, status)}
+                />
+              </VuiTypography>
+            </VuiBox>
+            <VuiTypography variant="caption" color="white">
+              Optimized Entry: {row.optimizeEntry ? "Yes" : "No"}
+            </VuiTypography>
+          </VuiBox>
+
+          <VuiBox
+            width="100%"
+            alignItems="center"
+            justifyContent="space-between"
+            display="flex"
+            flexDirection="row"
+          >
+            <VuiTypography variant="caption" color="white">
+              Uptime: {timeDifference(row.createdAt)}
+            </VuiTypography>
+            <VuiBox
+              alignItems="center"
+              display="flex"
+              flexDirection="row"
+              justifyContent="flex-end"
+            >
+              <BsPencilSquare
+                size={isMobile ? 16 : 20}
+                onClick={onEdit}
+                color={colors.warning.main}
+                cursor="pointer"
+              />
+              <VuiBox ml={2}>
+                <FaTrashAlt
+                  size={isMobile ? 16 : 20}
+                  onClick={onDelete}
+                  color={colors.error.focus}
+                  cursor="pointer"
+                />
+              </VuiBox>
+            </VuiBox>
+          </VuiBox>
         </Grid>
       </Card>
     </VuiBox>
@@ -519,11 +617,11 @@ function Projects({
         }}
       >
         <VuiBox
-        // sx={({ breakpoints }) => ({
-        //   [breakpoints.down("md")]: {
-        //     display: "none",
-        //   },
-        // })}
+          sx={({ breakpoints }) => ({
+            [breakpoints.down("md")]: {
+              display: "none",
+            },
+          })}
         >
           <Table
             columns={[
@@ -542,17 +640,25 @@ function Projects({
             rows={renderRow}
           />
         </VuiBox>
-        {/* <VuiBox
+        <VuiBox
           sx={({ breakpoints }) => ({
+            display: "none",
             [breakpoints.down("md")]: {
               display: "block",
             },
           })}
         >
           {symbolConfig.map((row) => (
-            <SymbolConfigItemMobile key={row.symbol} row={row} position={position} />
+            <SymbolConfigItemMobile
+              key={row.symbol}
+              row={row}
+              position={position}
+              onAutoTakeProfitChange={onAutoTakeProfit}
+              onEditItem={onEditItem}
+              onDeleteItem={onDeleteItem}
+            />
           ))}
-        </VuiBox> */}
+        </VuiBox>
       </VuiBox>
       <TradingFrameMenu
         open={openTradingFrameMenu}

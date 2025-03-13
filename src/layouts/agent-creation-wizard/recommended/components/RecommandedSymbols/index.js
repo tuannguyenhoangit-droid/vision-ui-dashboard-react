@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { getRecommandedSymbols } from "services/api";
-import { Card } from "@mui/material";
+import { Card, Chip, Grid } from "@mui/material";
 import Table from "examples/Tables/Table";
 import VuiBox from "components/VuiBox";
 import VuiTypography from "components/VuiTypography";
@@ -55,8 +55,89 @@ const RecommandedSymbolsItem = ({ row, onItemClick = () => null }) => {
   };
 };
 
+const RecommandedSymbolsItemMobile = ({ row, onItemClick = () => null, type }) => {
+  const handleOnClick = () =>
+    onItemClick({
+      ...row,
+      side: row.signal,
+    });
+  return (
+    <VuiBox
+      key={row.symbol}
+      sx={{
+        marginTop: 1,
+        marginBottom: 1,
+      }}
+    >
+      <Card sx={{ backgroundColor: "rgba(255, 255, 255, 0.05)" }}>
+        <Grid container>
+          <Grid item xs={6}>
+            <VuiBox display="flex" alignItems="center">
+              <VuiTypography variant="h6" color="white">
+                {row.symbol}
+                <Chip
+                  sx={{ marginLeft: 1 }}
+                  color="primary"
+                  label={
+                    <VuiTypography variant="caption" color="white">
+                      {type}
+                    </VuiTypography>
+                  }
+                  size="small"
+                />
+              </VuiTypography>
+            </VuiBox>
+          </Grid>
+          <Grid item xs={6} display="flex" justifyContent="flex-end">
+            <Chip
+              color={row.signal === "BUY" ? "success" : "error"}
+              label={
+                <VuiTypography variant="caption" color="white">
+                  {row.signal}
+                </VuiTypography>
+              }
+              size="small"
+            />
+          </Grid>
+          <VuiBox
+            mt={2}
+            width="100%"
+            display="flex"
+            flexDirection="row"
+            justifyContent="space-between"
+          >
+            <VuiTypography variant="caption" color="white">
+              {["Score: ", row.stochSignal.totalScore]}
+            </VuiTypography>
+            <VuiTypography variant="caption" color="white">
+              {["Confidence: ", row.stochSignal.confidence.toFixed(2)]}%
+            </VuiTypography>
+          </VuiBox>
+
+          <VuiBox
+            mt={1.5}
+            width="100%"
+            display="flex"
+            justifyContent="space-between"
+            flexDirection="row"
+            alignItems="center"
+          >
+            <VuiTypography variant="caption" color="white">
+              {new Date(row.updatedAt).toLocaleString()}
+            </VuiTypography>
+            <VuiButton size="small" onClick={handleOnClick} color="vimeo" variant="gradient">
+              <AddCircle style={{ marginRight: 4 }} />
+              Strategy
+            </VuiButton>
+          </VuiBox>
+        </Grid>
+      </Card>
+    </VuiBox>
+  );
+};
+
 const RecommandedSymbols = (props) => {
-  const { onItemClick = () => null, data = [], title = "", description = "" } = props;
+  const { onItemClick = () => null, data = [], title = "", description = "", type = "" } = props;
 
   const renderRow = () => {
     return data.map((row) => RecommandedSymbolsItem({ row, onItemClick }));
@@ -83,7 +164,17 @@ const RecommandedSymbols = (props) => {
         },
       })}
     >
-      <VuiBox display="flex" justifyContent="space-between" alignItems="center" mb="32px">
+      <VuiBox
+        sx={({ breakpoints }) => ({
+          [breakpoints.down("md")]: {
+            display: "none",
+          },
+        })}
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
+        mb="32px"
+      >
         <VuiBox mb="auto">
           <VuiTypography color="white" variant="lg" mb="6px" gutterBottom>
             {title}
@@ -97,7 +188,10 @@ const RecommandedSymbols = (props) => {
         </VuiBox>
       </VuiBox>
       <VuiBox
-        sx={{
+        sx={({ breakpoints }) => ({
+          [breakpoints.down("md")]: {
+            display: "none",
+          },
           "& th": {
             borderBottom: ({ borders: { borderWidth }, palette: { grey } }) =>
               `${borderWidth[1]} solid ${grey[700]}`,
@@ -108,7 +202,7 @@ const RecommandedSymbols = (props) => {
                 `${borderWidth[1]} solid ${grey[700]}`,
             },
           },
-        }}
+        })}
       >
         <Table
           columns={[
@@ -121,6 +215,23 @@ const RecommandedSymbols = (props) => {
           ]}
           rows={renderRow()}
         />
+      </VuiBox>
+      <VuiBox
+        sx={({ breakpoints }) => ({
+          display: "none",
+          [breakpoints.down("md")]: {
+            display: "block",
+          },
+        })}
+      >
+        {data.map((row) => (
+          <RecommandedSymbolsItemMobile
+            key={row.symbol}
+            row={row}
+            onItemClick={onItemClick}
+            type={type}
+          />
+        ))}
       </VuiBox>
     </Card>
   );

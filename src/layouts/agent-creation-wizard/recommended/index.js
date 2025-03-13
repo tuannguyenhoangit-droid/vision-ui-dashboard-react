@@ -28,6 +28,7 @@ function Recommendation() {
       <Grid container spacing={2}>
         <Grid item xs={12} md={6}>
           <RecommandedSymbols
+            type="long-term"
             title="Long Term Signals"
             description="Top symbols recommanded by AI"
             onItemClick={setSymbolEditItem}
@@ -36,6 +37,7 @@ function Recommendation() {
         </Grid>
         <Grid item xs={12} md={6}>
           <RecommandedSymbols
+            type="mid-term"
             title="Mid Term Signals"
             description="Top symbols recommanded by AI"
             onItemClick={setSymbolEditItem}

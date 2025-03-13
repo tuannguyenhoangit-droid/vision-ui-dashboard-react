@@ -33,6 +33,8 @@ import { AddCircle } from "@mui/icons-material";
 import VuiButton from "components/VuiButton";
 import { useHistory } from "react-router-dom/cjs/react-router-dom";
 import { BsShare } from "react-icons/bs";
+import { Chip, Grid } from "@mui/material";
+import { isMobile } from "react-device-detect";
 
 const FuturePositionItem = ({ row, onShareProfit = () => null }) => {
   return {
@@ -114,6 +116,91 @@ const FuturePositionItem = ({ row, onShareProfit = () => null }) => {
   };
 };
 
+const FuturePositionItemMobile = ({ row, onShareProfit = () => null }) => {
+  return (
+    <VuiBox
+      key={row.symbol}
+      sx={{
+        marginTop: 1,
+        marginBottom: 1,
+      }}
+    >
+      <Card sx={{ backgroundColor: "rgba(255, 255, 255, 0.05)" }}>
+        <Grid container>
+          <VuiBox width="100%" display="flex" flexDirection="row" justifyContent="space-between">
+            <VuiTypography
+              color={"white"}
+              variant="caption" // smaller than h6
+            >
+              {row.symbol}
+            </VuiTypography>
+            <VuiBox display="flex" gap={0.5} flexDirection="row" alignItems="center">
+              <VuiTypography
+                variant="caption"
+                color={row.unRealizedProfit > 0 ? "success" : "error"}
+              >
+                {[
+                  Math.round(row.unRealizedProfit * 100) / 100,
+                  "USDT (",
+                  Math.round((row.unRealizedProfit / row.initialMargin) * 100),
+                  "%) ",
+                ].join(" ")}
+              </VuiTypography>
+              <BsShare
+                size={isMobile ? 12 : 20}
+                onClick={() => onShareProfit(row)}
+                color="white"
+                cursor="pointer"
+              />
+            </VuiBox>
+          </VuiBox>
+
+          <VuiBox
+            mt={1}
+            width="100%"
+            display="flex"
+            flexDirection="row"
+            justifyContent="space-between"
+            alignItems="center"
+          >
+            <VuiTypography variant="caption" color="white">
+              {["Entry: ", Math.round(row.entryPrice * 1000) / 1000]}
+            </VuiTypography>
+            <VuiTypography variant="caption" color="white">
+              {["Price: ", Math.round(row.markPrice * 1000) / 1000].join(" ")}
+            </VuiTypography>
+          </VuiBox>
+          <VuiBox
+            mt={1}
+            width="100%"
+            display="flex"
+            flexDirection="row"
+            justifyContent="space-between"
+          >
+            <VuiTypography variant="caption" color="white">
+              {["Size:", Math.abs(Math.round(row.notional * 1000) / 1000), "USDT"].join(" ")}
+            </VuiTypography>
+            <VuiTypography variant="caption" color="white">
+              {["Margin:", Math.round(row.initialMargin * 1000) / 1000, "USDT"].join(" ")}
+            </VuiTypography>
+          </VuiBox>
+          <VuiBox
+            mt={1}
+            width="100%"
+            display="flex"
+            flexDirection="row"
+            justifyContent="space-between"
+          >
+            <VuiTypography variant="caption" color="white">
+              {["Liquid:", Math.round(row.liquidationPrice * 1000) / 1000].join(" ")}
+            </VuiTypography>
+          </VuiBox>
+        </Grid>
+      </Card>
+    </VuiBox>
+  );
+};
+
 function FuturePositionList(props) {
   const [menu, setMenu] = useState(null);
   const { data = [], onShareProfit = () => null } = props;
@@ -156,13 +243,10 @@ function FuturePositionList(props) {
       <VuiBox display="flex" justifyContent="space-between" alignItems="center" mb="32px">
         <VuiBox mb="auto">
           <VuiTypography color="white" variant="lg" mb="6px" gutterBottom>
-            Current Future Position
+            Current Positions
           </VuiTypography>
           <VuiBox display="flex" alignItems="center" lineHeight={0}>
             {/* <BsCheckCircleFill color="green" size="15px" /> */}
-            <VuiTypography variant="button" fontWeight="regular" color="text">
-              &nbsp;<strong>Active position</strong> from Best Performance Volume
-            </VuiTypography>
           </VuiBox>
         </VuiBox>
         <VuiBox ml={1} display="flex" alignItems="center" flexDirection="row">
@@ -178,7 +262,10 @@ function FuturePositionList(props) {
         </VuiBox>
       </VuiBox>
       <VuiBox
-        sx={{
+        sx={({ breakpoints }) => ({
+          [breakpoints.down("md")]: {
+            display: "none",
+          },
           "& th": {
             borderBottom: ({ borders: { borderWidth }, palette: { grey } }) =>
               `${borderWidth[1]} solid ${grey[700]}`,
@@ -189,7 +276,7 @@ function FuturePositionList(props) {
                 `${borderWidth[1]} solid ${grey[700]}`,
             },
           },
-        }}
+        })}
       >
         <Table
           columns={[
@@ -205,6 +292,18 @@ function FuturePositionList(props) {
           ]}
           rows={renderRow()}
         />
+      </VuiBox>
+      <VuiBox
+        sx={({ breakpoints }) => ({
+          display: "none",
+          [breakpoints.down("md")]: {
+            display: "block",
+          },
+        })}
+      >
+        {data
+          ?.filter((row) => parseFloat(row.notional) !== 0)
+          .map((row) => FuturePositionItemMobile({ row, onShareProfit }))}
       </VuiBox>
     </Card>
   );
