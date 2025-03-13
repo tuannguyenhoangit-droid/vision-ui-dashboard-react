@@ -81,6 +81,14 @@ function Landing() {
             duration: transitions.duration.standard,
           }),
         },
+        [breakpoints.up("sm")]: {
+          marginLeft: pxToRem(isMobile ? 5 : 10),
+          marginRight: pxToRem(isMobile ? 5 : 10),
+          transition: transitions.create(["margin-left", "margin-right"], {
+            easing: transitions.easing.easeInOut,
+            duration: transitions.duration.standard,
+          }),
+        },
       })}
     >
       <DashboardNavbar />

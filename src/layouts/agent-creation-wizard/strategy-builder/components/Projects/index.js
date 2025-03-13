@@ -16,7 +16,7 @@ import { isMobile } from "react-device-detect";
 import { createSymbolConfig, getSymbolConfig, quickChangeFrame } from "services/api";
 import { setMessage } from "app-redux/futures/messageSlice";
 import { setSymbolConfigData } from "app-redux/futures/symbolConfigSlice";
-import { Chip, Menu, MenuItem } from "@mui/material";
+import { Chip, Grid, Menu, MenuItem } from "@mui/material";
 import { AddCircle, TrendingUp } from "@mui/icons-material";
 
 const TradingFrameList = [
@@ -244,6 +244,76 @@ const SymbolConfigItem = ({
   };
 };
 
+const SymbolConfigItemMobile = ({ row, position }) => {
+  const currentPosition = position.find((e) => e.symbol.includes(row.symbol));
+  return (
+    <VuiBox
+      key={row.symbol}
+      sx={{
+        marginTop: 1,
+        marginBottom: 1,
+      }}
+    >
+      <Card>
+        <Grid container>
+          <Grid item xs={6}>
+            <VuiTypography
+              color={
+                currentPosition
+                  ? parseFloat(currentPosition?.unRealizedProfit) > 0
+                    ? "success"
+                    : "error"
+                  : "white"
+              }
+              variant="h6"
+            >
+              {row.symbol}
+            </VuiTypography>
+          </Grid>
+          <Grid item xs={6} display="flex" justifyContent="flex-end">
+            <Chip
+              color={row.side === "BOTH" ? "warning" : row.side === "BUY" ? "success" : "error"}
+              label={
+                <VuiBox display="flex" alignItems="center">
+                  {row.side}
+                </VuiBox>
+              }
+              size="small"
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <VuiTypography variant="caption" color="white">
+              Trading Frame: {row.frame}
+            </VuiTypography>
+          </Grid>
+          <Grid item xs={6} display="flex" justifyContent="flex-end">
+            <VuiBox textAlign="left">
+              <VuiTypography variant="caption" color="white">
+                R.Frames:
+              </VuiTypography>
+              {row?.buyRequireHistogram?.map?.((frame) => (
+                <VuiTypography variant="caption" color="white">
+                  {frame}
+                </VuiTypography>
+              ))}
+            </VuiBox>
+          </Grid>
+          <Grid item xs={6}>
+            <VuiTypography variant="caption" color="white">
+              Amount: {row.buyAmount}
+            </VuiTypography>
+          </Grid>
+          <Grid item xs={6} display="flex" justifyContent="flex-end">
+            <VuiTypography variant="caption" color="white">
+              Max Budget: {row.maxBudget}
+            </VuiTypography>
+          </Grid>
+        </Grid>
+      </Card>
+    </VuiBox>
+  );
+};
+
 function Projects({
   onMenuClick = () => null,
   onEditItem = () => null,
@@ -448,22 +518,41 @@ function Projects({
           },
         }}
       >
-        <Table
-          columns={[
-            { name: "symbol", align: "left" },
-            { name: "side", align: "left" },
-            { name: "frame", align: "left" },
-            { name: "amount", align: "left" },
-            { name: "max budget", align: "left" },
-            { name: "require frames", align: "left" },
-            // { name: "rsi frame", align: "left" },
-            { name: "auto take profit", align: "left" },
-            { name: "optimized entry", align: "left" },
-            { name: "uptime", align: "left" },
-            { name: "action", align: "center" },
-          ]}
-          rows={renderRow}
-        />
+        <VuiBox
+        // sx={({ breakpoints }) => ({
+        //   [breakpoints.down("md")]: {
+        //     display: "none",
+        //   },
+        // })}
+        >
+          <Table
+            columns={[
+              { name: "symbol", align: "left" },
+              { name: "side", align: "left" },
+              { name: "frame", align: "left" },
+              { name: "amount", align: "left" },
+              { name: "max budget", align: "left" },
+              { name: "require frames", align: "left" },
+              // { name: "rsi frame", align: "left" },
+              { name: "auto take profit", align: "left" },
+              { name: "optimized entry", align: "left" },
+              { name: "uptime", align: "left" },
+              { name: "action", align: "center" },
+            ]}
+            rows={renderRow}
+          />
+        </VuiBox>
+        {/* <VuiBox
+          sx={({ breakpoints }) => ({
+            [breakpoints.down("md")]: {
+              display: "block",
+            },
+          })}
+        >
+          {symbolConfig.map((row) => (
+            <SymbolConfigItemMobile key={row.symbol} row={row} position={position} />
+          ))}
+        </VuiBox> */}
       </VuiBox>
       <TradingFrameMenu
         open={openTradingFrameMenu}
