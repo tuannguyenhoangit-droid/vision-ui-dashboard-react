@@ -24,7 +24,7 @@
 
 export default {
   values: {
-    xs: 375,
+    xs: 355,
     sm: 425,
     md: 768,
     lg: 1024,

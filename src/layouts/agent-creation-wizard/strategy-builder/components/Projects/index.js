@@ -4,7 +4,7 @@ import Icon from "@mui/material/Icon";
 import { BsCheckCircleFill, BsPencilSquare } from "react-icons/bs";
 import VuiBox from "components/VuiBox";
 import VuiTypography from "components/VuiTypography";
-import IconButton from "@mui/material/IconButton";
+import Lottie from "lottie-react";
 import Table from "examples/Tables/Table";
 import { useDispatch, useSelector } from "react-redux";
 import VuiSwitch from "components/VuiSwitch";
@@ -16,9 +16,9 @@ import { isMobile } from "react-device-detect";
 import { createSymbolConfig, getSymbolConfig, quickChangeFrame } from "services/api";
 import { setMessage } from "app-redux/futures/messageSlice";
 import { setSymbolConfigData } from "app-redux/futures/symbolConfigSlice";
-import { Chip, Grid, Menu, MenuItem } from "@mui/material";
+import { Chip, Menu, MenuItem } from "@mui/material";
 import { AddCircle, TrendingUp } from "@mui/icons-material";
-
+import lottieLiveSignal from "assets/jsons/live-signal.json";
 const TradingFrameList = [
   {
     label: "5m:30m",
@@ -137,24 +137,31 @@ const SymbolConfigItem = ({
   const onAutoTakeProfitChange = (row, status) => onAutoTakeProfit(row, status);
 
   return {
+    "": (
+      <Lottie
+        style={{
+          width: 16,
+          height: 16,
+        }}
+        animationData={lottieLiveSignal}
+        loop={true}
+      />
+    ),
     symbol: (
-      <VuiBox display="flex" alignItems="center">
-        {/* <AdobeXD size="20px" /> */}
-        <VuiTypography
-          // pl="16px"
-          color={
-            currentPosition
-              ? parseFloat(currentPosition?.unRealizedProfit) > 0
-                ? "success"
-                : "error"
-              : "white"
-          }
-          variant="button"
-          fontWeight="medium"
-        >
-          {row.symbol}
-        </VuiTypography>
-      </VuiBox>
+      <VuiTypography
+        // pl="16px"
+        color={
+          currentPosition
+            ? parseFloat(currentPosition?.unRealizedProfit) > 0
+              ? "success"
+              : "error"
+            : "white"
+        }
+        variant="button"
+        fontWeight="medium"
+      >
+        {row.symbol}
+      </VuiTypography>
     ),
     side: (
       <VuiTypography
@@ -283,22 +290,30 @@ const SymbolConfigItemMobile = ({
       }}
     >
       <Card sx={{ backgroundColor: "rgba(255, 255, 255, 0.05)" }}>
-        <Grid container>
-          <Grid item xs={6}>
-            <VuiTypography
-              color={
-                currentPosition
-                  ? parseFloat(currentPosition?.unRealizedProfit) > 0
-                    ? "success"
-                    : "error"
-                  : "white"
-              }
-              variant="h6"
-            >
-              {row.symbol}
-            </VuiTypography>
-          </Grid>
-          <Grid item xs={6} display="flex" justifyContent="flex-end">
+        <VuiBox>
+          <VuiBox width="100%" display="flex" flexDirection="row" justifyContent="space-between">
+            <VuiBox display="flex" flexDirection="row" alignItems="center">
+              <Lottie
+                style={{
+                  width: 24,
+                  height: 24,
+                }}
+                animationData={lottieLiveSignal}
+                loop={true}
+              />
+              <VuiTypography
+                color={
+                  currentPosition
+                    ? parseFloat(currentPosition?.unRealizedProfit) > 0
+                      ? "success"
+                      : "error"
+                    : "white"
+                }
+                variant="h6"
+              >
+                {row.symbol}
+              </VuiTypography>
+            </VuiBox>
             <Chip
               color={row.side === "BOTH" ? "warning" : row.side === "BUY" ? "success" : "error"}
               label={
@@ -310,46 +325,39 @@ const SymbolConfigItemMobile = ({
               }
               size="small"
             />
-          </Grid>
-          <Grid item xs={6}>
+          </VuiBox>
+
+          <VuiBox
+            mt={1}
+            width="100%"
+            display="flex"
+            flexDirection="row"
+            alignItems="center"
+            justifyContent="space-between"
+          >
             <VuiTypography variant="caption" color="white">
               Trading Frame: {row.frame}
             </VuiTypography>
-          </Grid>
-          <Grid
-            item
-            xs={6}
-            alignItems="center"
-            display="flex"
-            flexDirection="row"
-            justifyContent="flex-end"
-          >
             <VuiTypography variant="caption" color="white">
               R.Frames:
+              {row?.buyRequireHistogram?.map?.((frame) => frame)}
             </VuiTypography>
-            {row?.buyRequireHistogram?.map?.((frame) => (
-              <VuiTypography variant="caption" color="white">
-                {frame}
-              </VuiTypography>
-            ))}
-          </Grid>
-          <Grid item xs={6}>
+          </VuiBox>
+
+          <VuiBox
+            mt={1}
+            width="100%"
+            display="flex"
+            flexDirection="row"
+            justifyContent="space-between"
+          >
             <VuiTypography variant="caption" color="white">
               Amount: {row.buyAmount}
             </VuiTypography>
-          </Grid>
-          <Grid
-            item
-            xs={6}
-            alignItems="center"
-            display="flex"
-            flexDirection="row"
-            justifyContent="flex-end"
-          >
             <VuiTypography variant="caption" color="white">
               Max Budget: {row.maxBudget}
             </VuiTypography>
-          </Grid>
+          </VuiBox>
 
           <VuiBox
             width="100%"
@@ -406,7 +414,7 @@ const SymbolConfigItemMobile = ({
               </VuiBox>
             </VuiBox>
           </VuiBox>
-        </Grid>
+        </VuiBox>
       </Card>
     </VuiBox>
   );
@@ -625,6 +633,7 @@ function Projects({
         >
           <Table
             columns={[
+              { name: "", align: "left" },
               { name: "symbol", align: "left" },
               { name: "side", align: "left" },
               { name: "frame", align: "left" },

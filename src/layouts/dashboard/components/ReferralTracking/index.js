@@ -12,7 +12,9 @@ function ReferralTracking(props) {
   const { info, gradients } = colors;
   const { cardContent } = gradients;
 
-  const positionMargin = position.map((p) => parseFloat(p.initialMargin)).reduce((pre, cur) => pre + cur, 0);
+  const positionMargin = position
+    .map((p) => parseFloat(p.initialMargin))
+    .reduce((pre, cur) => pre + cur, 0);
   const health = (positionMargin / (parseFloat(balance) + parseFloat(profit))) * 100;
   return (
     <Card
@@ -101,10 +103,13 @@ function ReferralTracking(props) {
               <VuiTypography color="white" variant="lg" fontWeight="bold">
                 {[
                   "$",
-                  Math.abs(Math.round(
-                    position.map((p) => parseFloat(p.notional)).reduce((pre, cur) => pre + cur, 0) *
-                    100
-                  ) / 100),
+                  Math.abs(
+                    Math.round(
+                      position
+                        .map((p) => parseFloat(p.notional))
+                        .reduce((pre, cur) => pre + cur, 0) * 100
+                    ) / 100
+                  ),
                 ].join("")}
               </VuiTypography>
             </VuiBox>

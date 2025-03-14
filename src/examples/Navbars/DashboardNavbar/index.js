@@ -18,7 +18,7 @@ import VuiTypography from "components/VuiTypography";
 
 import Breadcrumbs from "examples/Breadcrumbs";
 import NotificationItem from "examples/Items/NotificationItem";
-
+import SA_BOT_IMAGE from "assets/images/sabot_ic.png";
 // Custom styles for DashboardNavbar
 import {
   navbar,
@@ -127,12 +127,24 @@ function DashboardNavbar({ absolute, light, isMini }) {
       color="inherit"
       sx={(theme) => navbar(theme, { transparentNavbar, absolute, light })}
     >
-      <Toolbar sx={(theme) => navbarContainer(theme)}>
+      <Toolbar
+        sx={(theme) => {
+          return {
+            ...navbarContainer(theme),
+            minHeight: 0,
+          };
+        }}
+      >
         {isMobile ? null : (
           <VuiBox
             color="inherit"
             mb={{ xs: 1, md: 0 }}
-            sx={(theme) => navbarRow(theme, { isMini })}
+            sx={(theme) => ({
+              ...navbarRow(theme, { isMini }),
+              [theme.breakpoints.down("md")]: {
+                display: "none",
+              },
+            })}
           >
             <Breadcrumbs icon="home" title={route[route.length - 1]} route={route} light={light} />
           </VuiBox>
@@ -140,16 +152,38 @@ function DashboardNavbar({ absolute, light, isMini }) {
         {isMini ? null : (
           <VuiBox sx={(theme) => navbarRow(theme, { isMini })}>
             <VuiBox
-              pr={1}
+              display="flex"
+              alignItems="center"
+              flexDirection="row"
               sx={({}) => ({
                 backgroundColor: "info.main !important",
               })}
             >
-              {isMobile && (
-                <VuiTypography color="white" variant="lg" mb="6px" gutterBottom>
-                  SA Bot
-                </VuiTypography>
-              )}
+              {/* SA bot image */}
+              <VuiBox
+                sx={({ breakpoints }) => ({
+                  width: 24,
+                  height: 24,
+                  marginRight: 2,
+                  color: "white",
+                  [breakpoints.up("md")]: {
+                    display: "none",
+                  },
+                })}
+                component="img"
+                src={SA_BOT_IMAGE}
+              />
+              <VuiTypography
+                sx={({ breakpoints }) => ({
+                  [breakpoints.up("md")]: {
+                    display: "none",
+                  },
+                })}
+                color="white"
+                variant="lg"
+              >
+                SA Bot
+              </VuiTypography>
             </VuiBox>
             <VuiBox color={light ? "white" : "inherit"}>
               <Link to="/profile">
@@ -161,15 +195,18 @@ function DashboardNavbar({ absolute, light, isMini }) {
                   >
                     account_circle
                   </Icon>
-                  {isMobile ? null : (
-                    <VuiTypography
-                      variant="button"
-                      fontWeight="medium"
-                      color={light ? "white" : "dark"}
-                    >
-                      {user.user?.displayName}
-                    </VuiTypography>
-                  )}
+                  <VuiTypography
+                    variant="button"
+                    fontWeight="medium"
+                    color={light ? "white" : "dark"}
+                    sx={({ breakpoints }) => ({
+                      [breakpoints.down("lg")]: {
+                        display: "none",
+                      },
+                    })}
+                  >
+                    {user.user?.displayName}
+                  </VuiTypography>
                 </IconButton>
               </Link>
               <IconButton

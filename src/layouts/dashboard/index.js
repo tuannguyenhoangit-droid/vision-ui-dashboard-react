@@ -224,7 +224,7 @@ function Dashboard() {
           </Grid>
         </VuiBox>
         <VuiBox mb={3}>
-          <Grid container spacing="18px">
+          <Grid container spacing={3}>
             <Grid item xs={12} lg={6} xl={6}>
               <SatisfactionRate data={openOrders} />
             </Grid>

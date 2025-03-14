@@ -33,23 +33,32 @@ import { AddCircle } from "@mui/icons-material";
 import VuiButton from "components/VuiButton";
 import { useHistory } from "react-router-dom/cjs/react-router-dom";
 import { BsShare } from "react-icons/bs";
-import { Chip, Grid } from "@mui/material";
+import { Grid } from "@mui/material";
+import Lottie from "lottie-react";
 import { isMobile } from "react-device-detect";
+import lottieLiveSignal from "assets/jsons/live-signal.json";
 
 const FuturePositionItem = ({ row, onShareProfit = () => null }) => {
   return {
+    "": (
+      <Lottie
+        style={{
+          width: 16,
+          height: 16,
+        }}
+        animationData={lottieLiveSignal}
+        loop={true}
+      />
+    ),
     symbol: (
-      <VuiBox display="flex" alignItems="center">
-        {/* <AdobeXD size="20px" /> */}
-        <VuiTypography
-          // pl="16px"
-          color={parseFloat(row.unRealizedProfit) > 0 ? "success" : "error"}
-          variant="button"
-          fontWeight="medium"
-        >
-          {row.symbol}
-        </VuiTypography>
-      </VuiBox>
+      <VuiTypography
+        // pl="16px"
+        color={parseFloat(row.unRealizedProfit) > 0 ? "success" : "error"}
+        variant="button"
+        fontWeight="medium"
+      >
+        {row.symbol}
+      </VuiTypography>
     ),
     side: (
       <VuiTypography
@@ -95,12 +104,6 @@ const FuturePositionItem = ({ row, onShareProfit = () => null }) => {
             "%) ",
           ].join(" ")}
         </VuiTypography>
-        <VuiProgress
-          value={Math.round(row.diff)}
-          color="info"
-          label={false}
-          sx={{ background: "#2D2E5F" }}
-        />
       </VuiBox>
     ),
     liquid: (
@@ -128,12 +131,22 @@ const FuturePositionItemMobile = ({ row, onShareProfit = () => null }) => {
       <Card sx={{ backgroundColor: "rgba(255, 255, 255, 0.05)" }}>
         <Grid container>
           <VuiBox width="100%" display="flex" flexDirection="row" justifyContent="space-between">
-            <VuiTypography
-              color={"white"}
-              variant="caption" // smaller than h6
-            >
-              {row.symbol}
-            </VuiTypography>
+            <VuiBox display="flex" flexDirection="row" alignItems="center">
+              <Lottie
+                style={{
+                  width: 24,
+                  height: 24,
+                }}
+                animationData={lottieLiveSignal}
+                loop={true}
+              />
+              <VuiTypography
+                color={"white"}
+                variant="caption" // smaller than h6
+              >
+                {row.symbol}
+              </VuiTypography>
+            </VuiBox>
             <VuiBox display="flex" gap={0.5} flexDirection="row" alignItems="center">
               <VuiTypography
                 variant="caption"
@@ -280,6 +293,7 @@ function FuturePositionList(props) {
       >
         <Table
           columns={[
+            { name: "", align: "left" },
             { name: "symbol", align: "left" },
             { name: "side", align: "left" },
             { name: "size", align: "left" },

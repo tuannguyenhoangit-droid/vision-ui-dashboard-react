@@ -71,7 +71,7 @@ const RecommandedSymbolsItemMobile = ({ row, onItemClick = () => null, type }) =
     >
       <Card sx={{ backgroundColor: "rgba(255, 255, 255, 0.05)" }}>
         <Grid container>
-          <Grid item xs={6}>
+          <VuiBox display="flex" alignItems="center" justifyContent="space-between" width="100%">
             <VuiBox display="flex" alignItems="center">
               <VuiTypography variant="h6" color="white">
                 {row.symbol}
@@ -87,8 +87,6 @@ const RecommandedSymbolsItemMobile = ({ row, onItemClick = () => null, type }) =
                 />
               </VuiTypography>
             </VuiBox>
-          </Grid>
-          <Grid item xs={6} display="flex" justifyContent="flex-end">
             <Chip
               color={row.signal === "BUY" ? "success" : "error"}
               label={
@@ -98,7 +96,7 @@ const RecommandedSymbolsItemMobile = ({ row, onItemClick = () => null, type }) =
               }
               size="small"
             />
-          </Grid>
+          </VuiBox>
           <VuiBox
             mt={2}
             width="100%"

@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import UpdateRSIConfigDialog from "./components/UpdateRSIConfigDialog";
 import { setRsiStrategyConfig } from "app-redux/futures/rsiStrategyConfigSlice";
 import { getRsiStrategyConfig } from "services/api";
+import VuiTypography from "components/VuiTypography";
 
 function StrategyBuilder() {
   const [symbolDeleteItem, setSymbolDeleteItem] = useState(null);
@@ -38,24 +39,20 @@ function StrategyBuilder() {
   return (
     <DashboardLayout>
       <DashboardNavbar />
-      <Grid container spacing={3} direction="row" justifyContent="center" alignItems="stretch">
-        <Grid item xs={12} md={12} lg={12}>
-          <Projects
-            // onEditRSIItem={(item) => {
-            //   setSymbolUpdateRSIConfigItem(item);
-            // }}
-            onEditItem={(item) => {
-              setSymbolEditItem(item);
-            }}
-            onDeleteItem={(item) => {
-              setSymbolDeleteItem(item);
-            }}
-            onMenuClick={(action) => {
-              if (action === "add") openSymbolConfigModal(true);
-            }}
-          />
-        </Grid>
-      </Grid>
+      <Projects
+        // onEditRSIItem={(item) => {
+        //   setSymbolUpdateRSIConfigItem(item);
+        // }}
+        onEditItem={(item) => {
+          setSymbolEditItem(item);
+        }}
+        onDeleteItem={(item) => {
+          setSymbolDeleteItem(item);
+        }}
+        onMenuClick={(action) => {
+          if (action === "add") openSymbolConfigModal(true);
+        }}
+      />
       <SymbolConfigModal
         item={symbolEditItem}
         onClose={() => {
