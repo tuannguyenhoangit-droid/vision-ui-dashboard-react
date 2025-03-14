@@ -540,7 +540,7 @@ export const cancelTransaction = async (transactionId) => {
 
 export const getExceptionNotification = async (page = 1, limit = 10) => {
   const token = await auth.currentUser?.getIdToken?.();
-  if (!token) return Promise.reject("Cannot get user token 13");
+  if (!token) return Promise.resolve({ data: [] });
   return new Promise(async (resolve, reject) => {
     await axios
       .get(`/v1/exception-notification?page=${page}&limit=${limit}`, {
@@ -606,14 +606,11 @@ export const getRsiStrategyConfig = async () => {
 // get recommanded symbol
 
 export const getRecommandedSymbols = async () => {
-  const token = await auth.currentUser?.getIdToken?.();
-  if (!token) return Promise.reject("Cannot get user token 16");
   return new Promise(async (resolve, reject) => {
     await axios
       .get("/v1/recommand/signals", {
         headers: {
           "Content-Type": "application/json",
-          Authorization: ["Bearer", token].join(" "),
         },
       })
       .then((response) => {

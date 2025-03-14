@@ -18,8 +18,24 @@ import { Email, Telegram } from "@mui/icons-material";
 import Binance from "assets/images/shapes/binance.svg";
 import { useHistory } from "react-router-dom/cjs/react-router-dom";
 import Sidenav from "examples/Sidenav";
+import { getRecommandedSymbols } from "services/api";
+import { useEffect, useState } from "react";
+import SymbolSignal from "./components/SymbolSignal";
 function Landing() {
   const history = useHistory();
+
+  const [recommandedSymbols, setRecommandedSymbols] = useState([]);
+
+  useEffect(() => {
+    const fetchSymbolSignal = async () => {
+      const response = await getRecommandedSymbols();
+      setRecommandedSymbols(response);
+    };
+    setTimeout(() => {
+      fetchSymbolSignal();
+    }, 1000);
+  }, []);
+
   return (
     <VuiBox
       sx={({ breakpoints, transitions, functions: { pxToRem } }) => ({
@@ -192,7 +208,7 @@ function Landing() {
                 <VuiButton
                   color="primary"
                   variant="gradient"
-                  onClick={() => history.push("/authentication/sign-in")}
+                  onClick={() => history.push("/future")}
                 >
                   Try Now
                 </VuiButton>
@@ -237,8 +253,27 @@ function Landing() {
             </VuiBox>
           </Grid>
         </Grid>
+        {/* Recommanded Symbols Signal */}
+        <Grid mt={isMobile ? 4 : 8} item xs={12} md={12} lg={12} xl={12} id="recommanded-symbols">
+          <SymbolSignal
+            title="Long Term Signals by AI"
+            description="Base on 1d 3d 1w data analytics"
+            profitIn="Profit in 3-7 days"
+            data={recommandedSymbols.longTermSignals}
+          />
+        </Grid>
+
+        <Grid item xs={12} md={12} lg={12} xl={12} id="recommanded-symbols">
+          <SymbolSignal
+            title="Mid Term Signals by AI"
+            description="Base on 4h 6h 12h data analytics"
+            profitIn="Profit in 2 days less"
+            data={recommandedSymbols.midTermSignals}
+          />
+        </Grid>
+
         {/* About Bot Strategies */}
-        <Grid item xs={12} md={12} lg={12} xl={12} id="bot-strategies">
+        <Grid mt={isMobile ? 4 : 8} item xs={12} md={12} lg={12} xl={12} id="bot-strategies">
           <VuiBox
             mb={isMobile ? 1 : 4}
             display="flex"
