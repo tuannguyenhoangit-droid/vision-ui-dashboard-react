@@ -21,6 +21,11 @@ import { AddCircle, TrendingUp } from "@mui/icons-material";
 import lottieLiveSignal from "assets/jsons/live-signal.json";
 const TradingFrameList = [
   {
+    label: "5m:15m",
+    value: "5m",
+    depends: ["15m"],
+  },
+  {
     label: "5m:30m",
     value: "5m",
     depends: ["30m"],

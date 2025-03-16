@@ -83,7 +83,7 @@ function DashboardNavbar({ absolute, light, isMini }) {
         reduxDispatch(setNotification({ data: res.data, page: res.page }));
       });
     }
-  }, []);
+  }, [route]);
 
   const handleMiniSidenav = () => setMiniSidenav(dispatch, !miniSidenav);
   const handleOpenTelegram = () => window.open("https://t.me/sabot_official", "_blank");

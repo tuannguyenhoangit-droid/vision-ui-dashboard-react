@@ -5,16 +5,9 @@ import { isMobile } from "react-device-detect";
 import VuiTypography from "components/VuiTypography";
 import html2canvas from "html2canvas";
 import { saveAs } from "file-saver";
-import {
-  FacebookIcon,
-  FacebookShareButton,
-  TelegramIcon,
-  TelegramShareButton,
-  TwitterIcon,
-  TwitterShareButton,
-} from "react-share";
+import ProfitTexture from "assets/images/profit-texture.png";
 import { Download } from "@mui/icons-material";
-
+import SA_BOT_IMAGE from "assets/images/sabot_ic.png";
 export function ProfitShare({ open, onClose = () => null, data = null }) {
   const {
     symbol,
@@ -29,7 +22,7 @@ export function ProfitShare({ open, onClose = () => null, data = null }) {
   } = data || {};
 
   const handleDownload = () => {
-    const container = document.getElementById("profit-share-dialog");
+    const container = document.getElementById("profit-share-dialog2");
     if (!container) return;
     html2canvas(container, {
       scale: 2,
@@ -55,24 +48,57 @@ export function ProfitShare({ open, onClose = () => null, data = null }) {
     >
       <GradientBorder borderRadius={0} fullWidth="100%">
         <Card
-          id="profit-share-dialog"
           component="form"
           role="form"
-          borderRadius="inherit"
-          p="24px"
+          id="profit-share-dialog2"
           width={isMobile ? "100%" : "420px"}
           sx={({ palette: { secondary } }) => ({
             backgroundColor: secondary.focus,
             width: isMobile ? "100%" : "420px",
             borderRadius: 0,
+            padding: "24px",
           })}
         >
-          <VuiTypography variant="caption" color="white">
-            Automated Trading Platform
-          </VuiTypography>
-          <VuiTypography variant="h6" color="white">
-            SA BOT
-          </VuiTypography>
+          <VuiBox
+            sx={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              zIndex: -999,
+              opacity: 0.368,
+              width: "100%",
+              height: "100%",
+            }}
+            component="img"
+            src={ProfitTexture}
+            width="100%"
+            height="100%"
+          />
+          <VuiBox
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+            flexDirection="row"
+          >
+            <VuiBox>
+              <VuiTypography fontWeight="bold" variant="body2" color="primary">
+                Automated Trading Platform
+              </VuiTypography>
+              <VuiTypography variant="h6" color="white">
+                SA BOT
+              </VuiTypography>
+            </VuiBox>
+            <VuiBox
+              component="img"
+              src={SA_BOT_IMAGE}
+              sx={{
+                width: 32,
+                height: 32,
+                marginRight: 2,
+                color: "white",
+              }}
+            />
+          </VuiBox>
           <VuiBox mt={2} display="flex" alignItems="center" gap="16px" flexDirection="row">
             <VuiTypography
               variant="h6"

@@ -256,6 +256,7 @@ function Landing() {
         {/* Recommanded Symbols Signal */}
         <Grid mt={isMobile ? 4 : 8} item xs={12} md={12} lg={12} xl={12} id="recommanded-symbols">
           <SymbolSignal
+            type="long-term"
             title="Long Term Signals by AI"
             description="Base on 1d 3d 1w data analytics"
             profitIn="Profit in 3-7 days"
@@ -265,6 +266,7 @@ function Landing() {
 
         <Grid item xs={12} md={12} lg={12} xl={12} id="recommanded-symbols">
           <SymbolSignal
+            type="mid-term"
             title="Mid Term Signals by AI"
             description="Base on 4h 6h 12h data analytics"
             profitIn="Profit in 2 days less"

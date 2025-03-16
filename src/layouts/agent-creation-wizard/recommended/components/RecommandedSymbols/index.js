@@ -9,7 +9,7 @@ import VuiButton from "components/VuiButton";
 import { AddCircle } from "@mui/icons-material";
 //  symbol, volume, date, recommanded, signal, stochSignal stochSignal: confidence, finalSignal
 
-const RecommandedSymbolsItem = ({ row, onItemClick = () => null }) => {
+const RecommandedSymbolsItem = ({ row, onItemClick = () => null, type }) => {
   const handleOnClick = () =>
     onItemClick({
       ...row,
@@ -30,7 +30,7 @@ const RecommandedSymbolsItem = ({ row, onItemClick = () => null }) => {
     ),
     score: (
       <VuiTypography variant="caption" color="white">
-        {row.stochSignal.totalScore}
+        {row.result.totalScore || row.result?.signalDetails?.[type]?.totalScore || 0}
       </VuiTypography>
     ),
     date: (
@@ -41,7 +41,10 @@ const RecommandedSymbolsItem = ({ row, onItemClick = () => null }) => {
 
     confidence: (
       <VuiTypography variant="caption" color="white">
-        {[row.stochSignal.confidence.toFixed(2), "%"].join("")}
+        {[
+          (row.result.confidence || row.result?.signalDetails?.[type]?.confidence || 0).toFixed(2),
+          "%",
+        ].join("")}
       </VuiTypography>
     ),
     action: (
@@ -105,10 +108,10 @@ const RecommandedSymbolsItemMobile = ({ row, onItemClick = () => null, type }) =
             justifyContent="space-between"
           >
             <VuiTypography variant="caption" color="white">
-              {["Score: ", row.stochSignal.totalScore]}
+              {["Score: ", row.signalDetails?.[type]?.totalScore || 0]}
             </VuiTypography>
             <VuiTypography variant="caption" color="white">
-              {["Confidence: ", row.stochSignal.confidence.toFixed(2)]}%
+              {["Confidence: ", (row.signalDetails?.[type]?.confidence || 0).toFixed(2)]}%
             </VuiTypography>
           </VuiBox>
 
@@ -138,7 +141,7 @@ const RecommandedSymbols = (props) => {
   const { onItemClick = () => null, data = [], title = "", description = "", type = "" } = props;
 
   const renderRow = () => {
-    return data.map((row) => RecommandedSymbolsItem({ row, onItemClick }));
+    return data.map((row) => RecommandedSymbolsItem({ row, onItemClick, type }));
   };
 
   return (

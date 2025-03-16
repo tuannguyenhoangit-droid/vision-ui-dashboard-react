@@ -6,7 +6,7 @@ import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import { useHistory } from "react-router-dom";
 
-function SymbolSignal({ title, description, profitIn, data = [] }) {
+function SymbolSignal({ title, description, profitIn, data = [], type }) {
   const history = useHistory();
 
   if (data.length === 0) {
@@ -74,18 +74,45 @@ function SymbolSignal({ title, description, profitIn, data = [] }) {
                   alignItems="center"
                 >
                   <VuiTypography
+                    sx={{
+                      textAlign: "center",
+                    }}
                     color={item.signal === "BUY" ? "success" : "error"}
                     variant="body2"
                   >
                     {item.signal}
                   </VuiTypography>
-                  <VuiTypography color="primary" variant="body2">
+                  <VuiTypography
+                    sx={{
+                      textAlign: "center",
+                    }}
+                    color="primary"
+                    variant="body2"
+                  >
                     {item.symbol.replace("USDT", "")}
                   </VuiTypography>
-                  <VuiTypography mt={1} color="white" variant="caption">
-                    {["Confi ", item.stochSignal.confidence, "%"].join("")}
+                  <VuiTypography
+                    sx={{
+                      textAlign: "center",
+                    }}
+                    mt={1}
+                    color="white"
+                    variant="caption"
+                  >
+                    {[
+                      "Confi ",
+                      item.result.confidence || item.result?.signalDetails?.[type]?.confidence || 0,
+                      "%",
+                    ].join("")}
                   </VuiTypography>
-                  <VuiTypography mt={0.5} color="dark" variant="caption">
+                  <VuiTypography
+                    sx={{
+                      textAlign: "center",
+                    }}
+                    mt={0.5}
+                    color="dark"
+                    variant="caption"
+                  >
                     {profitIn}
                   </VuiTypography>
                   <VuiBox mt={1}>
