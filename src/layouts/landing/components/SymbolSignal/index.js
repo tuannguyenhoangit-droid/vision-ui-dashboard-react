@@ -99,11 +99,7 @@ function SymbolSignal({ title, description, profitIn, data = [], type }) {
                     color="white"
                     variant="caption"
                   >
-                    {[
-                      "Confi ",
-                      item.result.confidence || item.result?.signalDetails?.[type]?.confidence || 0,
-                      "%",
-                    ].join("")}
+                    {["Confi ", (item.result.confidence || 0).toFixed(0), "%"].join("")}
                   </VuiTypography>
                   <VuiTypography
                     sx={{

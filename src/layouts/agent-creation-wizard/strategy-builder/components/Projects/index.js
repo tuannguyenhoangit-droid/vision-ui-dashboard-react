@@ -26,11 +26,6 @@ const TradingFrameList = [
     depends: ["15m"],
   },
   {
-    label: "5m:30m",
-    value: "5m",
-    depends: ["30m"],
-  },
-  {
     label: "15m:30m",
     value: "15m",
     depends: ["30m"],
@@ -59,6 +54,11 @@ const TradingFrameList = [
     label: "30m:4h",
     value: "30m",
     depends: ["4h"],
+  },
+  {
+    label: "1h:2h",
+    value: "1h",
+    depends: ["2h"],
   },
   {
     label: "1h:4h",

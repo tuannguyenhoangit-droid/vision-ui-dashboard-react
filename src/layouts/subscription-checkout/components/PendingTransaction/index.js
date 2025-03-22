@@ -10,7 +10,7 @@ import { useEffect, useState } from "react";
 import { countDownExpired } from "utils";
 import { cancelTransaction } from "services/api";
 import { cancelPendingTransaction } from "app-redux/futures/transaction";
-import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
+import { useHistory } from "react-router-dom/cjs/react-router-dom";
 
 function PendingTransaction({ onVerify = () => {} }) {
   const { gradients } = colors;

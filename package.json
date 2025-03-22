@@ -39,6 +39,7 @@
     "react-redux": "^9.2.0",
     "react-router-dom": "5.2.0",
     "react-share": "^5.1.2",
+    "reactflow": "^11.11.4",
     "stylis": "4.0.10",
     "stylis-plugin-rtl": "2.1.0",
     "use-debounce": "^10.0.4",

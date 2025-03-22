@@ -12,7 +12,7 @@ import { getAccountSubscriptionInfo, validateTransaction } from "services/api";
 import { useDispatch, useSelector } from "react-redux";
 import { setMessage } from "app-redux/futures/messageSlice";
 import { setPendingTransaction } from "app-redux/futures/transaction";
-import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
+import { useHistory } from "react-router-dom/cjs/react-router-dom";
 import { setUserSubscription } from "app-redux/futures/userSlice";
 
 function VerifyTransactionHashModal({ open, onClose }) {

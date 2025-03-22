@@ -436,7 +436,7 @@ export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
           finalConfig.optimizeEntry,
           parseFloat(finalConfig.optimizeEntryPercent),
           finalConfig.enableRSIStrategy,
-          finalConfig.rsiRequireValues.filter((rsi) => rsi),
+          [], // finalConfig.rsiRequireValues.filter((rsi) => rsi),
           finalConfig.rsiStrategy,
           finalConfig.maxDCAPerWave
         );
@@ -470,6 +470,7 @@ export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
         const userSymbolConfig = await getSymbolConfig();
         dispatch(setSymbolConfigData(userSymbolConfig));
       } catch (e) {
+        console.log(e);
         setLoading(false);
       }
     } else {
@@ -965,7 +966,7 @@ export function SymbolConfigModal({ open, onClose = () => null, item = null }) {
               </VuiBox>
               <VuiBox mt={4} justifyContent="space-between" display="flex" alignItems="center">
                 <VuiBox minWidth="46%">
-                  <VuiButton onClick={() => setCurrentStep(2)} color={"light"} fullWidth>
+                  <VuiButton onClick={() => setCurrentStep(1)} color={"light"} fullWidth>
                     BACK
                   </VuiButton>
                 </VuiBox>

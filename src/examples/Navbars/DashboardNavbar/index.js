@@ -46,6 +46,7 @@ function DashboardNavbar({ absolute, light, isMini }) {
   const { miniSidenav, transparentNavbar, fixedNavbar } = controller;
   const [openMenu, setOpenMenu] = useState(false);
   const route = useLocation().pathname.split("/").slice(1);
+
   const user = useSelector((state) => state.user);
   const notification = useSelector((state) => state.notification);
   const reduxDispatch = useDispatch();
@@ -63,8 +64,8 @@ function DashboardNavbar({ absolute, light, isMini }) {
       setTransparentNavbar(dispatch, (fixedNavbar && window.scrollY === 0) || !fixedNavbar);
     }
 
-    /** 
-     The event listener that's calling the handleTransparentNavbar function when 
+    /**
+     The event listener that's calling the handleTransparentNavbar function when
      scrolling the window.
     */
     window.addEventListener("scroll", handleTransparentNavbar);
@@ -83,7 +84,7 @@ function DashboardNavbar({ absolute, light, isMini }) {
         reduxDispatch(setNotification({ data: res.data, page: res.page }));
       });
     }
-  }, [route]);
+  }, route);
 
   const handleMiniSidenav = () => setMiniSidenav(dispatch, !miniSidenav);
   const handleOpenTelegram = () => window.open("https://t.me/sabot_official", "_blank");

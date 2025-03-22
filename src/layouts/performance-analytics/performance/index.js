@@ -9,7 +9,7 @@ import { barChartOptionsDashboard } from "layouts/dashboard/data/barChartOptions
 import linearGradient from "assets/theme/functions/linearGradient";
 import colors from "assets/theme/base/colors";
 import { useEffect, useMemo, useState } from "react";
-import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
+import { useHistory } from "react-router-dom/cjs/react-router-dom";
 import { getIncomePnL, getTradeList } from "../../../services/api";
 import { getAuth } from "firebase/auth";
 import { firebaseApp } from "../../../firebase";

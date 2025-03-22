@@ -30,7 +30,7 @@ const RecommandedSymbolsItem = ({ row, onItemClick = () => null, type }) => {
     ),
     score: (
       <VuiTypography variant="caption" color="white">
-        {row.result.totalScore || row.result?.signalDetails?.[type]?.totalScore || 0}
+        {(row.result.totalScore || 0).toFixed(2)}
       </VuiTypography>
     ),
     date: (
@@ -41,10 +41,7 @@ const RecommandedSymbolsItem = ({ row, onItemClick = () => null, type }) => {
 
     confidence: (
       <VuiTypography variant="caption" color="white">
-        {[
-          (row.result.confidence || row.result?.signalDetails?.[type]?.confidence || 0).toFixed(2),
-          "%",
-        ].join("")}
+        {[(row.result.confidence || 0).toFixed(2), "%"].join("")}
       </VuiTypography>
     ),
     action: (
@@ -108,10 +105,10 @@ const RecommandedSymbolsItemMobile = ({ row, onItemClick = () => null, type }) =
             justifyContent="space-between"
           >
             <VuiTypography variant="caption" color="white">
-              {["Score: ", row.signalDetails?.[type]?.totalScore || 0]}
+              {["Score: ", (row.result.totalScore || 0).toFixed(2)]}
             </VuiTypography>
             <VuiTypography variant="caption" color="white">
-              {["Confidence: ", (row.signalDetails?.[type]?.confidence || 0).toFixed(2)]}%
+              {["Confidence: ", (row.result.confidence || 0).toFixed(2)]}%
             </VuiTypography>
           </VuiBox>
 

@@ -19,10 +19,102 @@ import Binance from "assets/images/shapes/binance.svg";
 import { useHistory } from "react-router-dom/cjs/react-router-dom";
 import Sidenav from "examples/Sidenav";
 import { getRecommandedSymbols } from "services/api";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import SymbolSignal from "./components/SymbolSignal";
+
+import ReactFlow, { Background, useNodesState, useEdgesState, addEdge } from "reactflow";
+
+import "reactflow/dist/style.css";
+const initialNodes = [
+  { id: "BIG_FRAME", position: { x: 0, y: 0 }, data: { label: "Frame: 1d 3d 1w" } },
+  {
+    id: "MID_FRAME",
+    position: { x: 0, y: 100 },
+    data: { label: "Frame: 4h 6h 12h" },
+  },
+  {
+    id: "OPEN_MARKE_ORDER",
+    sourcePosition: "bottom",
+    targetPosition: "top",
+    position: { x: 0, y: 400 },
+    data: { label: "Open Market Order" },
+  },
+  {
+    id: "EMA_CROSS",
+    targetPosition: "top",
+    sourcePosition: "left",
+    position: { x: 200, y: 300 },
+    data: { label: "EMA Cross Check" },
+  },
+  {
+    id: "TRADING_FRAME",
+    targetPosition: "left",
+    sourcePosition: "bottom",
+    position: { x: 200, y: 200 },
+    data: { label: "Trading Frame" },
+  },
+  {
+    id: "MID_TERM_SIGNAL",
+    targetPosition: "left",
+    position: { x: -200, y: 300 },
+    data: { label: "Check Signal" },
+  },
+  {
+    id: "MID_TERM_SIGNAL_4_6_12",
+    targetPosition: "left",
+    position: { x: -200, y: 200 },
+    data: { label: "4h 6h 12h" },
+  },
+];
+const initialEdges = [
+  {
+    id: "e1-2",
+    source: "BIG_FRAME",
+    target: "MID_FRAME",
+  },
+  {
+    animated: true,
+    id: "EMA_CROSS_OPEN_MARKE_ORDER",
+    source: "EMA_CROSS",
+    target: "OPEN_MARKE_ORDER",
+    label: "buy / sell",
+  },
+  {
+    animated: true,
+    id: "EMA_CROSS_TRADING_FRAME", // EMA Cross -> Trading Frame
+    source: "EMA_CROSS",
+    target: "TRADING_FRAME",
+    label: "check cross",
+  },
+  // trading frame -> ema cross
+  {
+    animated: true,
+    id: "TRADING_FRAME_EMA_CROSS", // Trading Frame -> EMA Cross
+    source: "TRADING_FRAME",
+    target: "EMA_CROSS",
+    label: "up / down",
+  },
+  {
+    animated: true,
+    id: "MID_TERM_SIGNAL_OPEN_MARKE_ORDER", // BOT -> Mid Term Signal
+    source: "MID_TERM_SIGNAL",
+    target: "OPEN_MARKE_ORDER",
+    label: "buy / sell",
+  },
+  {
+    animated: true,
+    id: "MID_TERM_SIGNAL_MID_TERM_SIGNAL_4_6_12", // Mid Term Signal -> Mid Term Signal 4h 6h 12h
+    source: "MID_TERM_SIGNAL",
+    target: "MID_TERM_SIGNAL_4_6_12",
+    label: "check signal",
+  },
+];
 function Landing() {
   const history = useHistory();
+  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
+  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+
+  const onConnect = useCallback((params) => setEdges((eds) => addEdge(params, eds)), [setEdges]);
 
   const [recommandedSymbols, setRecommandedSymbols] = useState([]);
 
@@ -42,32 +134,32 @@ function Landing() {
         p: isMobile ? 1.5 : 3,
         position: "relative",
         [breakpoints.up("xxxxl")]: {
-          marginLeft: pxToRem(300),
-          marginRight: pxToRem(300),
+          marginLeft: pxToRem(240),
+          marginRight: pxToRem(240),
           transition: transitions.create(["margin-left", "margin-right"], {
             easing: transitions.easing.easeInOut,
             duration: transitions.duration.standard,
           }),
         },
         [breakpoints.up("xxxl")]: {
-          marginLeft: pxToRem(270),
-          marginRight: pxToRem(270),
+          marginLeft: pxToRem(180),
+          marginRight: pxToRem(180),
           transition: transitions.create(["margin-left", "margin-right"], {
             easing: transitions.easing.easeInOut,
             duration: transitions.duration.standard,
           }),
         },
         [breakpoints.up("xxl")]: {
-          marginLeft: pxToRem(190),
-          marginRight: pxToRem(190),
+          marginLeft: pxToRem(120),
+          marginRight: pxToRem(120),
           transition: transitions.create(["margin-left", "margin-right"], {
             easing: transitions.easing.easeInOut,
             duration: transitions.duration.standard,
           }),
         },
         [breakpoints.up("xl")]: {
-          marginLeft: pxToRem(150),
-          marginRight: pxToRem(150),
+          marginLeft: pxToRem(80),
+          marginRight: pxToRem(80),
           transition: transitions.create(["margin-left", "margin-right"], {
             easing: transitions.easing.easeInOut,
             duration: transitions.duration.standard,
@@ -241,9 +333,11 @@ function Landing() {
                   [breakpoints.only("sm")]: {
                     height: "200px",
                     justifyContent: "center",
+                    marginTop: "32px",
                   },
                   [breakpoints.down("sm")]: {
                     height: "160px",
+                    marginTop: "32px",
                     justifyContent: "center",
                   },
                 };
@@ -273,6 +367,34 @@ function Landing() {
             data={recommandedSymbols.midTermSignals}
           />
         </Grid>
+        {/* 
+        <Grid item xs={12}>
+          <VuiBox sx={{ width: "100%", height: 800 }}>
+            <ReactFlow
+              draggable={false}
+              nodes={nodes}
+              edges={edges}
+              proOptions={{ hideAttribution: true }}
+              onlyRenderVisibleElements
+              nodesDraggable={false}
+              nodesConnectable={false}
+              elementsSelectable={false}
+              edgesUpdatable={false}
+              minZoom={1}
+              maxZoom={1}
+              preventScrolling
+              fitView
+              snapToGrid
+              snapGrid={[10, 10]}
+              moveableNodes={false}
+              onNodesChange={onNodesChange}
+              onEdgesChange={onEdgesChange}
+              onConnect={onConnect}
+            >
+              <Background />
+            </ReactFlow>
+          </VuiBox>
+        </Grid> */}
 
         {/* About Bot Strategies */}
         <Grid mt={isMobile ? 4 : 8} item xs={12} md={12} lg={12} xl={12} id="bot-strategies">
@@ -293,7 +415,7 @@ function Landing() {
           <Card sx={{ backgroundColor: "#6927FF" }}>
             <VuiBox display="flex" flexDirection="column" height="100%">
               <Grid container spacing={3}>
-                <Grid item xs={12} md={6} xl={2.4}>
+                <Grid item xs={12} sm={6} md={4} xl={3} xxxl={2.4}>
                   <StrategyCard
                     image={profile1}
                     label="Base on MACD"
@@ -308,7 +430,7 @@ function Landing() {
                     authors={[]}
                   />
                 </Grid>
-                <Grid item xs={12} md={6} xl={2.4}>
+                <Grid item xs={12} sm={6} md={4} xl={3} xxxl={2.4}>
                   <StrategyCard
                     image={profile2}
                     label="Base on Bollinger Bands"
@@ -323,7 +445,7 @@ function Landing() {
                     authors={[]}
                   />
                 </Grid>
-                <Grid item xs={12} md={6} xl={2.4}>
+                <Grid item xs={12} sm={6} md={4} xl={3} xxxl={2.4}>
                   <StrategyCard
                     image={profile3}
                     label="Base on MACD"
@@ -345,7 +467,7 @@ function Landing() {
                     }
                   />
                 </Grid>
-                <Grid item xs={12} md={6} xl={2.4}>
+                <Grid item xs={12} sm={6} md={4} xl={3} xxxl={2.4}>
                   <StrategyCard
                     image={profile3}
                     label="Base on EMA"
@@ -367,7 +489,7 @@ function Landing() {
                     }
                   />
                 </Grid>
-                <Grid item xs={12} md={6} xl={2.4}>
+                <Grid item xs={12} sm={6} md={4} xl={3} xxxl={2.4}>
                   <StrategyCard
                     image={profile3}
                     label="Base on MACD"
