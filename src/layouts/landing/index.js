@@ -19,94 +19,583 @@ import Binance from "assets/images/shapes/binance.svg";
 import { useHistory } from "react-router-dom/cjs/react-router-dom";
 import Sidenav from "examples/Sidenav";
 import { getRecommandedSymbols } from "services/api";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import SymbolSignal from "./components/SymbolSignal";
 
-import ReactFlow, { Background, useNodesState, useEdgesState, addEdge } from "reactflow";
+import ReactFlow, {
+  useNodesState,
+  useEdgesState,
+  addEdge,
+  MarkerType,
+  Background,
+  Controls,
+  Panel,
+} from "reactflow";
 
 import "reactflow/dist/style.css";
+
+// Trading Strategy Flow Diagram nodes
 const initialNodes = [
-  { id: "BIG_FRAME", position: { x: 0, y: 0 }, data: { label: "Frame: 1d 3d 1w" } },
+  // Main flow nodes
   {
-    id: "MID_FRAME",
-    position: { x: 0, y: 100 },
-    data: { label: "Frame: 4h 6h 12h" },
+    id: "start",
+    type: "input",
+    data: { label: "Start Trading Strategy" },
+    position: { x: 415, y: 0 },
+    style: { background: "#0075FF", color: "white", borderRadius: "30px", width: 200 },
   },
   {
-    id: "OPEN_MARKE_ORDER",
-    sourcePosition: "bottom",
-    targetPosition: "top",
-    position: { x: 0, y: 400 },
-    data: { label: "Open Market Order" },
+    id: "multiTimeframe",
+    data: { label: "Analyze Multiple Timeframes" },
+    position: { x: 440, y: 80 },
+    style: { background: "#0C1E4E", color: "white", border: "1px solid #0075FF" },
   },
   {
-    id: "EMA_CROSS",
-    targetPosition: "top",
-    sourcePosition: "left",
-    position: { x: 200, y: 300 },
-    data: { label: "EMA Cross Check" },
+    id: "signalAnalysis",
+    data: { label: "Signal Analysis" },
+    position: { x: 440, y: 160 },
+    style: { background: "#0C1E4E", color: "white", border: "1px solid #0075FF" },
+  },
+
+  // Core Signal Analysis nodes
+  {
+    id: "macd",
+    data: { label: "MACD Analysis" },
+    position: { x: 150, y: 240 },
+    style: { background: "#0C1E4E", color: "white", border: "1px solid #0075FF" },
   },
   {
-    id: "TRADING_FRAME",
-    targetPosition: "left",
-    sourcePosition: "bottom",
-    position: { x: 200, y: 200 },
-    data: { label: "Trading Frame" },
+    id: "ema",
+    data: { label: "EMA Crossover Analysis" },
+    position: { x: 350, y: 240 },
+    style: { background: "#0C1E4E", color: "white", border: "1px solid #0075FF" },
   },
   {
-    id: "MID_TERM_SIGNAL",
-    targetPosition: "left",
-    position: { x: -200, y: 300 },
-    data: { label: "Check Signal" },
+    id: "stochRSI",
+    data: { label: "StochRSI Analysis" },
+    position: { x: 550, y: 240 },
+    style: { background: "#0C1E4E", color: "white", border: "1px solid #0075FF" },
   },
   {
-    id: "MID_TERM_SIGNAL_4_6_12",
-    targetPosition: "left",
-    position: { x: -200, y: 200 },
-    data: { label: "4h 6h 12h" },
+    id: "bBands",
+    data: { label: "Bollinger Bands Analysis" },
+    position: { x: 750, y: 240 },
+    style: { background: "#0C1E4E", color: "white", border: "1px solid #0075FF" },
+  },
+
+  // Signal Computation nodes
+  {
+    id: "histogramEvaluation",
+    data: { label: "Histogram Evaluation" },
+    position: { x: 0, y: 320 },
+    style: { background: "#0C1E4E", color: "white", border: "1px solid #0075FF" },
+  },
+  {
+    id: "emaCrossover",
+    data: { label: "EMA Crossover Detection" },
+    position: { x: 300, y: 320 },
+    style: { background: "#0C1E4E", color: "white", border: "1px solid #0075FF" },
+  },
+  {
+    id: "stochRSIRange",
+    data: { label: "StochRSI Range Analysis" },
+    position: { x: 600, y: 320 },
+    style: { background: "#0C1E4E", color: "white", border: "1px solid #0075FF" },
+  },
+  {
+    id: "pricePosition",
+    data: { label: "Price Position in Bands" },
+    position: { x: 900, y: 320 },
+    style: { background: "#0C1E4E", color: "white", border: "1px solid #0075FF" },
+  },
+
+  // Signal details
+  {
+    id: "histogramTop",
+    data: { label: "Top of Histogram" },
+    position: { x: -100, y: 400 },
+    style: { background: "#0C1E4E", color: "white", border: "1px solid #0075FF" },
+  },
+  {
+    id: "histogramBottom",
+    data: { label: "Bottom of Histogram" },
+    position: { x: 60, y: 400 },
+    style: { background: "#0C1E4E", color: "white", border: "1px solid #0075FF" },
+  },
+
+  {
+    id: "emaCrossUp",
+    data: { label: "EMA Cross Up = Bullish" },
+    position: { x: 220, y: 400 },
+    style: { background: "#0C1E4E", color: "white", border: "1px solid #0075FF" },
+  },
+  {
+    id: "emaCrossDown",
+    data: { label: "EMA Cross Down = Bearish" },
+    position: { x: 380, y: 400 },
+    style: { background: "#0C1E4E", color: "white", border: "1px solid #0075FF" },
+  },
+
+  {
+    id: "overBought",
+    data: { label: "Overbought Zone" },
+    position: { x: 540, y: 400 },
+    style: { background: "#0C1E4E", color: "white", border: "1px solid #0075FF" },
+  },
+  {
+    id: "overSold",
+    data: { label: "Oversold Zone" },
+    position: { x: 700, y: 400 },
+    style: { background: "#0C1E4E", color: "white", border: "1px solid #0075FF" },
+  },
+
+  {
+    id: "upperBand",
+    data: { label: "Upper Band = Resistance" },
+    position: { x: 860, y: 400 },
+    style: { background: "#0C1E4E", color: "white", border: "1px solid #0075FF" },
+  },
+  {
+    id: "lowerBand",
+    data: { label: "Lower Band = Support" },
+    position: { x: 1020, y: 400 },
+    style: { background: "#0C1E4E", color: "white", border: "1px solid #0075FF" },
+  },
+
+  // Signal Weighting
+  {
+    id: "signalWeighting",
+    data: { label: "Signal Weighting & Combination" },
+    position: { x: 440, y: 480 },
+    style: { background: "#0C1E4E", color: "white", border: "1px solid #0075FF" },
+  },
+  {
+    id: "confidenceCalculation",
+    data: { label: "Calculate Signal Confidence" },
+    position: { x: 440, y: 560 },
+    style: { background: "#0C1E4E", color: "white", border: "1px solid #0075FF" },
+  },
+  {
+    id: "finalSignal",
+    data: { label: "Final Trading Signal" },
+    position: { x: 440, y: 640 },
+    style: { background: "#0C1E4E", color: "white", border: "1px solid #0075FF" },
+  },
+
+  // Signal Types
+  {
+    id: "buySignal",
+    data: { label: "BUY Signal" },
+    position: { x: 280, y: 720 },
+    style: { background: "#0C1E4E", color: "#1acd7c", border: "1px solid #1acd7c" },
+  },
+  {
+    id: "sellSignal",
+    data: { label: "SELL Signal" },
+    position: { x: 600, y: 720 },
+    style: { background: "#0C1E4E", color: "#f53535", border: "1px solid #f53535" },
+  },
+  {
+    id: "neutralSignal",
+    data: { label: "NEUTRAL Signal" },
+    position: { x: 440, y: 720 },
+    style: { background: "#0C1E4E", color: "#FFD700", border: "1px solid #FFD700" },
+  },
+
+  // Trading Actions
+  {
+    id: "histogramPosition",
+    data: { label: "Histogram Position?" },
+    position: { x: 440, y: 800 },
+    style: {
+      background: "#0C1E4E",
+      color: "white",
+      border: "1px solid #0075FF",
+      borderRadius: "15px",
+    },
+  },
+
+  // Bottom Histogram Actions
+  {
+    id: "buyOpportunity",
+    data: { label: "BUY Opportunity" },
+    position: { x: 200, y: 880 },
+    style: { background: "#0C1E4E", color: "#1acd7c", border: "1px solid #1acd7c" },
+  },
+  {
+    id: "enterLong",
+    data: { label: "Enter Long Position" },
+    position: { x: 200, y: 960 },
+    style: { background: "#0C1E4E", color: "#1acd7c", border: "1px solid #1acd7c" },
+  },
+  {
+    id: "sellTP",
+    data: { label: "Take Profit for Short" },
+    position: { x: 680, y: 880 },
+    style: { background: "#0C1E4E", color: "#f53535", border: "1px solid #f53535" },
+  },
+
+  // Top Histogram Actions
+  {
+    id: "sellOpportunity",
+    data: { label: "SELL Opportunity" },
+    position: { x: 520, y: 880 },
+    style: { background: "#0C1E4E", color: "#f53535", border: "1px solid #f53535" },
+  },
+  {
+    id: "enterShort",
+    data: { label: "Enter Short Position" },
+    position: { x: 520, y: 960 },
+    style: { background: "#0C1E4E", color: "#f53535", border: "1px solid #f53535" },
+  },
+  {
+    id: "buyTP",
+    data: { label: "Take Profit for Long" },
+    position: { x: 360, y: 880 },
+    style: { background: "#0C1E4E", color: "#1acd7c", border: "1px solid #1acd7c" },
   },
 ];
+
+// Trading Strategy Flow Diagram edges
 const initialEdges = [
+  // Main flow - primary path animated
   {
-    id: "e1-2",
-    source: "BIG_FRAME",
-    target: "MID_FRAME",
+    id: "e1",
+    source: "start",
+    target: "multiTimeframe",
+    animated: true,
+    style: { stroke: "#0075FF", strokeWidth: 2 },
+    markerEnd: { type: MarkerType.ArrowClosed, color: "#0075FF" },
   },
   {
+    id: "e2",
+    source: "multiTimeframe",
+    target: "signalAnalysis",
     animated: true,
-    id: "EMA_CROSS_OPEN_MARKE_ORDER",
-    source: "EMA_CROSS",
-    target: "OPEN_MARKE_ORDER",
-    label: "buy / sell",
+    style: { stroke: "#0075FF", strokeWidth: 2 },
+    markerEnd: { type: MarkerType.ArrowClosed, color: "#0075FF" },
+  },
+
+  // Signal Analysis to Core components - alternate animation for different paths
+  {
+    id: "e3",
+    source: "signalAnalysis",
+    target: "macd",
+    animated: true,
+    style: { stroke: "#0075FF" },
+    markerEnd: { type: MarkerType.ArrowClosed, color: "#0075FF" },
   },
   {
+    id: "e4",
+    source: "signalAnalysis",
+    target: "ema",
     animated: true,
-    id: "EMA_CROSS_TRADING_FRAME", // EMA Cross -> Trading Frame
-    source: "EMA_CROSS",
-    target: "TRADING_FRAME",
-    label: "check cross",
-  },
-  // trading frame -> ema cross
-  {
-    animated: true,
-    id: "TRADING_FRAME_EMA_CROSS", // Trading Frame -> EMA Cross
-    source: "TRADING_FRAME",
-    target: "EMA_CROSS",
-    label: "up / down",
+    style: { stroke: "#0075FF" },
+    markerEnd: { type: MarkerType.ArrowClosed, color: "#0075FF" },
   },
   {
+    id: "e5",
+    source: "signalAnalysis",
+    target: "stochRSI",
     animated: true,
-    id: "MID_TERM_SIGNAL_OPEN_MARKE_ORDER", // BOT -> Mid Term Signal
-    source: "MID_TERM_SIGNAL",
-    target: "OPEN_MARKE_ORDER",
-    label: "buy / sell",
+    style: { stroke: "#0075FF" },
+    markerEnd: { type: MarkerType.ArrowClosed, color: "#0075FF" },
   },
   {
+    id: "e6",
+    source: "signalAnalysis",
+    target: "bBands",
     animated: true,
-    id: "MID_TERM_SIGNAL_MID_TERM_SIGNAL_4_6_12", // Mid Term Signal -> Mid Term Signal 4h 6h 12h
-    source: "MID_TERM_SIGNAL",
-    target: "MID_TERM_SIGNAL_4_6_12",
-    label: "check signal",
+    style: { stroke: "#0075FF" },
+    markerEnd: { type: MarkerType.ArrowClosed, color: "#0075FF" },
+  },
+
+  // Core to computation - animated main paths
+  {
+    id: "e7",
+    source: "macd",
+    target: "histogramEvaluation",
+    animated: true,
+    style: { stroke: "#0075FF" },
+    markerEnd: { type: MarkerType.ArrowClosed, color: "#0075FF" },
+  },
+  {
+    id: "e8",
+    source: "ema",
+    target: "emaCrossover",
+    animated: true,
+    style: { stroke: "#0075FF" },
+    markerEnd: { type: MarkerType.ArrowClosed, color: "#0075FF" },
+  },
+  {
+    id: "e9",
+    source: "stochRSI",
+    target: "stochRSIRange",
+    animated: true,
+    style: { stroke: "#0075FF" },
+    markerEnd: { type: MarkerType.ArrowClosed, color: "#0075FF" },
+  },
+  {
+    id: "e10",
+    source: "bBands",
+    target: "pricePosition",
+    animated: true,
+    style: { stroke: "#0075FF" },
+    markerEnd: { type: MarkerType.ArrowClosed, color: "#0075FF" },
+  },
+
+  // Computation to details
+  {
+    id: "e11",
+    source: "histogramEvaluation",
+    target: "histogramTop",
+    animated: true,
+    style: { stroke: "#0075FF" },
+    markerEnd: { type: MarkerType.ArrowClosed, color: "#0075FF" },
+  },
+  {
+    id: "e12",
+    source: "histogramEvaluation",
+    target: "histogramBottom",
+    animated: true,
+    style: { stroke: "#0075FF" },
+    markerEnd: { type: MarkerType.ArrowClosed, color: "#0075FF" },
+  },
+
+  {
+    id: "e13",
+    source: "emaCrossover",
+    target: "emaCrossUp",
+    animated: true,
+    style: { stroke: "#0075FF" },
+    markerEnd: { type: MarkerType.ArrowClosed, color: "#0075FF" },
+  },
+  {
+    id: "e14",
+    source: "emaCrossover",
+    target: "emaCrossDown",
+    animated: true,
+    style: { stroke: "#0075FF" },
+    markerEnd: { type: MarkerType.ArrowClosed, color: "#0075FF" },
+  },
+
+  {
+    id: "e15",
+    source: "stochRSIRange",
+    target: "overBought",
+    animated: true,
+    style: { stroke: "#0075FF" },
+    markerEnd: { type: MarkerType.ArrowClosed, color: "#0075FF" },
+  },
+  {
+    id: "e16",
+    source: "stochRSIRange",
+    target: "overSold",
+    animated: true,
+    style: { stroke: "#0075FF" },
+    markerEnd: { type: MarkerType.ArrowClosed, color: "#0075FF" },
+  },
+
+  {
+    id: "e17",
+    source: "pricePosition",
+    target: "upperBand",
+    animated: true,
+    style: { stroke: "#0075FF" },
+    markerEnd: { type: MarkerType.ArrowClosed, color: "#0075FF" },
+  },
+  {
+    id: "e18",
+    source: "pricePosition",
+    target: "lowerBand",
+    animated: true,
+    style: { stroke: "#0075FF" },
+    markerEnd: { type: MarkerType.ArrowClosed, color: "#0075FF" },
+  },
+
+  // Details to weighting - some animated to show active signal flows
+  {
+    id: "e19",
+    source: "histogramTop",
+    target: "signalWeighting",
+    animated: true,
+    style: { stroke: "#0075FF" },
+    markerEnd: { type: MarkerType.ArrowClosed, color: "#0075FF" },
+  },
+  {
+    id: "e20",
+    source: "histogramBottom",
+    target: "signalWeighting",
+    animated: true,
+    style: { stroke: "#0075FF" },
+    markerEnd: { type: MarkerType.ArrowClosed, color: "#0075FF" },
+  },
+  {
+    id: "e21",
+    source: "emaCrossUp",
+    target: "signalWeighting",
+    animated: true,
+    style: { stroke: "#0075FF" },
+    markerEnd: { type: MarkerType.ArrowClosed, color: "#0075FF" },
+  },
+  {
+    id: "e22",
+    source: "emaCrossDown",
+    target: "signalWeighting",
+    animated: true,
+    style: { stroke: "#0075FF" },
+    markerEnd: { type: MarkerType.ArrowClosed, color: "#0075FF" },
+  },
+  {
+    id: "e23",
+    source: "overBought",
+    target: "signalWeighting",
+    animated: true,
+    style: { stroke: "#0075FF" },
+    markerEnd: { type: MarkerType.ArrowClosed, color: "#0075FF" },
+  },
+  {
+    id: "e24",
+    source: "overSold",
+    target: "signalWeighting",
+    animated: true,
+    style: { stroke: "#0075FF" },
+    markerEnd: { type: MarkerType.ArrowClosed, color: "#0075FF" },
+  },
+  {
+    id: "e25",
+    source: "upperBand",
+    target: "signalWeighting",
+    animated: true,
+    style: { stroke: "#0075FF" },
+    markerEnd: { type: MarkerType.ArrowClosed, color: "#0075FF" },
+  },
+  {
+    id: "e26",
+    source: "lowerBand",
+    target: "signalWeighting",
+    animated: true,
+    style: { stroke: "#0075FF" },
+    markerEnd: { type: MarkerType.ArrowClosed, color: "#0075FF" },
+  },
+
+  // Main signal flow path - animated
+  {
+    id: "e27",
+    source: "signalWeighting",
+    target: "confidenceCalculation",
+    animated: true,
+    style: { stroke: "#0075FF", strokeWidth: 2 },
+    markerEnd: { type: MarkerType.ArrowClosed, color: "#0075FF" },
+  },
+  {
+    id: "e28",
+    source: "confidenceCalculation",
+    target: "finalSignal",
+    animated: true,
+    style: { stroke: "#0075FF", strokeWidth: 2 },
+    markerEnd: { type: MarkerType.ArrowClosed, color: "#0075FF" },
+  },
+
+  // Final signals - animated with color-coding
+  {
+    id: "e29",
+    source: "finalSignal",
+    target: "buySignal",
+    animated: true,
+    style: { stroke: "#1acd7c", strokeWidth: 2 },
+    markerEnd: { type: MarkerType.ArrowClosed, color: "#1acd7c" },
+  },
+  {
+    id: "e30",
+    source: "finalSignal",
+    target: "sellSignal",
+    animated: true,
+    style: { stroke: "#f53535", strokeWidth: 2 },
+    markerEnd: { type: MarkerType.ArrowClosed, color: "#f53535" },
+  },
+  {
+    id: "e31",
+    source: "finalSignal",
+    target: "neutralSignal",
+    animated: true,
+    style: { stroke: "#FFD700" },
+    markerEnd: { type: MarkerType.ArrowClosed, color: "#FFD700" },
+  },
+
+  // Trading Actions - animated decision paths
+  {
+    id: "e32",
+    source: "buySignal",
+    target: "histogramPosition",
+    animated: true,
+    style: { stroke: "#1acd7c" },
+    markerEnd: { type: MarkerType.ArrowClosed, color: "#1acd7c" },
+  },
+  {
+    id: "e33",
+    source: "sellSignal",
+    target: "histogramPosition",
+    animated: true,
+    style: { stroke: "#f53535" },
+    markerEnd: { type: MarkerType.ArrowClosed, color: "#f53535" },
+  },
+
+  // Histogram position decisions - active trading paths
+  {
+    id: "e34",
+    source: "histogramPosition",
+    target: "buyOpportunity",
+    label: "Bottom",
+    animated: true,
+    style: { stroke: "#1acd7c" },
+    markerEnd: { type: MarkerType.ArrowClosed, color: "#1acd7c" },
+  },
+  {
+    id: "e35",
+    source: "histogramPosition",
+    target: "sellTP",
+    label: "Top",
+    animated: true,
+    style: { stroke: "#f53535" },
+    markerEnd: { type: MarkerType.ArrowClosed, color: "#f53535" },
+  },
+
+  {
+    id: "e36",
+    source: "histogramPosition",
+    target: "sellOpportunity",
+    label: "Top",
+    animated: true,
+    style: { stroke: "#f53535" },
+    markerEnd: { type: MarkerType.ArrowClosed, color: "#f53535" },
+  },
+  {
+    id: "e37",
+    source: "histogramPosition",
+    target: "buyTP",
+    label: "Bottom",
+    animated: true,
+    style: { stroke: "#1acd7c" },
+    markerEnd: { type: MarkerType.ArrowClosed, color: "#1acd7c" },
+  },
+
+  // Final actions - primary trading decisions animated
+  {
+    id: "e38",
+    source: "buyOpportunity",
+    target: "enterLong",
+    animated: true,
+    style: { stroke: "#1acd7c", strokeWidth: 2 },
+    markerEnd: { type: MarkerType.ArrowClosed, color: "#1acd7c" },
+  },
+  {
+    id: "e39",
+    source: "sellOpportunity",
+    target: "enterShort",
+    animated: true,
+    style: { stroke: "#f53535", strokeWidth: 2 },
+    markerEnd: { type: MarkerType.ArrowClosed, color: "#f53535" },
   },
 ];
 function Landing() {
@@ -367,34 +856,94 @@ function Landing() {
             data={recommandedSymbols.midTermSignals}
           />
         </Grid>
-        {/* 
-        <Grid item xs={12}>
-          <VuiBox sx={{ width: "100%", height: 800 }}>
-            <ReactFlow
-              draggable={false}
-              nodes={nodes}
-              edges={edges}
-              proOptions={{ hideAttribution: true }}
-              onlyRenderVisibleElements
-              nodesDraggable={false}
-              nodesConnectable={false}
-              elementsSelectable={false}
-              edgesUpdatable={false}
-              minZoom={1}
-              maxZoom={1}
-              preventScrolling
-              fitView
-              snapToGrid
-              snapGrid={[10, 10]}
-              moveableNodes={false}
-              onNodesChange={onNodesChange}
-              onEdgesChange={onEdgesChange}
-              onConnect={onConnect}
-            >
-              <Background />
-            </ReactFlow>
+
+        <Grid item xs={12} mt={4} id="trading-strategy">
+          <VuiBox
+            mb={4}
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            flexDirection="column"
+          >
+            <VuiTypography textAlign="center" color="white" variant="h4" fontWeight="bold">
+              Trading Strategy Flow Diagram
+            </VuiTypography>
+            <VuiTypography color="text" variant="body2" fontWeight="regular" textAlign="center">
+              Visual representation of our AI trading decision process
+            </VuiTypography>
           </VuiBox>
-        </Grid> */}
+          <Card
+            sx={{
+              backgroundColor: "#0C1E4E",
+              padding: 2,
+              boxShadow: "0 10px 20px rgba(0,0,0,0.5)",
+            }}
+          >
+            <VuiBox sx={{ width: "100%", height: 800 }}>
+              <ReactFlow
+                nodes={nodes}
+                edges={edges}
+                proOptions={{ hideAttribution: true }}
+                onlyRenderVisibleElements
+                nodesDraggable={false}
+                nodesConnectable={false}
+                elementsSelectable={true}
+                edgesUpdatable={false}
+                minZoom={0.5}
+                maxZoom={2}
+                defaultZoom={0.8}
+                fitView
+                snapToGrid
+                snapGrid={[10, 10]}
+                onNodesChange={onNodesChange}
+                onEdgesChange={onEdgesChange}
+                onConnect={onConnect}
+              >
+                <Background color="#304878" gap={16} size={1} />
+                <Controls position="bottom-right" showInteractive={false} />
+              </ReactFlow>
+              <VuiBox
+                sx={{
+                  position: "absolute",
+                  bottom: "10px",
+                  left: "10px",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "5px",
+                  backgroundColor: "rgba(0, 0, 0, 0.7)",
+                  padding: "8px",
+                  borderRadius: "4px",
+                  zIndex: 5,
+                }}
+              >
+                <VuiBox display="flex" alignItems="center" gap={1}>
+                  <VuiBox
+                    sx={{ width: 12, height: 12, backgroundColor: "#1acd7c", borderRadius: "50%" }}
+                  />
+                  <VuiTypography variant="caption" color="white">
+                    Buy Signal
+                  </VuiTypography>
+                </VuiBox>
+                <VuiBox display="flex" alignItems="center" gap={1}>
+                  <VuiBox
+                    sx={{ width: 12, height: 12, backgroundColor: "#f53535", borderRadius: "50%" }}
+                  />
+                  <VuiTypography variant="caption" color="white">
+                    Sell Signal
+                  </VuiTypography>
+                </VuiBox>
+                <VuiBox display="flex" alignItems="center" gap={1}>
+                  <VuiBox
+                    sx={{ width: 12, height: 12, backgroundColor: "#FFD700", borderRadius: "50%" }}
+                  />
+                  <VuiTypography variant="caption" color="white">
+                    Neutral/Take Profit
+                  </VuiTypography>
+                </VuiBox>
+              </VuiBox>
+            </VuiBox>
+          </Card>
+        </Grid>
 
         {/* About Bot Strategies */}
         <Grid mt={isMobile ? 4 : 8} item xs={12} md={12} lg={12} xl={12} id="bot-strategies">
@@ -419,8 +968,8 @@ function Landing() {
                   <StrategyCard
                     image={profile1}
                     label="Base on MACD"
-                    title="Depend on Upper Histogram"
-                    description="As Uber works through a huge amount of internal management turmoil."
+                    title="MACD Analysis"
+                    description="Base on MACD and Signal Line to make trading decisions"
                     action={{
                       type: "internal",
                       route: undefined,
@@ -428,51 +977,14 @@ function Landing() {
                       label: "LEARN MORE",
                     }}
                     authors={[]}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={6} md={4} xl={3} xxxl={2.4}>
-                  <StrategyCard
-                    image={profile2}
-                    label="Base on Bollinger Bands"
-                    title="Follow Bollinger Bands"
-                    description="Music is something that every person has his or her own specific opinion about."
-                    action={{
-                      type: "internal",
-                      route: undefined,
-                      color: "white",
-                      label: "LEARN MORE",
-                    }}
-                    authors={[]}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={6} md={4} xl={3} xxxl={2.4}>
-                  <StrategyCard
-                    image={profile3}
-                    label="Base on MACD"
-                    title="Histogram Over Average"
-                    description="Different people have different taste, and various types of music."
-                    action={{
-                      type: "internal",
-                      route: undefined,
-                      color: "white",
-                      label: "LEARN MORE",
-                    }}
-                    authors={
-                      [
-                        // { image: team4, name: "Peterson" },
-                        // { image: team3, name: "Nick Daniel" },
-                        // { image: team2, name: "Ryan Milly" },
-                        // { image: team1, name: "Elena Morison" },
-                      ]
-                    }
                   />
                 </Grid>
                 <Grid item xs={12} sm={6} md={4} xl={3} xxxl={2.4}>
                   <StrategyCard
                     image={profile3}
                     label="Base on EMA"
-                    title="EMA Safe Entry"
-                    description="Different people have different taste, and various types of music."
+                    title="EMA Crossover Analysis"
+                    description="Base on EMA Crossover to make trading decisions"
                     action={{
                       type: "internal",
                       route: undefined,
@@ -492,9 +1004,9 @@ function Landing() {
                 <Grid item xs={12} sm={6} md={4} xl={3} xxxl={2.4}>
                   <StrategyCard
                     image={profile3}
-                    label="Base on MACD"
-                    title="Maximum DCA per SHW"
-                    description="Different people have different taste, and various types of music."
+                    label="Base on StochRSI"
+                    title="StochRSI Analysis"
+                    description="Base on StochRSI to make trading decisions"
                     action={{
                       type: "internal",
                       route: undefined,
@@ -509,6 +1021,21 @@ function Landing() {
                         // { image: team1, name: "Elena Morison" },
                       ]
                     }
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6} md={4} xl={3} xxxl={2.4}>
+                  <StrategyCard
+                    image={profile2}
+                    label="Base on Bollinger Bands"
+                    title="Bollinger Bands Analysis"
+                    description="Base on Bollinger Bands to make trading decisions"
+                    action={{
+                      type: "internal",
+                      route: undefined,
+                      color: "white",
+                      label: "LEARN MORE",
+                    }}
+                    authors={[]}
                   />
                 </Grid>
               </Grid>
