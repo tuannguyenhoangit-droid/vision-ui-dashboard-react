@@ -937,7 +937,7 @@ function Landing() {
                     sx={{ width: 12, height: 12, backgroundColor: "#FFD700", borderRadius: "50%" }}
                   />
                   <VuiTypography variant="caption" color="white">
-                    Neutral/Take Profit
+                    Neutral
                   </VuiTypography>
                 </VuiBox>
               </VuiBox>
